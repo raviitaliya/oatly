@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     confpassword:{
         type:String,
-        required:false
+        required:true
     },
     address1:{
         type:String,
