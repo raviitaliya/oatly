@@ -1,7 +1,12 @@
 import { User } from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
-import { sendVerificationEmail,sendWelcomeEmail,sendPasswordResetEmail,sendResetSuccessfullEmail } from "../Email/email.js";
+import {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+  sendResetSuccessfullEmail,
+} from "../Email/email.js";
 import Crypto from "crypto";
 
 export const signup = async (req, res) => {
@@ -138,7 +143,7 @@ export const verifyEmail = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, username, password } = req.body;
-  
+
   try {
     const user = await User.findOne({
       $or: [{ username }, { email }],
