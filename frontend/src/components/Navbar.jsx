@@ -23,7 +23,7 @@ const Navbar = () => {
             <Sheet>
               <SheetTrigger asChild>
                 <button
-                  className="w-12 h-12 sm:w-12 sm:h-12 rounded-full cursor-pointer outline-white bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+                  className="w-12 h-12 sm:w-12 sm:h-12 rounded-full cursor-hand outline-white bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
                   aria-label="Menu"
                 >
                   <div className="w-5 sm:w-6 h-0.5 sm:h-1 bg-white rounded-full"></div>
@@ -45,7 +45,7 @@ const Navbar = () => {
       </div>
 
       {/* Right Side - Avatar */}
-      <div className="flex items-center w-10 h-10 sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-pointer">
+      <div className="flex items-center w-10 h-10 sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
         <img
           src={profileGif}
           alt="Profile"
