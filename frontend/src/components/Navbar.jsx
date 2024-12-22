@@ -23,6 +23,7 @@ const Navbar = () => {
             <Sheet>
               <SheetTrigger asChild>
                 <button
+
                   className="w-12 h-12 rounded-full cursor-hand outline-white bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
                   aria-label="Menu"
                 >
@@ -31,22 +32,13 @@ const Navbar = () => {
                   <div className="w-6 h-1 bg-white rounded-full"></div>
                 </button>
               </SheetTrigger>
-              <SheetContent
-                side="left"
+              <SheetContent 
+                side="left" 
                 className="!w-[90vw] sm:!w-[600px] md:!w-[740px] lg:!w-[840px]"
               >
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Cumque nostrum enim asperiores laboriosam repellat tenetur
-                  nihil qui voluptates ex tempora deleniti sed deserunt, eveniet
-                  corporis reiciendis reprehenderit soluta, magnam dicta. Lorem
-                  ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab
-                  omnis rerum debitis sunt consequatur id maiores quaerat.
-                  Magnam impedit in soluta fugiat! Praesentium, aut doloremque
-                  est exercitationem velit earum.
-                </p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
 
-                {/* <SheetContent side="left" className="w-[600px] "> */}
+              {/* <SheetContent side="left" className="w-[600px] "> */}
                 {/* <SheetHeader>
                   <SheetTitle>Edit profile</SheetTitle>
                   <SheetDescription>
