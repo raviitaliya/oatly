@@ -1,6 +1,7 @@
 import React from "react";
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
 import { Facebook, Twitter, Instagram, Youtube, Music } from 'lucide-react';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
   Sheet,
   SheetClose,
@@ -67,6 +68,7 @@ const Navbar = () => {
                   </SheetClose>
                 </SheetFooter> */}
 
+                
 
               </SheetContent>
             </Sheet>
