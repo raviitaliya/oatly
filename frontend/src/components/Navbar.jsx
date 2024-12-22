@@ -23,12 +23,7 @@ const Navbar = () => {
             <Sheet>
               <SheetTrigger asChild>
                 <button
-<<<<<<< HEAD
                   className="w-14 h-14 rounded-full bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-=======
-
-                  className="w-12 h-12 rounded-full cursor-hand outline-white bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
->>>>>>> 73478dde10da8d0f28569a2ea74721ba644d5d5a
                   aria-label="Menu"
                 >
                   <div className="w-6 h-1 bg-white rounded-full"></div>
@@ -36,52 +31,11 @@ const Navbar = () => {
                   <div className="w-6 h-1 bg-white rounded-full"></div>
                 </button>
               </SheetTrigger>
-<<<<<<< HEAD
               <SheetContent 
                 side="left" 
                 className="!w-[90vw] sm:!w-[600px] md:!w-[740px] lg:!w-[840px]"
               >
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
-=======
-              <SheetContent side="left" className="w-[600px] ">
-                {/* <SheetHeader>
-                  <SheetTitle>Edit profile</SheetTitle>
-                  <SheetDescription>
-                    Make changes to your profile here. Click save when you're
-                    done.
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      value="Pedro Duarte"
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="username" className="text-right">
-                      Username
-                    </Label>
-                    <Input
-                      id="username"
-                      value="@peduarte"
-                      className="col-span-3"
-                    />
-                  </div>
-                </div>
-                <SheetFooter>
-                  <SheetClose asChild>
-                    <Button type="submit">Save changes</Button>
-                  </SheetClose>
-                </SheetFooter> */}
-
-                
-
->>>>>>> 73478dde10da8d0f28569a2ea74721ba644d5d5a
               </SheetContent>
             </Sheet>
           </div>
