@@ -1,8 +1,8 @@
+@import url(https://db.onlinewebfonts.com/c/8f99df3b140b4b98bb4b3963cc850c64?family=Girdo+Black);
+@import url(https://db.onlinewebfonts.com/c/f3e969781acbea4345478576b9f5c41f?family=MagdaCleanMonoWeb-Black+W03+Rg);
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url(https://db.onlinewebfonts.com/c/8f99df3b140b4b98bb4b3963cc850c64?family=Girdo+Black);
-@import url(https://db.onlinewebfonts.com/c/f3e969781acbea4345478576b9f5c41f?family=MagdaCleanMonoWeb-Black+W03+Rg);
 @layer base {
   :root {
     --background: 0 0% 100%;
