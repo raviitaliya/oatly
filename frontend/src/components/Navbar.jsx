@@ -1,6 +1,6 @@
 import React from "react";
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
-import { Facebook, Twitter, Instagram, Youtube, Music } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, Music } from "lucide-react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
   Sheet,
@@ -14,7 +14,7 @@ import {
 } from "./ui/sheet";
 
 const Navbar = () => {
-  const profileGif = '/src/assets/gif/discord-avatar.gif'; 
+  const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
     <nav className="flex items-center justify-between p-3  ">
       <div className="flex items-center">
@@ -23,12 +23,7 @@ const Navbar = () => {
             <Sheet>
               <SheetTrigger asChild>
                 <button
-<<<<<<< HEAD
-                  className="w-14 h-14 rounded-full bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
-=======
-
                   className="w-12 h-12 rounded-full cursor-hand outline-white bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
->>>>>>> 73478dde10da8d0f28569a2ea74721ba644d5d5a
                   aria-label="Menu"
                 >
                   <div className="w-6 h-1 bg-white rounded-full"></div>
@@ -36,14 +31,22 @@ const Navbar = () => {
                   <div className="w-6 h-1 bg-white rounded-full"></div>
                 </button>
               </SheetTrigger>
-<<<<<<< HEAD
-              <SheetContent 
-                side="left" 
+              <SheetContent
+                side="left"
                 className="!w-[90vw] sm:!w-[600px] md:!w-[740px] lg:!w-[840px]"
               >
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
-=======
-              <SheetContent side="left" className="w-[600px] ">
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Cumque nostrum enim asperiores laboriosam repellat tenetur
+                  nihil qui voluptates ex tempora deleniti sed deserunt, eveniet
+                  corporis reiciendis reprehenderit soluta, magnam dicta. Lorem
+                  ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab
+                  omnis rerum debitis sunt consequatur id maiores quaerat.
+                  Magnam impedit in soluta fugiat! Praesentium, aut doloremque
+                  est exercitationem velit earum.
+                </p>
+
+                {/* <SheetContent side="left" className="w-[600px] "> */}
                 {/* <SheetHeader>
                   <SheetTitle>Edit profile</SheetTitle>
                   <SheetDescription>
@@ -78,10 +81,6 @@ const Navbar = () => {
                     <Button type="submit">Save changes</Button>
                   </SheetClose>
                 </SheetFooter> */}
-
-                
-
->>>>>>> 73478dde10da8d0f28569a2ea74721ba644d5d5a
               </SheetContent>
             </Sheet>
           </div>
@@ -90,11 +89,11 @@ const Navbar = () => {
 
       {/* Right Side - Avatar */}
       <div className="flex items-center w-12 h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
-      <img
-        src={profileGif}
-        alt="Profile"
-        className="w-12 h-12 rounded-full object-cover shadow-lg "
-      />
+        <img
+          src={profileGif}
+          alt="Profile"
+          className="w-12 h-12 rounded-full object-cover shadow-lg "
+        />
       </div>
     </nav>
   );
