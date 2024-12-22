@@ -1,0 +1,6 @@
+*{
+    ::selection {
+        color: black;
+        background: #98c5d3;
+      }
+}
