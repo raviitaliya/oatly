@@ -34,7 +34,7 @@ const Navbar = () => {
               </SheetTrigger>
               <SheetContent 
                 side="left" 
-                className="!w-[90vw] sm:!w-[600px] md:!w-[740px] lg:!w-[840px] bg-black border-none text-white"
+                className="!w-[90vw] sm:!w-[600px] md:!w-[740px] lg:!w-[950px] bg-black border-none text-white"
               >
                 <p className="font-font2 ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
 
