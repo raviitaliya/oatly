@@ -34,45 +34,11 @@ const Navbar = () => {
               </SheetTrigger>
               <SheetContent 
                 side="left" 
-                className="!w-[90vw] sm:!w-[600px] md:!w-[740px] lg:!w-[950px] bg-black"
+                className="!w-[90vw] sm:!w-[600px] md:!w-[740px] lg:!w-[840px] bg-black border-none text-white"
               >
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
+                <p className="font-font2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
 
-              {/* <SheetContent side="left" className="w-[600px] "> */}
-                {/* <SheetHeader>
-                  <SheetTitle>Edit profile</SheetTitle>
-                  <SheetDescription>
-                    Make changes to your profile here. Click save when you're
-                    done.
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      value="Pedro Duarte"
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="username" className="text-right">
-                      Username
-                    </Label>
-                    <Input
-                      id="username"
-                      value="@peduarte"
-                      className="col-span-3"
-                    />
-                  </div>
-                </div>
-                <SheetFooter>
-                  <SheetClose asChild>
-                    <Button type="submit">Save changes</Button>
-                  </SheetClose>
-                </SheetFooter> */}
+              
               </SheetContent>
             </Sheet>
           </div>
