@@ -1,3 +1,5 @@
+@import url(https://db.onlinewebfonts.com/c/8f99df3b140b4b98bb4b3963cc850c64?family=Girdo+Black);
+@import url(https://db.onlinewebfonts.com/c/f3e969781acbea4345478576b9f5c41f?family=MagdaCleanMonoWeb-Black+W03+Rg);
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,7 +29,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
     --background: 222.2 84% 4.9%;
@@ -53,14 +55,34 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
 @layer base {
+  
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+@font-face {
+  font-family: "Girdo Black";
+  src: url("https://db.onlinewebfonts.com/t/8f99df3b140b4b98bb4b3963cc850c64.eot");
+  src: url("https://db.onlinewebfonts.com/t/8f99df3b140b4b98bb4b3963cc850c64.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/8f99df3b140b4b98bb4b3963cc850c64.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/8f99df3b140b4b98bb4b3963cc850c64.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/8f99df3b140b4b98bb4b3963cc850c64.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/8f99df3b140b4b98bb4b3963cc850c64.svg#Girdo Black")format("svg");
+  
+}
+
+
+@font-face {
+  font-family: "MagdaCleanMonoWeb-Black W03 Rg";
+  src:url("./assets/fonts/MagdaPro.0318dd19.otf")format("otf");
+  font-weight: 100;
 }
