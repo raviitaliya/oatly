@@ -35,7 +35,7 @@ const Navbar = () => {
                 side="left" 
                 className="!w-full sm:!w-full md:!w-[740px] lg:!w-[950px] bg-black border-none text-white p-4 sm:p-6"
               >
-                <p className="font-font2 ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
+                <p className="font-font2 font-normal text-xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nostrum enim asperiores laboriosam repellat tenetur nihil qui voluptates ex tempora deleniti sed deserunt, eveniet corporis reiciendis reprehenderit soluta, magnam dicta. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus, ab omnis rerum debitis sunt consequatur id maiores quaerat. Magnam impedit in soluta fugiat! Praesentium, aut doloremque est exercitationem velit earum.</p>
 
               
               </SheetContent>
