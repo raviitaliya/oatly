@@ -20,7 +20,7 @@ const Navbar = () => {
             <Sheet>
               <SheetTrigger asChild>
                 <button
-                 
+
                   className="w-14 h-14 rounded-full bg-black flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-colors border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.15)]"
                   aria-label="Menu"
                 >

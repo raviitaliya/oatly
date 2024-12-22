@@ -7,6 +7,10 @@ export default {
   ],
   theme: {
   	extend: {
+		fontFamily: {
+			font1: ['Girdo Black', 'sans-serif'],  
+			font2: ['MagdaCleanMonoWeb-Black W03 Rg', 'sans-serif'],  
+		  },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
