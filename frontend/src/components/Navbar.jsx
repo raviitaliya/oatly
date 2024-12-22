@@ -16,7 +16,7 @@ import {
 const Navbar = () => {
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
-    <nav className="flex items-center justify-between p-2 sm:p-3 w-full">
+    <nav className="flex items-center fixed justify-between p-2 sm:p-3 w-full">
       <div className="flex items-center">
         <div>
           <div className="grid grid-cols-1 gap-2">
