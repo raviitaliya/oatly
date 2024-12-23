@@ -17,6 +17,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        text: '#888',
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -57,6 +58,7 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+        
       },
     },
   },
