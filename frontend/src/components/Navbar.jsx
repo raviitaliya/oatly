@@ -1,6 +1,12 @@
 import React from "react";
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
 import { Facebook, Twitter, Instagram, Youtube, Music } from "lucide-react";
+import { FaInstagram } from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa";
+import { FaTwitter } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
+import { MdMusicNote } from "react-icons/md";
+
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
   Sheet,
@@ -153,33 +159,33 @@ const Navbar = () => {
                       <div className="flex gap-3">
                         <a
                           href="#"
-                          className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <Facebook size={20} />
+                          <FaFacebookF style={{color: 'black'}} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <Twitter size={20} />
+                          <FaTwitter style={{color: 'black'}} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <Instagram size={20} />
+                          <FaInstagram  style={{color: 'black'}} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white  -rotate-6 transition-colors"
                         >
-                          <Youtube size={20} />
+                          <FaYoutube style={{color: 'black'}} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <Music size={20} />
+                          <MdMusicNote style={{color: 'black'}} size={30} />
                         </a>
                       </div>
                     </div>
