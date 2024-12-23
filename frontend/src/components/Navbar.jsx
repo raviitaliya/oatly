@@ -86,31 +86,31 @@ const Navbar = () => {
                         <div className="space-y-3">
                           <Link
                             to="/faq"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2  text-gray-400 hover:text-white transition-colors"
                           >
                             FAQ
                           </Link>
                           <Link
                             to="/careers"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             Careers
                           </Link>
                           <Link
                             to="/contact"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             Contact
                           </Link>
                           <Link
                             to="/privacy-policy"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             Privacy Policy
                           </Link>
                           <Link
                             to="/cookie-consent"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             Cookie consent
                           </Link>
