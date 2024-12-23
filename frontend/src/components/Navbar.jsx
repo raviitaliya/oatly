@@ -1,6 +1,5 @@
 import React from "react";
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
-import { Facebook, Twitter, Instagram, Youtube, Music } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
