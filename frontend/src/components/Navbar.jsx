@@ -41,7 +41,7 @@ const Navbar = () => {
                 side="left"
                 className="!w-full sm:!w-full md:!w-[740px] lg:!w-[950px] bg-black border-none text-white p-4 sm:p-6"
               >
-                <div className="min-h-screen bg-black text-white p-4 md:p-8 lg:p-12 overflow-y-auto ml-[-50px]">
+                <div className="min-h-screen bg-black text-white p-4 md:p-8 lg:p-12 overflow-y-auto">
                   {/* Main Navigation */}
                   <nav className="mb-20 md:mb-32">
                     <ul className="flex flex-col gap-3 md:gap-4 mt-20">
