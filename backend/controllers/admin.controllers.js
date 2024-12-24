@@ -84,3 +84,28 @@ export const AddProudct = async (req, res) => {
   }
 };
 
+export const getAllProducts = async (req, res) => {
+    try {
+        const products = await Product.find();
+        
+        if (!products || products.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                message: "No products found"
+            });
+        }
+
+        return res.status(200).json({
+            status: 200,
+            products,
+            message: "Products fetched successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: "Error while fetching products",
+            error: error.message
+        });
+    }
+};
+
