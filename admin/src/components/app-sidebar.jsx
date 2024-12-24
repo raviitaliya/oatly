@@ -1,66 +1,67 @@
+import { Home, Package, FileText, CreditCard, Users } from "lucide-react"
 
-import { FiHome, FiPlus, FiBox, FiDollarSign, FiUsers } from "react-icons/fi"
-
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Home",
-      url: "/",
-      icon: FiHome,
-      isActive: true,
-    },
-    {
-      title: "Add Product",
-      url: "/add-product",
-      icon: FiPlus,
-    },
-    {
-      title: "Product Details",
-      url: "/product-details",
-      icon: FiBox,
-    },
-    {
-      title: "Payment",
-      url: "/payment",
-      icon: FiDollarSign,
-    },
-    {
-      title: "Users",
-      url: "/users",
-      icon: FiUsers,
-    },
-  ],
-}
+// Menu items.
+const items = [
+  {
+    title: "Home",
+    url: "/",
+    icon: Home,
+  },
+  {
+    title: "Add Products",
+    url: "/add-product",
+    icon: Package,
+  },
+  {
+    title: "Product Details",
+    url: "/product-details",
+    icon: FileText,
+  },
+  {
+    title: "Payment",
+    url: "/payment",
+    icon: CreditCard,
+  },
+  {
+    title: "Users",
+    url: "/users",
+    icon: Users,
+  },
+]
 
-export function AppSidebar({
-  ...props
-}) {
+export function AppSidebar() {
   return (
-    (<Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
+    <Sidebar>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <SidebarGroup>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>)
-  );
+    </Sidebar>
+  )
 }
