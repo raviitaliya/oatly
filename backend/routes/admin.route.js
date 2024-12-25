@@ -12,7 +12,7 @@ router.route("/addProduct").post(
             name: "image",
             maxcount:1,
         }
-    ]),
+    ]), 
     AddProudct
 )
 
