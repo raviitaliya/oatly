@@ -1,14 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 
-function Layout({ children }) {
+function Layout() {
   return (
     <div className="app-container">
       <header>
      <Navbar />
       </header>
       <main>
-        {children}
+        <Outlet/>
       </main>
       <footer>
         
