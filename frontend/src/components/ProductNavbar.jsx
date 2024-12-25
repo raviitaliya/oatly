@@ -1,6 +1,4 @@
-import React from 'react'
 import { Link } from 'react-router-dom';
-import { useLocation } from "react-router-dom";
 
 const ProductNavbar = () => {
   return (
@@ -18,16 +16,16 @@ const ProductNavbar = () => {
                   `hover:border-b-2 ${isActive ? ":border-b-2" : "border-none"}`}>
             <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Chilled Oat Drinks</li>
           </Link>
-          <Link to='/oat-drink'>
+          <Link to='/Cooking'>
             <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Cooking</li>
           </Link>
-          <Link to='/oat-drink'>
+          <Link to='/Spread'>
             <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Spread</li>
           </Link>
-          <Link to='/oat-drink'>
+          <Link to='/Oatmeal'>
             <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Oatmeal</li>
           </Link>
-          <Link >
+          <Link to='/Ice-Cream'>
             <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Ice Cream</li>
           </Link>
           <Link >

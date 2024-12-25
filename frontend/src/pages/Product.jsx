@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { useProductStore } from '../store/Store';
 import { Link } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
+import ProductNavbar from '@/components/ProductNavbar';
 
 const Product = () => {
   const { products, loading, error, fetchProducts } = useProductStore();
 
-  const pathname = useLocation().pathname
 
   useEffect(() => {
     fetchProducts();
@@ -19,39 +19,7 @@ const Product = () => {
 
   return (
     <div className="pt-20 container mx-auto px-4">
-      <div className='w-full flex  justify-center pb-10 '>
-        <ui className="flex list-none gap-14 text-lg font-font2">
-          <Link>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>All products</li>
-          </Link>
-          <Link to='/oat-drink'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Oat Drink</li>
-          </Link>
-          <Link to='/chilled-oat-drink' className={({ isActive }) =>
-                  `hover:border-b-2 ${isActive ? ":border-b-2" : "border-none"}`}>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Chilled Oat Drinks</li>
-          </Link>
-          <Link to='/oat-drink'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Cooking</li>
-          </Link>
-          <Link to='/oat-drink'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Spread</li>
-          </Link>
-          <Link to='/oat-drink'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Oatmeal</li>
-          </Link>
-          <Link >
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Ice Cream</li>
-          </Link>
-          <Link >
-            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Soft Serve</li>
-          </Link>
-        </ui>
-      </div>
-
-
-
-
+      <ProductNavbar/>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
