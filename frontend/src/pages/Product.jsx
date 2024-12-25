@@ -1,32 +1,61 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect } from 'react';
+import { useProductStore } from '../store/Store';
+import { Link } from 'react-router-dom';
 
 const Product = () => {
-  const [products, setProducts] = useState([]);
+  const { products, loading, error, fetchProducts } = useProductStore();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/admin/getAllProduct');
-        setProducts(response.data.products);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-
     fetchProducts();
   }, []);
 
+
+
+  if (loading) return <div className="pt-20 container mx-auto px-4">Loading...</div>;
+  if (error) return <div className="pt-20 container mx-auto px-4">Error: {error}</div>;
+
   return (
     <div className="pt-20 container mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-6">Our Products</h1>
+      <div className='w-full flex  justify-center pb-10 '>
+        <ui className="flex list-none gap-14 text-lg font-font2">
+          <Link>
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>All products</li>
+          </Link>
+          <Link to='/oat-drink'>
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Oat Drink</li>
+          </Link>
+          <Link to='/oat-drink'>
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Chilled Oat Drinks</li>
+          </Link>
+          <Link to='/oat-drink'>
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Cooking</li>
+          </Link>
+          <Link to='/oat-drink'>
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Spread</li>
+          </Link>
+          <Link to='/oat-drink'>
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Oatmeal</li>
+          </Link>
+          <Link >
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Ice Cream</li>
+          </Link>
+          <Link >
+            <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Soft Serve</li>
+          </Link>
+        </ui>
+      </div>
+
+
+
+
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
           <div key={product._id} className="border rounded-lg shadow-lg p-4">
             <div className="aspect-w-16 aspect-h-9 mb-4">
-              <img 
-                src={product.image} 
-                alt={product.productname} 
+              <img
+                src={product.image}
+                alt={product.productname}
                 className="w-full h-64 object-contain rounded-lg"
               />
             </div>
