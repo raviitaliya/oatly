@@ -6,6 +6,11 @@ import Layout from "./components/Layout";
 import OatDrink from "./pages/OatDrink";
 import ChilledOatDrinks from "./pages/ChilledOatDrinks";
 import AllProduct from "./pages/AllProduct";
+import Cooking from "./pages/Cooking";
+import Spread from "./pages/Spread";
+import Oatmeal from "./pages/Oatmeal";
+import IceCream from "./pages/IceCream";
+import SoftServe from "./pages/SoftServe";
 
 function App() {
   return (
@@ -16,9 +21,14 @@ function App() {
           <Route path="home" element={<Home />} />
           <Route path="our-products" element={<Product />}>
           <Route path="" element={<AllProduct />} />
-
             <Route path="oat-drink" element={<OatDrink />} />
             <Route path="chilled-oat-drink" element={<ChilledOatDrinks />} />
+            <Route path="cooking" element={<Cooking />} />
+            <Route path="spread" element={<Spread />} />
+            <Route path="oatmeal" element={<Oatmeal />} />
+            <Route path="ice-cream" element={<IceCream />} />
+            <Route path="soft-serve" element={<SoftServe />} />
+            
 
           </Route>
         </Route>

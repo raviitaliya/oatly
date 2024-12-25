@@ -1,39 +1,95 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink } from "react-router-dom";
 
 const ProductNavbar = () => {
   return (
     <div>
-      <div className='w-full flex  justify-center pb-10 '>
-        <ui className="flex list-none gap-14 text-lg font-font2 m-[]">
-          <Link to='/our-products'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>All products</li>
-          </Link>
-          <NavLink to='/our-products/oat-drink'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>Oat Drink</li>
-          </NavLink>
-          <Link to='/our-products/chilled-oat-drink' className={({ isActive }) =>
-            ` ${isActive ? ":border-b-2" : "border-none"}`}>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>Chilled Oat Drinks</li>
-          </Link>
-          <Link to='/our-products/Cooking'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>Cooking</li>
-          </Link>
-          <Link to='/our-products/Spread'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>Spread</li>
-          </Link>
-          <Link to='/our-products/Oatmeal'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>Oatmeal</li>
-          </Link>
-          <Link to='/our-products/Ice-Cream'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>Ice Cream</li>
-          </Link>
-          <Link to='/our-products/Soft-Serve'>
-            <li className='cursor-hand hover:border-b-2 border-black font-medium m-[10px]'>Soft Serve</li>
-          </Link>
-        </ui>
+      <div className="w-full flex justify-center pb-10">
+        <ul className="flex list-none gap-14 text-lg font-font2">
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products"
+              end
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              All products
+            </NavLink>
+          </li>
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products/oat-drink"
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              Oat Drink
+            </NavLink>
+          </li>
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products/chilled-oat-drink"
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              Chilled Oat Drinks
+            </NavLink>
+          </li>
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products/Cooking"
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              Cooking
+            </NavLink>
+          </li>
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products/Spread"
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              Spread
+            </NavLink>
+          </li>
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products/Oatmeal"
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              Oatmeal
+            </NavLink>
+          </li>
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products/Ice-Cream"
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              Ice Cream
+            </NavLink>
+          </li>
+          <li className="cursor-hand font-medium">
+            <NavLink
+              to="/our-products/Soft-Serve"
+              className={({ isActive }) =>
+                `hover:border-b-2 hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+              }
+            >
+              Soft Serve
+            </NavLink>
+          </li>
+        </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductNavbar
+export default ProductNavbar;
