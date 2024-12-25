@@ -1,9 +1,12 @@
 import { useEffect } from 'react';
 import { useProductStore } from '../store/Store';
 import { Link } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 const Product = () => {
   const { products, loading, error, fetchProducts } = useProductStore();
+
+  const pathname = useLocation().pathname
 
   useEffect(() => {
     fetchProducts();
@@ -24,7 +27,8 @@ const Product = () => {
           <Link to='/oat-drink'>
             <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Oat Drink</li>
           </Link>
-          <Link to='/oat-drink'>
+          <Link to='/chilled-oat-drink' className={({ isActive }) =>
+                  `hover:border-b-2 ${isActive ? ":border-b-2" : "border-none"}`}>
             <li className='cursor-hand hover:border-b-2 border-black font-medium p-[2px]'>Chilled Oat Drinks</li>
           </Link>
           <Link to='/oat-drink'>
