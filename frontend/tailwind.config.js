@@ -7,6 +7,7 @@ export default {
       fontFamily: {
         font1: ["Girdo Black", "sans-serif"],
         font2: ["Magda Mono,monospace", "sans-serif"],
+        
       },
 	  cursor:{
 		'hand': 'url(/src/assets/hand.png), pointer',
