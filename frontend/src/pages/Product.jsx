@@ -18,7 +18,7 @@ const Product = () => {
   if (error) return <div className="pt-20 container mx-auto px-4">Error: {error}</div>;
 
   return ( 
-    <div className="pt-20 container  mx-auto px-4">
+    <div className="pt-20   mx-auto px-4">
       <section >
         <ProductNavbar />
       </section>
