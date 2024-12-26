@@ -1,6 +1,7 @@
 import express from 'express';
-import { LoginAdmin,AddProudct,getAllProducts } from '../controllers/admin.controllers.js';
+import { LoginAdmin,AddProudct,getAllProducts,OatDrink } from '../controllers/admin.controllers.js';
 import { upload } from "../middleware/multer.js"
+
 
 const router = express.Router();
 
@@ -17,6 +18,8 @@ router.route("/addProduct").post(
 )
 
 router.get("/getAllProduct", getAllProducts);
+router.get("/oatdrink", OatDrink);
+
 
 
 export default router;
