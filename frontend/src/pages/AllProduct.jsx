@@ -6,7 +6,7 @@ const AllProduct = () => {
   const { products, loading, error, fetchProducts } = useProductStore();
 
   useEffect(() => {
-    if (products === 0) {
+    if (products.length === 0) {
       fetchProducts();
     }
   }, []);
