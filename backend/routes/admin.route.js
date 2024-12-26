@@ -1,5 +1,5 @@
 import express from 'express';
-import { LoginAdmin,AddProudct,getAllProducts,OatDrink } from '../controllers/admin.controllers.js';
+import { LoginAdmin,AddProudct,getAllProducts,OatDrink,ChilledOatDrinks } from '../controllers/admin.controllers.js';
 import { upload } from "../middleware/multer.js"
 
 
@@ -19,7 +19,7 @@ router.route("/addProduct").post(
 
 router.get("/getAllProduct", getAllProducts);
 router.get("/oatdrink", OatDrink);
-
+router.get("/chilledoatdrinks" , ChilledOatDrinks);
 
 
 export default router;

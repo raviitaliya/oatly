@@ -109,9 +109,13 @@ export const getAllProducts = async (req, res) => {
     }
 };
 
-export const OatDrink = async (res, req) => {
+export const OatDrink = async (req, res) => {
     try {
-        const products = await Product.find({ category: "Oat Drinks" });
+
+        const products = await Product.find({ category: "Oat Drink" });
+
+        console.log(products);
+        
         if (!products || products.length === 0) {
             return res.status(404).json({
                 status: 404,
@@ -130,4 +134,30 @@ export const OatDrink = async (res, req) => {
             error: error.message
         });
     }
+}
+
+
+export const ChilledOatDrinks = async (req, res) => {
+    try {
+        const products = await Product.find({ category: "Chilled Oat Drinks" });
+        
+        if (!products || products.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                message: "No Chilled Oat Drinks found"
+            });
+        }
+        return res.status(200).json({
+            status: 200,
+            products,
+            message: "Oat Drinks fetched successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: "Error while fetching Oat Drinks",
+            error: error.message
+        });
+    }  
+
 }
