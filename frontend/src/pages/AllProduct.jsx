@@ -4,14 +4,15 @@ import ProductCard from './ProductCard'
 const AllProduct = () => {
   return (
     <div>
-      <div className='flex  flex-wrap gap-6 justify-center items-center'>
+      <div className='flex  flex-wrap gap-7  items-center'>
 
       <ProductCard/>  
       <ProductCard/>  
       <ProductCard/>  
       <ProductCard/>  
       <ProductCard/>  
-      <ProductCard/>  
+      <ProductCard/> 
+       
 
       </div>
     </div>
