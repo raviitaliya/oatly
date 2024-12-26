@@ -115,7 +115,7 @@ export const OatDrink = async (req, res) => {
         const products = await Product.find({ category: "Oat Drink" });
 
         console.log(products);
-        
+
         if (!products || products.length === 0) {
             return res.status(404).json({
                 status: 404,
@@ -140,7 +140,7 @@ export const OatDrink = async (req, res) => {
 export const ChilledOatDrinks = async (req, res) => {
     try {
         const products = await Product.find({ category: "Chilled Oat Drinks" });
-        
+
         if (!products || products.length === 0) {
             return res.status(404).json({
                 status: 404,
@@ -158,14 +158,14 @@ export const ChilledOatDrinks = async (req, res) => {
             message: "Error while fetching Oat Drinks",
             error: error.message
         });
-    }  
+    }
 
 }
 
 export const Cooking = async (req, res) => {
     try {
         const products = await Product.find({ category: "Cooking" });
-        
+
         if (!products || products.length === 0) {
             return res.status(404).json({
                 status: 404,
@@ -183,6 +183,34 @@ export const Cooking = async (req, res) => {
             message: "Error while fetching Oat Drinks",
             error: error.message
         });
-    }  
+    }
 
+}
+
+
+
+export const getOneProduct = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+
+        if (!product) {
+            return res.status(404).json({
+                status: 404,
+                message: "Product not found"
+            });
+        }
+        return res.status(200).json({
+            status: 200,
+            product,
+            message: "Product fetched successfully"
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: "Error while fetching product",
+            error: error.message
+        });
+
+    }
 }

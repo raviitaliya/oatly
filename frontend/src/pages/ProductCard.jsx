@@ -4,7 +4,6 @@ import ViewProduct from "./ViewProduct";
 const ProductCard = ({ imageUrl, name }) => {
   return (
     <div
-      onClick={<ViewProduct />}
       className="h-[450px]name w-[350px] hover:cursor-hand"
     >
       <div className="w-[full] ">
