@@ -6,6 +6,7 @@ export const useProductStore = create((set, get) => ({
   products: [],
   oatDrinkProducts: [],
   chilledoatdrinks: [],
+  cooking: [],
 
   selectedProduct: null,
   loading: false,
@@ -15,6 +16,7 @@ export const useProductStore = create((set, get) => ({
   setProducts: (products) => set((state) => ({ products })),
   setoatDrinkProducts: (oatDrinkProducts) => set((state) => ({ oatDrinkProducts })),
   setchilledoatdrinks: (chilledoatdrinks) => set((state) => ({ chilledoatdrinks })),
+  setcooking: (cooking) => set((state) => ({ cooking })),
 
   // setSelectedProduct: (product) => set((state) => ({ selectedProduct: product })),
   
@@ -77,4 +79,28 @@ export const useProductStore = create((set, get) => ({
       })
     }
   },
+
+  getcooking: async () => {
+    if (get().loading) return; 
+    
+    set({ loading: true, error: null })
+    try {
+      const response = await api.get('/admin/cooking');
+
+      console.log(response);
+      
+      console.log(response.data.products);
+      
+
+      set({ cooking: response.data.products, loading: false })
+      
+    } catch (error) {
+      set({ 
+        error: error.response?.data?.message || 'Failed to fetch products', 
+        loading: false 
+      })
+    }
+  },
+
+
 }))

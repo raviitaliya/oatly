@@ -161,3 +161,28 @@ export const ChilledOatDrinks = async (req, res) => {
     }  
 
 }
+
+export const Cooking = async (req, res) => {
+    try {
+        const products = await Product.find({ category: "Cooking" });
+        
+        if (!products || products.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                message: "No Cooking found"
+            });
+        }
+        return res.status(200).json({
+            status: 200,
+            products,
+            message: "Oat Drinks fetched successfully"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: "Error while fetching Oat Drinks",
+            error: error.message
+        });
+    }  
+
+}
