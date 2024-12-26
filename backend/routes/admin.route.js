@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 import express from "express";
 import {
   LoginAdmin,
@@ -7,12 +7,11 @@ import {
   OatDrink,
 } from "../controllers/admin.controllers.js";
 import { upload } from "../middleware/multer.js";
-=======
+
 import express from 'express';
 import { LoginAdmin,AddProudct,getAllProducts,OatDrink,ChilledOatDrinks } from '../controllers/admin.controllers.js';
 import { upload } from "../middleware/multer.js"
 
->>>>>>> 5504c5e9016b05b359cddd5f0a42d032bc1e2af9
 
 const router = express.Router();
 
@@ -29,12 +28,9 @@ router.route("/addProduct").post(
 );
 
 router.get("/getAllProduct", getAllProducts);
-<<<<<<< HEAD
+
 router.get("/oatDrink", OatDrink);
-=======
 router.get("/oatdrink", OatDrink);
 router.get("/chilledoatdrinks" , ChilledOatDrinks);
-
->>>>>>> 5504c5e9016b05b359cddd5f0a42d032bc1e2af9
 
 export default router;
