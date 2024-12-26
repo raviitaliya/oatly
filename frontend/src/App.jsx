@@ -11,6 +11,7 @@ import Spread from "./pages/Spread";
 import Oatmeal from "./pages/Oatmeal";
 import IceCream from "./pages/IceCream";
 import SoftServe from "./pages/SoftServe";
+import ViewProduct from "./pages/ViewProduct";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="our-products" element={<Product />}>
           <Route path="" element={<AllProduct />} />
             <Route path="oat-drink" element={<OatDrink />} />
+              <Route path=":id" element={<ViewProduct />} />
             <Route path="chilled-oat-drink" element={<ChilledOatDrinks />} />
             <Route path="cooking" element={<Cooking />} />
             <Route path="spread" element={<Spread />} />
