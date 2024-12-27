@@ -105,27 +105,23 @@ export const useProductStore = create((set, get) => ({
 
   getOneProduct: async (id) => {
     if (get().loading) return;
-
-    set({ loading: true, error: null })
+  
+    set({ loading: true, error: null });
     try {
-
-      
       const response = await api.get(`/admin/${id}`);
-
-      console.log(response);
+      console.log('API Response:', response.data);
       
-
-      
-
-      set({ oneProduct: response.data.product, loading: false })
-
+      // Adjust according to your API response structure
+      set({ oneProduct: response.data.product, loading: false });
     } catch (error) {
+      console.error('API Error:', error);
       set({
-        error: error.response?.data?.message || 'Failed to fetch products',
-        loading: false
-      })
+        error: error.response?.data?.message || 'Failed to fetch product',
+        loading: false,
+      });
     }
   },
+  
 
 
 
