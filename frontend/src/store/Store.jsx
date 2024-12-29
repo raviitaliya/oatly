@@ -7,34 +7,29 @@ export const useProductStore = create((set, get) => ({
   oatDrinkProducts: [],
   chilledoatdrinks: [],
   cooking: [],
-  oneProduct: [],
-
+  oneProduct: null,
   selectedProduct: null,
   loading: false,
   error: null,
 
-  // Actions - using get() to check current state when needed
-  setProducts: (products) => set((state) => ({ products })),
-  setoatDrinkProducts: (oatDrinkProducts) =>
-    set((state) => ({ oatDrinkProducts })),
-  setchilledoatdrinks: (chilledoatdrinks) =>
-    set((state) => ({ chilledoatdrinks })),
-  setcooking: (cooking) => set((state) => ({ cooking })),
-  setoneProduct: (oneProduct) => set((state) => ({ oneProduct })),
+  
+  setProducts: (products) => set({ products }),
+  setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
+  setchilledoatdrinks: (chilledoatdrinks) => set({ chilledoatdrinks }),
+  setcooking: (cooking) => set({ cooking }),
+  setoneProduct: (oneProduct) => set({ oneProduct }),
 
-  // setSelectedProduct: (product) => set((state) => ({ selectedProduct: product })),
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
 
-  setLoading: (loading) => set((state) => ({ loading })),
-  setError: (error) => set((state) => ({ error })),
 
+  setClearState: () => set({ oneProduct: null, error: null, loading: false }),
   // Async actions
   fetchProducts: async () => {
-    if (get().loading) return; // Prevent multiple simultaneous fetches
-
+    if (get().loading) return;
     set({ loading: true, error: null });
     try {
       const response = await api.get("/admin/getAllProduct");
-
       set({ products: response.data.products, loading: false });
     } catch (error) {
       set({
@@ -93,21 +88,23 @@ export const useProductStore = create((set, get) => ({
   },
 
   getOneProduct: async (id) => {
-    if (get().loading) return;
-
     set({ loading: true, error: null });
     try {
       const response = await api.get(`/admin/${id}`);
-      console.log("API Response:", response.data);
-
-      // Adjust according to your API response structure
-      set({ oneProduct: response.data.product, loading: false });
+      
+      console.log('API Response:', response);  
+      if (response.status === 200) {
+        set({ oneProduct: response.data.product, loading: false });
+      } else {
+        set({ oneProduct: null, loading: false, error: response.data.message });
+      }
     } catch (error) {
-      console.error("API Error:", error);
       set({
-        error: error.response?.data?.message || "Failed to fetch product",
+        oneProduct: null,
         loading: false,
+        error: error.message,
       });
     }
-  },
+  }
+  
 }));

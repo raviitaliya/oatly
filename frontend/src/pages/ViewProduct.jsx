@@ -4,18 +4,20 @@ import { useProductStore } from "../store/Store";
 
 function ViewProduct() {
   const { id } = useParams();
-
-  const { oneProduct, loading, error, getOneProduct, setoneProduct } = useProductStore();
+  const { oneProduct, loading, error, getOneProduct, setClearState } = useProductStore();
 
   useEffect(() => {
-    // Clear the previous product's data before fetching a new one
-    setoneProduct(null);
+    
+    if (oneProduct && oneProduct._id === id) return;
+
+    
+    setClearState();
     getOneProduct(id);
-  }, [id, getOneProduct, setoneProduct]);
+  }, [id, oneProduct, getOneProduct, setClearState]); 
+
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
   if (!oneProduct) return <div>No product found</div>;
 
   return (
