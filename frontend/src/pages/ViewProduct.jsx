@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
 import { useParams, Link ,useNavigate} from "react-router-dom";
 import { useProductStore } from "../store/Store";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 
 function ViewProduct() {
@@ -10,6 +17,9 @@ function ViewProduct() {
 
   
 
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
   useEffect(() => {
 
     if (oneProduct && oneProduct._id === id) return;
@@ -25,6 +35,32 @@ function ViewProduct() {
 
   return (
     <div className="">
+
+<Breadcrumb className="mb-6 z-50 relative !mt-[-66px] ml-16 font-font2">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={Link} to="/">
+                Home
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink onClick={() => handleNavigate('/our-products')} >
+                Products
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink onClick={() => handleNavigate(`/our-products/${oneProduct.category.replace(/\s+/g, '-').toLowerCase()}`)}>
+                {oneProduct.category}
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink>{oneProduct.productname}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
    
 
       <img src={oneProduct.image} alt={oneProduct.productname || "Product"} />
