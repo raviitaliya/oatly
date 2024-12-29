@@ -26,7 +26,7 @@ function App() {
             <Route path="chilled-oat-drink" element={<ChilledOatDrinks />} />
             <Route path="cooking" element={<Cooking />} />
             <Route path="spread" element={<Spread />} />
-            <Route path="oatmeal" element={<Oatmeal />} />
+            <Route path="oatgurt" element={<Oatmeal />} />
             <Route path="ice-cream" element={<IceCream />} />
             <Route path="soft-serve" element={<SoftServe />} />
             <Route path=":id" element={<ViewProduct />} />

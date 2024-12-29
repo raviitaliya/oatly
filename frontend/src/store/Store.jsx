@@ -7,21 +7,27 @@ export const useProductStore = create((set, get) => ({
   oatDrinkProducts: [],
   chilledoatdrinks: [],
   cooking: [],
+  spread: [],
+  oatgurt: [],
+  IceCream: [],
+  SoftServe: [],
   oneProduct: null,
   selectedProduct: null,
   loading: false,
   error: null,
 
-  
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
   setchilledoatdrinks: (chilledoatdrinks) => set({ chilledoatdrinks }),
   setcooking: (cooking) => set({ cooking }),
+  setspread: (spread) => set({ spread }),
+  setoatgurt: (oatgurt) => set({ oatgurt }),
+  seticeCream: (IceCream) => set({ IceCream }),
+  setsoftServe: (SoftServe) => set({ SoftServe }),
   setoneProduct: (oneProduct) => set({ oneProduct }),
 
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
-
 
   setClearState: () => set({ oneProduct: null, error: null, loading: false }),
   // Async actions
@@ -87,12 +93,75 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
+  getspread: async () => {
+    if (get().loading) return;
+
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/spread");
+
+      set({ spread: response.data.products, loading: false });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to fetch products",
+        loading: false,
+      });
+    }
+  },
+  getoatgurt: async () => {
+    if (get().loading) return;
+
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/oatgurt");
+
+      set({ oatgurt: response.data.products, loading: false });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to fetch products",
+        loading: false,
+      });
+    }
+  },
+
+  getIceCream: async () => {
+    if (get().loading) return;
+
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/Ice-cream");
+
+      set({ IceCream: response.data.products, loading: false });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to fetch products",
+        loading: false,
+      });
+    }
+  },
+
+  getSoftServe: async () => {
+    if (get().loading) return;
+
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/soft-serve");
+
+      set({ SoftServe: response.data.products, loading: false });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to fetch products",
+        loading: false,
+      });
+    }
+  },
+
   getOneProduct: async (id) => {
     set({ loading: true, error: null });
     try {
       const response = await api.get(`/admin/${id}`);
-      
-      console.log('API Response:', response);  
+
+      console.log("API Response:", response);
       if (response.status === 200) {
         set({ oneProduct: response.data.product, loading: false });
       } else {
@@ -105,6 +174,5 @@ export const useProductStore = create((set, get) => ({
         error: error.message,
       });
     }
-  }
-  
+  },
 }));

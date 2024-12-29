@@ -10,7 +10,7 @@ const ProductNavbar = () => {
               to="/our-products"
               end
               className={({ isActive }) =>
-                `hover:border-b-2 hover:cursor-hand hover:cursor-hand hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
+                `hover:border-b-2 hover:cursor-hand hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
               }
             >
               All products
@@ -58,12 +58,12 @@ const ProductNavbar = () => {
           </li>
           <li className="cursor-hand font-medium ">
             <NavLink
-              to="/our-products/Oatmeal"
+              to="/our-products/Oatgurt"
               className={({ isActive }) =>
                 `hover:border-b-2 hover:cursor-hand hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
               }
             >
-              Oatmeal
+              Oatgurt
             </NavLink>
           </li>
           <li className="cursor-hand font-medium ">

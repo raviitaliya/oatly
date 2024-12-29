@@ -10,7 +10,6 @@ function ViewProduct() {
     
     if (oneProduct && oneProduct._id === id) return;
 
-    
     setClearState();
     getOneProduct(id);
   }, [id, oneProduct, getOneProduct, setClearState]); 
