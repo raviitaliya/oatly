@@ -124,25 +124,25 @@ const Navbar = () => {
                         <div className="space-y-3">
                           <Link
                             to="/sustainability"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             Sustainability
                           </Link>
                           <Link
                             to="/investors"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             For Investors
                           </Link>
                           <Link
                             to="/accessibility"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             Accessibility
                           </Link>
                           <Link
                             to="/cookie-policy"
-                            className="block font-mono text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
                           >
                             Cookie Policy
                           </Link>
@@ -151,8 +151,8 @@ const Navbar = () => {
                     </div>
 
                     {/* Social Section */}
-                    <div>
-                      <h2 className="text-base md:text-lg font-mono mb-6">
+                    <div >
+                      <h2 className="text-base md:text-lg font-font2 mb-6">
                         BE SOCIAL
                       </h2>
                       <div className="flex gap-3">

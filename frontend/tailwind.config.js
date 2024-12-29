@@ -6,7 +6,7 @@ export default {
     extend: {
       fontFamily: {
         font1: ["Girdo Black", "sans-serif"],
-        font2: ["Magda Mono,monospace", "sans-serif"],
+        font2: ["MagdaCleanMonoWeb-Black W03 Rg", "sans-serif"],
         
       },
 	  cursor:{

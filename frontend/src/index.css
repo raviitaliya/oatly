@@ -83,6 +83,10 @@
 
 @font-face {
   font-family: "MagdaCleanMonoWeb-Black W03 Rg";
-  src:url("./assets/fonts/MagdaPro.0318dd19.otf")format("otf");
-  
+  src: url("https://db.onlinewebfonts.com/t/f3e969781acbea4345478576b9f5c41f.eot");
+  src: url("https://db.onlinewebfonts.com/t/f3e969781acbea4345478576b9f5c41f.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/f3e969781acbea4345478576b9f5c41f.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/f3e969781acbea4345478576b9f5c41f.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/f3e969781acbea4345478576b9f5c41f.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/f3e969781acbea4345478576b9f5c41f.svg#MagdaCleanMonoWeb-Black W03 Rg")format("svg");
 }
