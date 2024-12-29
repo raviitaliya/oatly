@@ -1,4 +1,3 @@
-import React from "react";
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
@@ -6,17 +5,8 @@ import { FaTwitter } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
+import { Link } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 const Navbar = () => {
   const profileGif = "/src/assets/gif/discord-avatar.gif";
@@ -151,7 +141,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Social Section */}
-                    <div >
+                    <div>
                       <h2 className="text-base md:text-lg font-font2 mb-6">
                         BE SOCIAL
                       </h2>
@@ -160,31 +150,31 @@ const Navbar = () => {
                           href="#"
                           className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <FaFacebookF style={{color: 'black'}} size={30} />
+                          <FaFacebookF style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
                           className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <FaTwitter style={{color: 'black'}} size={30} />
+                          <FaTwitter style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
                           className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <FaInstagram  style={{color: 'black'}} size={30} />
+                          <FaInstagram style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
                           className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white  -rotate-6 transition-colors"
                         >
-                          <FaYoutube style={{color: 'black'}} size={30} />
+                          <FaYoutube style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
                           className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
                         >
-                          <MdMusicNote style={{color: 'black'}} size={30} />
+                          <MdMusicNote style={{ color: "black" }} size={30} />
                         </a>
                       </div>
                     </div>
