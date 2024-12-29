@@ -2,6 +2,7 @@ import React from 'react'
 import { useProductStore } from "../store/Store";
 import { useEffect } from "react";
 import ProductCard from "./ProductCard";
+import {Link} from "react-router-dom"
 
 function Oatmeal() {
   const { oatgurt, loading, error, getoatgurt } = useProductStore();
@@ -18,11 +19,13 @@ function Oatmeal() {
     <div>
       <div className="flex flex-wrap gap-7 items-center">
         {oatgurt.map((product) => (
+          <Link key={product._id} to={`/our-products/${product.category.replace(/\s+/g, '-').toLowerCase()}/${product._id}`}>
           <ProductCard
             key={product._id}
             imageUrl={product.image}
             name={product.productname}
           />
+          </Link>
         ))}
       </div>
     </div>

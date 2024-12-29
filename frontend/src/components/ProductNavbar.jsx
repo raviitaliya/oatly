@@ -28,7 +28,7 @@ const ProductNavbar = () => {
           </li>
           <li className="cursor-hand font-medium ">
             <NavLink
-              to="/our-products/chilled-oat-drink"
+              to="/our-products/chilled-oat-drinks"
               className={({ isActive }) =>
                 `hover:border-b-2 hover:cursor-hand hover:border-black ${isActive ? "border-b-2 border-black" : ""}`
               }

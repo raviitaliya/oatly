@@ -14,8 +14,8 @@ import {
 
 const Navbar = () => {
   return (
-   
-    <nav className="flex items-center justify-between bg-gray-800 p-4 shadow-md">
+   <>
+    <nav className="flex items-center justify-between z-0 bg-gray-800 p-4 shadow-md">
     <div className="flex items-center">
     <div>
         <div className="grid grid-cols-1 gap-2">
@@ -55,7 +55,7 @@ const Navbar = () => {
     </div>
     </div>
 
-    {/* Right Side - Avatar */}
+  </nav>
     <div className="flex items-center">
       <img
         src="https://via.placeholder.com/40"
@@ -63,7 +63,7 @@ const Navbar = () => {
         className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
       />
     </div>
-  </nav>
+  </>
   )
 }
 

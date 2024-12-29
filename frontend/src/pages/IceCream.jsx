@@ -2,6 +2,7 @@ import React from "react";
 import { useProductStore } from "../store/Store";
 import { useEffect } from "react";
 import ProductCard from "./ProductCard";
+import {Link} from "react-router-dom"
 
 function IceCream() {
   const { IceCream, loading, error, getIceCream } = useProductStore();
@@ -18,11 +19,13 @@ function IceCream() {
     <div>
       <div className="flex flex-wrap gap-7 items-center">
         {IceCream.map((product) => (
-          <ProductCard
-            key={product._id}
-            imageUrl={product.image}
-            name={product.productname}
-          />
+          <Link key={product._id} to={`/our-products/${product.category.replace(/\s+/g, '-').toLowerCase()}/${product._id}`}>
+            <ProductCard
+              key={product._id}
+              imageUrl={product.image}
+              name={product.productname}
+            />
+          </Link>
         ))}
       </div>
     </div>

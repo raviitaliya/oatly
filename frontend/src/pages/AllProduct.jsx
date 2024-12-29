@@ -21,7 +21,7 @@ const AllProduct = () => {
     <div>
       <div className='flex flex-wrap gap-7 items-center'>
         {products.map((product) => (
-          <Link key={product._id} to={`/our-products/${product._id}`}>
+          <Link key={product._id} to={`/our-products/${product.category.replace(/\s+/g, '-').toLowerCase()}/${product._id}`}>
           <ProductCard
             key={product._id}
             imageUrl={product.image}
