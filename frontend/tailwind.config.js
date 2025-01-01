@@ -6,19 +6,22 @@ export default {
     extend: {
       fontFamily: {
         font1: ["Girdo Black", "sans-serif"],
-        font2: ["MagdaCleanMonoWeb-Black W03 Rg", "sans-serif"],
-        
+        font2: ["MagdaCleanMonoWeb", "sans-serif"],
       },
-	  cursor:{
-		'hand': 'url(/src/assets/hand.png), pointer',
-	  },
+      fontWeight: {
+        regular: "600",
+        bold: "700",
+      },
+      cursor: {
+        hand: "url(/src/assets/hand.png), pointer",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        text: '#888',
+        text: "#888",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -59,9 +62,8 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
-        
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: ["tailwindcss-animate"],
 };

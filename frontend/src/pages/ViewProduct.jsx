@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProductStore } from "../store/Store";
-import nice from "../assets/ProductSvg/nice.svg";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +11,7 @@ import {
 
 function ViewProduct() {
   const navigate = useNavigate();
-  const { id, category } = useParams();
+  const { id } = useParams();
   const { oneProduct, loading, error, getOneProduct, setClearState } =
     useProductStore();
 
@@ -66,29 +65,29 @@ function ViewProduct() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* 
-      <h1>{oneProduct.productname}</h1>
-      <p>{oneProduct.description}</p> */}
-      {/*  */}
-
-      <div className="flex items-center justify-center">
-        <div className="flex flex-col">
-          <p>{oneProduct.productname}</p>
-          <p>{oneProduct.desription}</p>
-        </div>
-        <div className="flex">
-          <div className="relative">
-            <img
-              src={oneProduct.image}
-              alt={oneProduct.productname || "Product"}
-            />
+      <section className=" py-8 px-4 mt-[73px]">
+        <div className="max-w-9xl max-h-[38rem] mx-auto flex  items-center justify-center">
+          <div className="text-left w-[51rem] flex flex-col justify-center">
+            <h1 className="text-[88px] font-bold font-font1 mb-4 leading-[80px]">
+              {oneProduct.productname}
+            </h1>
+            <div className="mt-0 w-[85%]">
+              <p className=" text-[20px] font-font2 ">
+                {oneProduct.desription}
+              </p>
+            </div>
           </div>
-
-          <div className="absolute top-0 ">
-            <img src={nice} className="w-12 " alt="this is nice svg" />
+          <div className="flex justify-center">
+            <div className="relative w-full h-full">
+              <img
+                src={oneProduct.image}
+                alt="Oatly Oat Drink for Coffee and Tea Jigger 20 ml"
+                className="w-[50.5rem] h-full object-contain"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
