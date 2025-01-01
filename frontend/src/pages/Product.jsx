@@ -16,7 +16,7 @@ const Product = () => {
 
   useEffect(() => {
     fetchProducts();
-  });
+  }, []);
 
   if (loading)
     return <div className="pt-20 container mx-auto px-4">Loading...</div>;
