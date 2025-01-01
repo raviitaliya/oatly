@@ -1,18 +1,18 @@
-import React from "react";
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 import { Link } from "react-router-dom";
-import footerlogo from "../assets/Footer/footerlogo.jpg";
+import logo from "../assets/logo/Oatly_1.svg"
 
 function Footer() {
   return (
     <div className="bg-black p-20 ">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between ">
         <div>
-          <img src={footerlogo} alt="oatlylogo" className="h-[150px]" />
+          <img src={logo} alt="oatlylogo" className="w-60
+          " />
         </div>
 
         <div className=" p-6">
