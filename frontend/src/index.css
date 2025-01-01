@@ -80,14 +80,17 @@
   
 }
 
+@font-face {
+  font-family: "MagdaCleanMonoWeb";
+  src: url("https://db.onlinewebfonts.com/t/44d54628ef43e8de1197b1a148e8ae88.ttf") format("truetype");
+  font-weight: 600; /* Regular */
+  font-style: normal;
+}
 
 @font-face {
-  font-family: "MagdaCleanMonoWeb W03 Regular";
-  src: url("https://db.onlinewebfonts.com/t/44d54628ef43e8de1197b1a148e8ae88.eot");
-  src: url("https://db.onlinewebfonts.com/t/44d54628ef43e8de1197b1a148e8ae88.eot?#iefix")format("embedded-opentype"),
-  url("https://db.onlinewebfonts.com/t/44d54628ef43e8de1197b1a148e8ae88.woff2")format("woff2"),
-  url("https://db.onlinewebfonts.com/t/44d54628ef43e8de1197b1a148e8ae88.woff")format("woff"),
-  url("https://db.onlinewebfonts.com/t/44d54628ef43e8de1197b1a148e8ae88.ttf")format("truetype"),
-  url("https://db.onlinewebfonts.com/t/44d54628ef43e8de1197b1a148e8ae88.svg#MagdaCleanMonoWeb W03 Regular")format("svg");
-  font-weight: 300;
+  font-family: "MagdaCleanMonoWeb";
+  src: url("https://db.onlinewebfonts.com/t/bold-font-url.ttf") format("truetype");
+  font-weight: 700; /* Bold */
+  font-style: normal;
 }
+
