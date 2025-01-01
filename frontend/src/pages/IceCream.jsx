@@ -1,4 +1,3 @@
-import React from "react";
 import { useProductStore } from "../store/Store";
 import { useEffect } from "react";
 import ProductCard from "./ProductCard";
@@ -11,7 +10,7 @@ function IceCream() {
     if (IceCream.length === 0) {
       getIceCream();
     }
-  }, []);
+  });
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

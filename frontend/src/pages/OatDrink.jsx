@@ -12,7 +12,7 @@ const Oatdrink = () => {
     if (oatDrinkProducts.length === 0) {
       getOatDrink();
     }
-  }, []);
+  });
 
 
   if (loading) return <div>Loading...</div>;

@@ -125,7 +125,7 @@ export const OatDrink = async (req, res) => {
   try {
     const products = await Product.find({ category: "Oat Drink" });
 
-    console.log(products);
+    // console.log(products);
 
     if (!products || products.length === 0) {
       return res.status(404).json({

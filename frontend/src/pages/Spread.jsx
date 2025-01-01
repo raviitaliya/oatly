@@ -1,4 +1,3 @@
-import React from "react";
 import { useProductStore } from "../store/Store";
 import { useEffect } from "react";
 import ProductCard from "./ProductCard";
