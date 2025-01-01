@@ -1,4 +1,4 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProductStore } from "../store/Store";
 import nice from "../assets/ProductSvg/nice.svg";
@@ -84,9 +84,9 @@ function ViewProduct() {
             />
           </div>
 
-          {/* <div className="absolute top-0 ">
+          <div className="absolute top-0 ">
             <img src={nice} className="w-12 " alt="this is nice svg" />
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

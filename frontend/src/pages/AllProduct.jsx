@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import ProductCard from './ProductCard'
 import { useProductStore } from '../store/Store'
 import { Link } from 'react-router-dom';
@@ -25,6 +25,7 @@ const AllProduct = () => {
           <ProductCard
             key={product._id}
             imageUrl={product.image}
+            price={product.price}
             name={product.productname}
             />
         </Link>

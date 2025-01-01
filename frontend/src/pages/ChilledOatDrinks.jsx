@@ -27,6 +27,7 @@ const ChilledOatDrinks = () => {
         <ProductCard
           key={product._id}
           imageUrl={product.image}
+          price={product.price}
           name={product.productname}
         />
         </Link>
