@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import ProductCard from "./ProductCard";
 
 import { Link } from "react-router-dom";
+import OatlyTv from "@/components/OatlyTv";
+import Footer from "@/components/Footer";
 
 function Spread() {
   const { spread, loading, error, getspread } = useProductStore();
@@ -29,6 +31,8 @@ function Spread() {
           </Link>
         ))}
       </div>
+      <OatlyTv/>
+      <Footer/>
     </div>
   );
 }

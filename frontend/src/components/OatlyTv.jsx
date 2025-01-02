@@ -29,7 +29,7 @@ const OatlyTv = () => {
     // </div>
 
     <div
-  className="grid grid-cols-1 md:grid-cols-2 min-h-[40vh] md:min-h-[85vh] bg-center w-full"
+  className="grid grid-cols-1 md:grid-cols-2 min-h-[40vh] md:min-h-[85vh] bg-center w-full mt-10"
   style={{ backgroundImage: `url(${pinkImage})` }}
 >
   {/* TV Image Section */}

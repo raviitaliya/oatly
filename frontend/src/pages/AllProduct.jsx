@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import ProductCard from './ProductCard'
 import { useProductStore } from '../store/Store'
 import { Link } from 'react-router-dom';
+import OatlyTv from '@/components/OatlyTv';
+import Footer from '@/components/Footer';
 
 const AllProduct = () => {
   const { products, loading, error, fetchProducts } = useProductStore();
@@ -31,6 +33,8 @@ const AllProduct = () => {
         </Link>
         ))}
       </div>
+      <OatlyTv/>
+      <Footer/>
     </div>
   )
 }

@@ -2,6 +2,8 @@ import { useProductStore } from "../store/Store";
 import { useEffect } from "react";
 import ProductCard from "./ProductCard";
 import {Link} from "react-router-dom"
+import OatlyTv from "@/components/OatlyTv";
+import Footer from "@/components/Footer";
 
 function IceCream() {
   const { IceCream, loading, error, getIceCream } = useProductStore();
@@ -28,6 +30,8 @@ function IceCream() {
           </Link>
         ))}
       </div>
+      <OatlyTv/>
+      <Footer/>
     </div>
   );
 }
