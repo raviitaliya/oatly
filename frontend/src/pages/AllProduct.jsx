@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
-import ProductCard from './ProductCard'
-import { useProductStore } from '../store/Store'
-import { Link } from 'react-router-dom';
-import OatlyTv from '@/components/OatlyTv';
-import Footer from '@/components/Footer';
+import { useEffect } from "react";
+import ProductCard from "./ProductCard";
+import { useProductStore } from "../store/Store";
+import { Link } from "react-router-dom";
+import OatlyTv from "@/components/OatlyTv";
+import Footer from "@/components/Footer";
+import MainImage from "../assets/Footer/AllProductPage.jpg";
 
 const AllProduct = () => {
   const { products, loading, error, fetchProducts } = useProductStore();
@@ -15,28 +16,34 @@ const AllProduct = () => {
   }, []);
   console.log(products);
 
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <div className='flex flex-wrap gap-7 items-center'>
+      <div className="flex flex-wrap gap-7 items-center">
+        <img src={MainImage} className="w-[700px]" />
+
         {products.map((product) => (
-          <Link key={product._id} to={`/our-products/${product.category.replace(/\s+/g, '-').toLowerCase()}/${product._id}`}>
-          <ProductCard
+          <Link
             key={product._id}
-            imageUrl={product.image}
-            price={product.price}
-            name={product.productname}
+            to={`/our-products/${product.category
+              .replace(/\s+/g, "-")
+              .toLowerCase()}/${product._id}`}
+          >
+            <ProductCard
+              key={product._id}
+              imageUrl={product.image}
+              price={product.price}
+              name={product.productname}
             />
-        </Link>
+          </Link>
         ))}
       </div>
-      <OatlyTv/>
-      <Footer/>
+      <OatlyTv />
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
 export default AllProduct;
