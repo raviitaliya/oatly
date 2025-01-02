@@ -95,33 +95,33 @@ function Footer() {
           <div className="flex gap-3">
             <a
               href="#"
-              className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+              className="w-10 h-10 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
             >
-              <FaFacebookF style={{ color: "black" }} size={30} />
+              <FaFacebookF style={{ color: "black" }} size={25} />
             </a>
             <a
               href="#"
-              className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+              className="w-10 h-10 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
             >
-              <FaTwitter style={{ color: "black" }} size={30} />
+              <FaTwitter style={{ color: "black" }} size={25} />
             </a>
             <a
               href="#"
-              className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+              className="w-10 h-10 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
             >
-              <FaInstagram style={{ color: "black" }} size={30} />
+              <FaInstagram style={{ color: "black" }} size={25} />
             </a>
             <a
               href="#"
-              className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white  -rotate-6 transition-colors"
+              className="w-10 h-10 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white  -rotate-6 transition-colors"
             >
-              <FaYoutube style={{ color: "black" }} size={30} />
+              <FaYoutube style={{ color: "black" }} size={25} />
             </a>
             <a
               href="#"
-              className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+              className="w-10 h-10 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
             >
-              <MdMusicNote style={{ color: "black" }} size={30} />
+              <MdMusicNote style={{ color: "black" }} size={25} />
             </a>
           </div>
         </div>
