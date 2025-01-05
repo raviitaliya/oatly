@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Navbar from "../components/Navbar";
-import TV from '../assets/ProductSvg/OatlyTV.svg';
 import OatlyTv from "@/components/OatlyTv";
 
 const Home = () => {

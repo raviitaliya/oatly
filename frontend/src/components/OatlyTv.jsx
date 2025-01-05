@@ -1,4 +1,3 @@
-import React from "react";
 import Oatlytv from "../assets/ProductSvg/OatlyTV.svg";
 import pinkImage from "../assets/Footer/Pink.png";
 
