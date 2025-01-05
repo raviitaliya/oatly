@@ -1,6 +1,4 @@
-import Footer from "@/components/Footer";
 import Navbar from "../components/Navbar";
-import OatlyTv from "@/components/OatlyTv";
 
 const Home = () => {
   return (
