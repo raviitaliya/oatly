@@ -11,9 +11,7 @@ const Home = () => {
       <h1 className="font-font2 text-2xl">hello world</h1>
       <h1 className="font-font2 text-2xl">hello world</h1>
       
-    
-      <OatlyTv/>
-      <Footer/>
+   
     </div>
   );
 };

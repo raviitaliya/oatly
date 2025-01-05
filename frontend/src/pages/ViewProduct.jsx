@@ -8,6 +8,8 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import OatlyTv from "@/components/OatlyTv";
+import Footer from "@/components/Footer";
 
 function ViewProduct() {
   const navigate = useNavigate();
@@ -88,6 +90,8 @@ function ViewProduct() {
           </div>
         </div>
       </section>
+      <OatlyTv/>
+      <Footer/>
     </div>
   );
 }

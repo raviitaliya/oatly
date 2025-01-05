@@ -2,6 +2,8 @@ import { useProductStore } from '../store/Store'
 import { useEffect } from 'react'
 import ProductCard from './ProductCard'
 import { Link } from 'react-router-dom'
+import OatlyTv from '@/components/OatlyTv'
+import Footer from '@/components/Footer'
 
 
 const Oatdrink = () => {
@@ -32,6 +34,8 @@ const Oatdrink = () => {
         </Link>
       ))}
     </div>
+    <OatlyTv/>
+    <Footer/>
   </div>
   )
 }
