@@ -6,7 +6,7 @@ import {
   sendWelcomeEmail,
   sendPasswordResetEmail,
   sendResetSuccessfullEmail,
-} from "../Email/email.js";
+} from "../email/email.js";
 import Crypto from "crypto";
 
 export const signup = async (req, res) => {
