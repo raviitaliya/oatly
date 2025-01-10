@@ -23,7 +23,11 @@ const OatlyTv = () => {
             HOW DO WE MAKE OUR OAT DRINKS?
           </h1>
           <p className="text-lg md:text-xl leading-relaxed font-font2">
+<<<<<<< HEAD
+            Our oat base is just oats and water. But it's what we do with those
+=======
             Our oat base is just oats and water. But it is what we do with those
+>>>>>>> 76ff46fe6f88c8b0d4f9bf57ec69c5fbb2b4226f
             oats and that water that makes Oatly so special.
           </p>
         </div>
