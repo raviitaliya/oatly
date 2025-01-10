@@ -23,6 +23,7 @@ function ViewProduct() {
   const handleNavigate = (path) => {
     navigate(path);
   };
+  
   useEffect(() => {
     if (oneProduct && oneProduct._id === id) return;
 
