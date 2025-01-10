@@ -20,7 +20,7 @@ export const verifyToken = (req, res, next) => {
     }
     req.userId = decoded.userId;
     next();
-  } catch (error) {
+  } catch {
     return res.status(500).json({
       success: false,
       message: "token is not verify",

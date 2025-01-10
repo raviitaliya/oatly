@@ -24,7 +24,7 @@ const Product = () => {
     return <div className="pt-20 container mx-auto px-4">Error: {error}</div>;
 
   return (
-    <div className="pt-20   mx-auto px-4">
+    <div className="pt-20 mx-auto ">
       <section>{IsProduct ? <div> </div> : <ProductNavbar />}</section>
       <section className="mt-2">
         <Outlet />

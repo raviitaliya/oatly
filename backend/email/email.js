@@ -42,8 +42,8 @@ export const sendWelcomeEmail = async (email, name) => {
 	<p style="font-size:22px;">We're glad to have you onboard!</p>
 	<div >
 		<img
-			src="https://a.storyblok.com/f/107921/1200x675/7af4d8eb25/thanks-milk-featured.jpg/m/750x0/filters:quality(75):format(webp)"
-			style="height: 250px;  "
+			src="https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/36_Welcome%20Email%20Templates.jpg?width=595&height=400&name=36_Welcome%20Email%20Templates.jpg"
+			style="height: 250px;"
 			alt=""
 		/>
 	</div>
@@ -78,7 +78,7 @@ export const sendPasswordResetEmail = async (email, resetURL) => {
   }
 };
 
-export const sendResetSuccessfullEmail = async (email, name) => {
+export const sendResetSuccessfullEmail = async (email) => {
   const recipient = [{ email }];
   try {
     const mailOptions = {
