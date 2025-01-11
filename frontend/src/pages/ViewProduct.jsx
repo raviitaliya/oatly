@@ -143,7 +143,7 @@ function ViewProduct() {
               <img
                 src={tree}
                 alt="this is svg"
-                className=" absolute top-[-20px] left-[-11] z-10 IngredientsDisclaimer_Svg__8t1p9 "
+                className=" absolute top-[-20px] left-[-11] z-10 "
               />
             </div>
           </div>
