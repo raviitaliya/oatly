@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 function AddToCard() {
   const [cart, setCart] = useState([]);
-
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);

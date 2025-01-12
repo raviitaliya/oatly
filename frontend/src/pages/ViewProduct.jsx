@@ -47,8 +47,22 @@ function ViewProduct() {
       totalPrice: oneProduct.price * quantity,
     };
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push(productDetails);
-    localStorage.setItem("cart", JSON.stringify(cart));
+
+    if (cart.length > 0) {
+      const existingProduct = cart.find((item) => item.id === productDetails.id);
+      if (existingProduct) {
+        existingProduct.quantity += productDetails.quantity;
+        existingProduct.totalPrice += productDetails.totalPrice;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert("Product added to cart!");
+        return;
+      }
+    }else{
+      cart.push(productDetails);
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+    // cart.push(productDetails);
+    // localStorage.setItem("cart", JSON.stringify(cart));
     alert("Product added to cart!");
   };
 

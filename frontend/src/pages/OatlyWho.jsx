@@ -11,33 +11,6 @@ const OatlyWho = () => {
   return (
     <div style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className="leading-none">
-<<<<<<< HEAD
-        <div className="flex items-center justify-center min-h-screen text-white text-center tracking-tighter">
-          <div className="absolute px-4">
-            <p className="font-font1 text-[40px] md:text-[80px] lg:text-[120px] pb-4 relative">
-              OATLY WHO
-            </p>
-            <p className="font-font2 text-[16px] md:text-[20px]">OR...</p>
-            <p className="font-font1 text-[40px] md:text-[80px] lg:text-[120px]">
-              THE OBLIGATORY
-            </p>
-            <p className="font-font1 text-[40px] md:text-[80px] lg:text-[120px]">
-              "ABOUT US"
-            </p>
-            <p className="font-font1 text-[40px] md:text-[80px] lg:text-[120px]">
-              SECTION OF AN OAT
-            </p>
-            <p className="font-font1 text-[40px] md:text-[80px] lg:text-[120px]">
-              DRINK COMPANY'S
-            </p>
-            <p className="font-font1 text-[40px] md:text-[80px] lg:text-[120px]">
-              WEBSITE
-            </p>
-          </div>
-        </div>
-        <div className="text-white min-h-screen flex items-center justify-center px-4 md:px-8">
-          <div className="container mx-auto mb-[50rem]">
-=======
 
         <div className="py-32 sm:py-24">
           <div className="flex items-center justify-center  text-white text-center tracking-tighter relative">
@@ -73,7 +46,6 @@ const OatlyWho = () => {
 
         <div className="text-white  flex items-center justify-center px-4 md:px-8">
           <div className="container mx-auto  ">
->>>>>>> ffcbb05ed35f24e4f8cad45517f9471291ad748a
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div>
                 <p className="text-gray-300 text-lg md:text-xl  font-font2">
@@ -84,11 +56,7 @@ const OatlyWho = () => {
                   experiment with random punctuation, misspellings, and
                   offensively long run-on sentences.
                 </p>
-<<<<<<< HEAD
-                <p className="mt-4 text-gray-300 text-lg md:text-xl  font-font2">
-=======
                 <p className="mt-4 text-gray-300 text-lg md:text-xl font-font2">
->>>>>>> ffcbb05ed35f24e4f8cad45517f9471291ad748a
                   That 10-year-old child—stuck inside the body of an adult
                   freelance copywriter—was wrong.
                 </p>
@@ -102,11 +70,7 @@ const OatlyWho = () => {
                   half of them from the same IP address in a country we haven’t
                   heard of.
                 </p>
-<<<<<<< HEAD
-                <p className="mt-4 text-gray-300 text-lg md:text-xl  font-font2">
-=======
                 <p className="mt-4 text-gray-300 text-ld md:text-xl font-font2">
->>>>>>> ffcbb05ed35f24e4f8cad45517f9471291ad748a
                   So for the people and the bots who need answers, here it goes…
                 </p>
               </div>
