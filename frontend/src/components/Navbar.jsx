@@ -187,11 +187,11 @@ const Navbar = () => {
       </div>
 
       {/* Right Side - Avatar */}
-      <div className="flex items-center w-10 h-10 sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
+      <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
         <img
           src={profileGif}
           alt="Profile"
-          className="w-12 h-12 sm:w-12 sm:h-12 rounded-full object-cover shadow-lg"
+          className="w-12 h-12  rounded-full object-cover shadow-lg"
         />
       </div>
     </nav>

@@ -13,6 +13,7 @@ import IceCream from "./pages/IceCream";
 import SoftServe from "./pages/SoftServe";
 import ViewProduct from "./pages/ViewProduct";
 import OatlyWho from "./pages/OatlyWho";
+import AddToCard from "./pages/AddToCard";
 
 function App() {
   return (
@@ -31,9 +32,10 @@ function App() {
             <Route path="ice-cream" element={<IceCream />} />
             <Route path="soft-serve" element={<SoftServe />} />
             <Route path=":category/:id" element={<ViewProduct />} />
-           
+
           </Route>
           <Route path="oatly-who" element={< OatlyWho/>} />
+          <Route path="addToCard" element={<AddToCard />} />
         </Route>
       </Routes>
     </BrowserRouter>

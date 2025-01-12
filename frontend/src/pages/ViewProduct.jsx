@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useProductStore } from "../store/Store";
 import Oatme from "../assets/ProductSvg/Oatme.svg";
@@ -13,17 +13,45 @@ import {
 } from "@/components/ui/breadcrumb";
 import OatlyTv from "@/components/OatlyTv";
 import Footer from "@/components/Footer";
+import AddToCardBtn from "@/components/ui/AddToCardBtn";
 
 function ViewProduct() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { oneProduct, loading, error, getOneProduct, setClearState } =
     useProductStore();
+  const [quantity, setQuantity] = useState(1);
 
   const handleNavigate = (path) => {
     navigate(path);
   };
-  
+
+  const increaseQuantity = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  // Function to handle quantity decrease
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
+  const addToCart = () => {
+    const productDetails = {
+      id: oneProduct._id,
+      name: oneProduct.productname,
+      image: oneProduct.image,
+      price: oneProduct.price,
+      quantity: quantity,
+      totalPrice: oneProduct.price * quantity,
+    };
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push(productDetails);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Product added to cart!");
+  };
+
   useEffect(() => {
     if (oneProduct && oneProduct._id === id) return;
 
@@ -72,8 +100,8 @@ function ViewProduct() {
       </Breadcrumb>
 
       <section className="lg:py-8 px-4 lg:  mt-[73px]">
-        <div className="max-w-9xl max-h-[38rem] mx-auto flex  items-center justify-center">
-          <div className="text-left w-[51rem] flex flex-col justify-center">
+        <div className="max-w-9xl max-h-[38rem] mx-auto flex items-center justify-center">
+          <div className="text-left w-[51rem] flex flex-col justify-center items-start ">
             <h1 className="sm:text-[40px] md:text-[52px] lg:text-[88px] font-bold font-font1 mb-4 lg:leading-[80px]">
               {oneProduct.productname}
             </h1>
@@ -81,6 +109,14 @@ function ViewProduct() {
               <p className=" lg:text-[20px] font-font2 ">
                 {oneProduct.desription}
               </p>
+            </div>
+            <div className="mt-4">
+              <div>
+                <button onClick={decreaseQuantity}>-</button>
+                <span>{quantity}</span>
+                <button onClick={increaseQuantity}>+</button>
+              </div>
+              <AddToCardBtn onClick={addToCart} />
             </div>
           </div>
           <div className="flex justify-center">
