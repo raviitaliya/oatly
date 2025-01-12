@@ -4,6 +4,7 @@ import { useProductStore } from "../store/Store";
 import Oatme from "../assets/ProductSvg/Oatme.svg";
 import animation from "../assets/ProductSvg/animation.svg";
 import tree from "../assets/ProductSvg/tree.svg";
+import Cart from '../components/Cart';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,6 +17,8 @@ import Footer from "@/components/Footer";
 import AddToCardBtn from "@/components/ui/AddToCardBtn";
 
 function ViewProduct() {
+
+  const [isCartOpen,setIsCartOpen]=useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { oneProduct, loading, error, getOneProduct, setClearState } =
@@ -65,6 +68,11 @@ function ViewProduct() {
     // localStorage.setItem("cart", JSON.stringify(cart));
     alert("Product added to cart!");
   };
+
+  const handleOnclick = ()=>{
+    addToCart()
+    setIsCartOpen(!isCartOpen)
+  }
 
   useEffect(() => {
     if (oneProduct && oneProduct._id === id) return;
@@ -130,7 +138,8 @@ function ViewProduct() {
                 <span>{quantity}</span>
                 <button onClick={increaseQuantity}>+</button>
               </div>
-              <AddToCardBtn onClick={addToCart} />
+              <AddToCardBtn onClick={handleOnclick} />
+              {isCartOpen && <Cart isOpen={isCartOpen}/> }
             </div>
           </div>
           <div className="flex justify-center">
