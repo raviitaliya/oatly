@@ -14,8 +14,41 @@ import SoftServe from "./pages/SoftServe";
 import ViewProduct from "./pages/ViewProduct";
 import OatlyWho from "./pages/OatlyWho";
 import AddToCard from "./pages/AddToCard";
+import { getToken, onMessage } from "firebase/messaging";
+import { useEffect } from "react";
+import { messaging } from "@/firebase/firebase";
 
 function App() {
+  async function requestPermission() {
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      const token = await getToken(messaging, {
+        vapidKey: "BEL9fSsDVxDrSbZbi5-6dcFFN9CbcSVwZHP1PJF2tbjaqOHOdXEdfqcZ0BnoJUyrAiad4LvRb2k-jBZye8gnt9s",
+      });
+      console.log("FCM Token:", token);
+
+      // Send this token to your backend to save
+      await fetch("http://localhost:8000/api/notify/save-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+    } else {
+      console.error("Notification permission denied");
+    }
+  }
+
+  useEffect(() => {
+    requestPermission();
+
+    // Handle foreground notifications
+    onMessage(messaging, (payload) => {
+      console.log("Foreground notification received:", payload);
+      alert(payload.notification.body);
+    });
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
@@ -32,9 +65,8 @@ function App() {
             <Route path="ice-cream" element={<IceCream />} />
             <Route path="soft-serve" element={<SoftServe />} />
             <Route path=":category/:id" element={<ViewProduct />} />
-
           </Route>
-          <Route path="oatly-who" element={< OatlyWho/>} />
+          <Route path="oatly-who" element={<OatlyWho />} />
           <Route path="addToCard" element={<AddToCard />} />
         </Route>
       </Routes>
