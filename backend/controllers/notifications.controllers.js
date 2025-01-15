@@ -44,6 +44,7 @@ export const sendNotification = async (req, res) => {
     notification: {
       title: title,
       body: body,
+      
     },
     tokens: tokens
   };
