@@ -44,10 +44,13 @@ export const sendNotification = async (req, res) => {
     notification: {
       title: title,
       body: body,
-      
+
     },
-    tokens: tokens
+    tokens: [tokens]
   };
+
+  console.log(message);
+  
 
   try {
     const response = await messaging.sendMulticast(message);
