@@ -39,6 +39,36 @@ function ViewProduct() {
     }
   };
 
+  // const addToCart = () => {
+  //   const productDetails = {
+  //     id: oneProduct._id,
+  //     name: oneProduct.productname,
+  //     image: oneProduct.image,
+  //     price: oneProduct.price,
+  //     quantity: quantity,
+  //     totalPrice: oneProduct.price * quantity,
+  //   };
+  //   let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  //   if (cart.length > 0) {
+  //     const existingProduct = cart.find(
+  //       (item) => item.id === productDetails.id
+  //     );
+  //     if (existingProduct) {
+  //       existingProduct.quantity += productDetails.quantity;
+  //       existingProduct.totalPrice += productDetails.totalPrice;
+  //       localStorage.setItem("cart", JSON.stringify(cart));
+  //       alert("Product added to cart!");
+  //       return;
+  //     }
+  //   } else {
+  //     cart.push(productDetails);
+  //     localStorage.setItem("cart", JSON.stringify(cart));
+  //   }
+  //   // cart.push(productDetails);
+  //   // localStorage.setItem("cart", JSON.stringify(cart));
+  // };
+
   const addToCart = () => {
     const productDetails = {
       id: oneProduct._id,
@@ -48,28 +78,28 @@ function ViewProduct() {
       quantity: quantity,
       totalPrice: oneProduct.price * quantity,
     };
+  
+    // Get existing cart data from localStorage or initialize it as an empty array
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    if (cart.length > 0) {
-      const existingProduct = cart.find(
-        (item) => item.id === productDetails.id
-      );
-      if (existingProduct) {
-        existingProduct.quantity += productDetails.quantity;
-        existingProduct.totalPrice += productDetails.totalPrice;
-        localStorage.setItem("cart", JSON.stringify(cart));
-        alert("Product added to cart!");
-        return;
-      }
+  
+    // Check if the product already exists in the cart
+    const existingProductIndex = cart.findIndex((item) => item.id === productDetails.id);
+  
+    if (existingProductIndex > -1) {
+      // Update the existing product's quantity and total price
+      cart[existingProductIndex].quantity += productDetails.quantity;
+      cart[existingProductIndex].totalPrice += productDetails.totalPrice;
     } else {
+      // Add the new product to the cart
       cart.push(productDetails);
-      localStorage.setItem("cart", JSON.stringify(cart));
     }
-    // cart.push(productDetails);
-    // localStorage.setItem("cart", JSON.stringify(cart));
+  
+    // Save the updated cart back to localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
     alert("Product added to cart!");
   };
 
+  
   const handleOnclick = () => {
     addToCart();
     setIsCartOpen(!isCartOpen);
@@ -135,10 +165,20 @@ function ViewProduct() {
             </div>
             <div className="mt-4">
               <div className="my-4 p-2 w-32 border border-black rounded ">
-                <div  className="flex items-center justify-between">
-                  <button className="border border-black px-3 rounded font-bold font-font2  hover:bg-gray-200" onClick={decreaseQuantity}>-</button>
-                <span>{quantity}</span>
-                  <button className="border border-black px-3 rounded  font-font2  hover:bg-gray-200" onClick={increaseQuantity}>+</button>
+                <div className="flex items-center justify-between">
+                  <button
+                    className="border border-black px-3 rounded font-bold font-font2  hover:bg-gray-200"
+                    onClick={decreaseQuantity}
+                  >
+                    -
+                  </button>
+                  <span>{quantity}</span>
+                  <button
+                    className="border border-black px-3 rounded  font-font2  hover:bg-gray-200"
+                    onClick={increaseQuantity}
+                  >
+                    +
+                  </button>
                 </div>
               </div>
               <AddToCardBtn onClick={handleOnclick} />
