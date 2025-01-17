@@ -57,8 +57,8 @@ function AddToCard() {
               <img src={item.image} alt={item.name} className="w-36" />
             </div>
             <div className="w-56">
-              <h2 className="my-4 font-font2">{item.name}</h2>
-              <div className="flex  gap-5">
+              <h2 className="my-4 font-font2 text-">{item.name}</h2>
+              <div className="flex  gap-4">
                 <div className="my-2 p-1 w-24 border border-black rounded ">
                   <div className="flex items-center justify-between">
                     <button className="px-3 rounded font-bold font-font2"
@@ -76,7 +76,7 @@ function AddToCard() {
                 </div>
                 <button
                   onClick={() => removeFromCart(item.id)}
-                  className="underline underline-offset-4"
+                  className="underline underline-offset-4 text-sm text-black/60"
                 >
                   Remove
                 </button>
