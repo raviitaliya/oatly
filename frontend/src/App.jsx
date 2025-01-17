@@ -27,7 +27,7 @@ function App() {
       });
       console.log("FCM Token:", token);
 
-      // Send this token to your backend to save
+     
       await fetch("http://localhost:8000/api/notify/save-token", {
         method: "POST",
         headers: {
@@ -43,17 +43,17 @@ function App() {
   useEffect(() => {
     requestPermission();
   
-    // Handle foreground notifications
+    
     onMessage(messaging, (payload) => {
       console.log("Foreground notification received:", payload);
   
       const { title, body } = payload.notification;
   
-      // Check if the permission is granted
+     
       if (Notification.permission === "granted") {
         new Notification(title, { body });
       } else {
-        alert(`${title}: ${body}`);  // Fallback if notifications are not allowed
+        alert(`${title}: ${body}`); 
       }
     });
   }, []);

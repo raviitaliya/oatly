@@ -47,7 +47,7 @@ function AddToCard() {
               </div>
             </div>
             <div className="relative">
-              <p className="absolute left-24 top-5"> ${item.totalPrice}</p>
+              <p className="absolute left-24 top-5"> <span className="pr-1">₹</span>{item.totalPrice}</p>
             </div>
           </div>
         ))}

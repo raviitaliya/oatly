@@ -4,10 +4,10 @@ import { useState } from "react";
 import  {useProductStore}  from "@/store/Store";
 
 const Home = () => {
-  const { sendNotification, loading, error } = useProductStore(); // Access Zustand store
+  const { sendNotification, loading, error } = useProductStore();
   const [notificationData, setNotificationData] = useState({
-    title: "", // Title should be dynamic from user input
-    message: "", // Message should be dynamic from user input
+    title: "",
+    message: "",
     tokens: ['fElDgF2WNo2xr3ioh-HHen:APA91bHGqyegXpXU5FM8twzZN3rkNEn1q-TammpBQynttEevi6v4SvzwzjkU8B3ynqiamrJtobhwx5zOdWIMk8d_2JenShtxOiWUo3zc4VX9J0lTu8vS1l4'], // This should be a valid array of device tokens
   });
 
@@ -22,30 +22,27 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Validate if tokens array is not empty
     if (notificationData.tokens.length === 0) {
       alert("Please provide at least one token");
       return;
     }
   
-    // Validate title and body
     if (!notificationData.title || !notificationData.message) {
       alert("Title and message are required");
       return;
     }
   
-    // Construct the payload object with notification data
     const payload = {
       notification: {
-        title: notificationData.title,  // Title should not be empty
-        body: notificationData.message, // Body should not be empty
+        title: notificationData.title,  
+        body: notificationData.message, 
       },
-      tokens: notificationData.tokens, // Array of valid device tokens
+      tokens: notificationData.tokens, 
     };
   
-    console.log("Submitting notification data:", payload); // Add logging to check the payload
+    console.log("Submitting notification data:", payload); 
   
-    await sendNotification(payload); // Send notification to the backend
+    await sendNotification(payload); 
   };
   return (
     <div>

@@ -46,14 +46,10 @@ export default function Cart({ isOpen }) {
             </div>
           </SheetTitle>
           <hr className="border-t border-gray-300 my-4" />
-          <SheetDescription>
-           
-          </SheetDescription>
+          <SheetDescription></SheetDescription>
         </SheetHeader>
-          <AddToCard/>
-        <SheetFooter>
-          
-        </SheetFooter>
+        <AddToCard />
+        <SheetFooter></SheetFooter>
       </SheetContent>
     </Sheet>
   );
