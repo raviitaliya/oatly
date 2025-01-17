@@ -4,7 +4,7 @@ import { useProductStore } from "../store/Store";
 import Oatme from "../assets/ProductSvg/Oatme.svg";
 import animation from "../assets/ProductSvg/animation.svg";
 import tree from "../assets/ProductSvg/tree.svg";
-import Cart from '../components/Cart';
+import Cart from "../components/Cart";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,8 +17,7 @@ import Footer from "@/components/Footer";
 import AddToCardBtn from "@/components/ui/AddToCardBtn";
 
 function ViewProduct() {
-
-  const [isCartOpen,setIsCartOpen]=useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { oneProduct, loading, error, getOneProduct, setClearState } =
@@ -52,7 +51,9 @@ function ViewProduct() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     if (cart.length > 0) {
-      const existingProduct = cart.find((item) => item.id === productDetails.id);
+      const existingProduct = cart.find(
+        (item) => item.id === productDetails.id
+      );
       if (existingProduct) {
         existingProduct.quantity += productDetails.quantity;
         existingProduct.totalPrice += productDetails.totalPrice;
@@ -60,7 +61,7 @@ function ViewProduct() {
         alert("Product added to cart!");
         return;
       }
-    }else{
+    } else {
       cart.push(productDetails);
       localStorage.setItem("cart", JSON.stringify(cart));
     }
@@ -69,10 +70,10 @@ function ViewProduct() {
     alert("Product added to cart!");
   };
 
-  const handleOnclick = ()=>{
-    addToCart()
-    setIsCartOpen(!isCartOpen)
-  }
+  const handleOnclick = () => {
+    addToCart();
+    setIsCartOpen(!isCartOpen);
+  };
 
   useEffect(() => {
     if (oneProduct && oneProduct._id === id) return;
@@ -133,13 +134,15 @@ function ViewProduct() {
               </p>
             </div>
             <div className="mt-4">
-              <div>
-                <button onClick={decreaseQuantity}>-</button>
+              <div className="my-4 p-2 w-32 border border-black rounded ">
+                <div  className="flex items-center justify-between">
+                  <button className="border border-black px-3 rounded font-bold font-font2  hover:bg-gray-200" onClick={decreaseQuantity}>-</button>
                 <span>{quantity}</span>
-                <button onClick={increaseQuantity}>+</button>
+                  <button className="border border-black px-3 rounded  font-font2  hover:bg-gray-200" onClick={increaseQuantity}>+</button>
+                </div>
               </div>
               <AddToCardBtn onClick={handleOnclick} />
-              {isCartOpen && <Cart isOpen={isCartOpen}/> }
+              {isCartOpen && <Cart isOpen={isCartOpen} />}
             </div>
           </div>
           <div className="flex justify-center">
