@@ -14,15 +14,30 @@ function AddToCard() {
   };
   return (
     <div>
-      <h1>Shopping Cart</h1>
       <div>
         {cart.map((item) => (
-          <div key={item.id}>
-            <img src={item.image} alt={item.name} />
-            <h2>{item.name}</h2>
-            <p>Quantity: {item.quantity}</p>
-            <p>Total Price: ${item.totalPrice}</p>
-            <button onClick={() => removeFromCart(item.id)}>Remove</button>
+          <div key={item.id} className="flex gap-6 my-5 ">
+            <div>
+              <img src={item.image} alt={item.name} className="w-36" />
+            </div>
+            <div className="w-56">
+              <h2 className="my-4 font-font2">{item.name}</h2>
+              <div className="flex  gap-5">
+                {/* <p>{item.quantity}</p> */}
+                
+              <div className="my-2 p-1 w-24 border border-black rounded ">
+                <div  className="flex items-center justify-between">
+                  <button className=" px-3 rounded font-bold font-font2  hover:bg-gray-200">-</button>
+                <span>{item.quantity}</span>
+                  <button className=" px-3 rounded font-semibold  font-font2  hover:bg-gray-200">+</button>
+                </div>
+              </div>
+                <button onClick={() => removeFromCart(item.id)} className="underline underline-offset-4">Remove</button>
+              </div>
+            </div>
+            <div className="relative">
+              <p className="absolute left-24 top-5"> ${item.totalPrice}</p>
+            </div>
           </div>
         ))}
       </div>

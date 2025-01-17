@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
@@ -10,41 +10,51 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
+import bagicon from "../assets/AddToCartSheet/bagicon.svg";
+import AddToCard from "@/pages/AddToCard";
 
-export default function Cart({isOpen}) {
+export default function Cart({ isOpen }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="outline">Open</Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="!w-full sm:!w-full md:!w-[740px] lg:!w-[700px]">
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
+          <SheetTitle>
+            <div className="flex items-center gap-3">
+              <div>
+                <svg width="20" height="18" viewBox="0 0 20 18">
+                  <path
+                    d="M3 1h14l1 16H2L3 1z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  ></path>
+                  <path
+                    d="M7 4v0a3 3 0 003 3v0a3 3 0 003-3v0"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <p>ITEMS</p>
+              </div>
+            </div>
+          </SheetTitle>
+          <hr className="border-t border-gray-300 my-4" />
           <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
+           
           </SheetDescription>
         </SheetHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
+          <AddToCard/>
         <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
+          
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
