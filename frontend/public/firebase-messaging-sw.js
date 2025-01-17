@@ -12,14 +12,17 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
 const messaging = firebase.messaging();
 
+// Handle background notifications
 messaging.onBackgroundMessage((payload) => {
-  console.log("Received background message:", payload);
-  const notificationTitle = payload.notification?.title ;
+  console.log("Background notification received:", payload);
+
+  const notificationTitle = payload.notification?.title || "Background Notification";
   const notificationOptions = {
-    body: payload.notification?.body ,
-    icon: payload.notification?.image
+    body: payload.notification?.body || "No content available",
+    icon: payload.notification?.icon || "/default-icon.png",
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

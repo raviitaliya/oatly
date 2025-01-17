@@ -13,10 +13,10 @@ export const saveToken = async (req, res) => {
 
   if (!tokens.includes(token)) {
     tokens.push(token);
-    console.log("Token saved:", token);
-  }
+    // console.log("Token saved:", token);
+  } 
 
-  res.status(200).json({ success: true, message: "Token saved successfully" });
+  res.status(200).json({ success: true, message: "Token saved successfully"});
 };
 
 // Send Notification to Devices
