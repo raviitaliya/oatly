@@ -42,13 +42,22 @@ function App() {
 
   useEffect(() => {
     requestPermission();
-
+  
     // Handle foreground notifications
     onMessage(messaging, (payload) => {
       console.log("Foreground notification received:", payload);
-      alert(payload.notification.body);
+  
+      const { title, body } = payload.notification;
+  
+      // Check if the permission is granted
+      if (Notification.permission === "granted") {
+        new Notification(title, { body });
+      } else {
+        alert(`${title}: ${body}`);  // Fallback if notifications are not allowed
+      }
     });
   }, []);
+  
   return (
     <BrowserRouter>
       <Routes>
