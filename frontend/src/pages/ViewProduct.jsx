@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import OatlyTv from "@/components/OatlyTv";
 import Footer from "@/components/Footer";
+import ProductCard from "./ProductCard";
 import { toast } from "sonner";
 
 function ViewProduct() {
@@ -25,11 +26,16 @@ function ViewProduct() {
     randomProduct,
     loading,
     error,
+    random,
     getOneProduct,
     setClearState,
   } = useProductStore();
-  
-  
+
+
+  console.log(random);
+
+
+
   const [quantity, setQuantity] = useState(1);
 
   const handleNavigate = (path) => {
@@ -82,9 +88,11 @@ function ViewProduct() {
     if (oneProduct && oneProduct._id === id) return;
 
     setClearState();
-    getOneProduct(id);
     randomProduct();
+    getOneProduct(id);
   }, [id, oneProduct, getOneProduct, randomProduct, setClearState]);
+
+
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -230,7 +238,31 @@ function ViewProduct() {
         </div>
       </section>
 
-      <section></section>
+      <section >
+        <div className=" flex justify-center items-center">
+          <h1 className="text-[32px] sm:text-[40px] md:text-[52px] font-bold font-font1 mb-4">
+            Our Popular Products
+          </h1>
+        </div>
+
+        <div className=" flex justify-center gap-14 items-center">
+          {random.map((product) => (
+            <Link
+              key={product._id}
+              to={`/our-products/${product.category
+                .replace(/\s+/g, "-")
+                .toLowerCase()}/${product._id}`}
+            >
+              <ProductCard
+                key={product._id}
+                imageUrl={product.image}
+                price={product.price}
+                name={product.productname}
+              />
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <OatlyTv />
       <Footer />

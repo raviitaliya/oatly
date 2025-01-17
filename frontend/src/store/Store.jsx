@@ -10,7 +10,7 @@ export const useProductStore = create((set, get) => ({
   oatgurt: [],
   IceCream: [],
   SoftServe: [],
-  randomProducts:[],
+  random:[],
   oneProduct: null,
   selectedProduct: null,
   loading: false,
@@ -25,7 +25,7 @@ export const useProductStore = create((set, get) => ({
   seticeCream: (IceCream) => set({ IceCream }),
   setsoftServe: (SoftServe) => set({ SoftServe }),
   setoneProduct: (oneProduct) => set({ oneProduct }),
-  setrandomProducts: (randomProduct) => set({randomProduct}),
+  setrandom: (random) => set({random}),
 
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
@@ -162,7 +162,6 @@ export const useProductStore = create((set, get) => ({
     try {
       const response = await api.get(`/admin/${id}`);
 
-      console.log("API Response:", response);
       if (response.status === 200) {
         set({ oneProduct: response.data.product, loading: false });
       } else {
@@ -215,10 +214,10 @@ export const useProductStore = create((set, get) => ({
     if (get().loading) return;
     set({ loading: true, error: null });
     try {
-      const response = await api.get("/admin/random-products");
-      console.log(response);
-      set({ randomProducts: response.data.products, loading: false });
     
+      
+      const response = await api.get("/admin/random-products");
+      set({ random: response.data.randomProducts, loading: false });
     } catch (error) {
       console.error("Error:", error.message);
       set({
