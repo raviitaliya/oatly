@@ -6,7 +6,6 @@ function AddToCard() {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
     console.log(storedCart);
-    
   }, []);
 
   const removeFromCart = (productId) => {
@@ -25,8 +24,6 @@ function AddToCard() {
             <div className="w-56">
               <h2 className="my-4 font-font2">{item.name}</h2>
               <div className="flex  gap-5">
-                {/* <p>{item.quantity}</p> */}
-
                 <div className="my-2 p-1 w-24 border border-black rounded ">
                   <div className="flex items-center justify-between">
                     <button className=" px-3 rounded font-bold font-font2  hover:bg-gray-200">
@@ -47,7 +44,11 @@ function AddToCard() {
               </div>
             </div>
             <div className="relative">
-              <p className="absolute left-24 top-5"> <span className="pr-1">₹</span>{item.totalPrice}</p>
+              <p className="absolute left-24 top-5">
+                {" "}
+                <span className="pr-1">₹</span>
+                {item.totalPrice}
+              </p>
             </div>
           </div>
         ))}

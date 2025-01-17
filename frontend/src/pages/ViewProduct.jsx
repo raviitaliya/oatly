@@ -32,42 +32,14 @@ function ViewProduct() {
     setQuantity((prev) => prev + 1);
   };
 
-  // Function to handle quantity decrease
+ 
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity((prev) => prev - 1);
     }
   };
 
-  // const addToCart = () => {
-  //   const productDetails = {
-  //     id: oneProduct._id,
-  //     name: oneProduct.productname,
-  //     image: oneProduct.image,
-  //     price: oneProduct.price,
-  //     quantity: quantity,
-  //     totalPrice: oneProduct.price * quantity,
-  //   };
-  //   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  //   if (cart.length > 0) {
-  //     const existingProduct = cart.find(
-  //       (item) => item.id === productDetails.id
-  //     );
-  //     if (existingProduct) {
-  //       existingProduct.quantity += productDetails.quantity;
-  //       existingProduct.totalPrice += productDetails.totalPrice;
-  //       localStorage.setItem("cart", JSON.stringify(cart));
-  //       alert("Product added to cart!");
-  //       return;
-  //     }
-  //   } else {
-  //     cart.push(productDetails);
-  //     localStorage.setItem("cart", JSON.stringify(cart));
-  //   }
-  //   // cart.push(productDetails);
-  //   // localStorage.setItem("cart", JSON.stringify(cart));
-  // };
+ 
 
   const addToCart = () => {
     const productDetails = {
@@ -79,22 +51,22 @@ function ViewProduct() {
       totalPrice: oneProduct.price * quantity,
     };
   
-    // Get existing cart data from localStorage or initialize it as an empty array
+   
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
   
-    // Check if the product already exists in the cart
+    
     const existingProductIndex = cart.findIndex((item) => item.id === productDetails.id);
   
     if (existingProductIndex > -1) {
-      // Update the existing product's quantity and total price
+  
       cart[existingProductIndex].quantity += productDetails.quantity;
       cart[existingProductIndex].totalPrice += productDetails.totalPrice;
     } else {
-      // Add the new product to the cart
+
       cart.push(productDetails);
     }
   
-    // Save the updated cart back to localStorage
+   
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Product added to cart!");
   };
