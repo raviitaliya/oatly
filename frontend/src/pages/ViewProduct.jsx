@@ -14,14 +14,22 @@ import {
 } from "@/components/ui/breadcrumb";
 import OatlyTv from "@/components/OatlyTv";
 import Footer from "@/components/Footer";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 function ViewProduct() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { oneProduct, loading, error, getOneProduct, setClearState } =
-    useProductStore();
+  const {
+    oneProduct,
+    randomProduct,
+    loading,
+    error,
+    getOneProduct,
+    setClearState,
+  } = useProductStore();
+  
+  
   const [quantity, setQuantity] = useState(1);
 
   const handleNavigate = (path) => {
@@ -32,14 +40,11 @@ function ViewProduct() {
     setQuantity((prev) => prev + 1);
   };
 
- 
   const decreaseQuantity = () => {
     if (quantity > 1) {
       setQuantity((prev) => prev - 1);
     }
   };
-
- 
 
   const addToCart = () => {
     const productDetails = {
@@ -50,28 +55,24 @@ function ViewProduct() {
       quantity: quantity,
       totalPrice: oneProduct.price * quantity,
     };
-  
-   
+
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  
-    
-    const existingProductIndex = cart.findIndex((item) => item.id === productDetails.id);
-  
+
+    const existingProductIndex = cart.findIndex(
+      (item) => item.id === productDetails.id
+    );
+
     if (existingProductIndex > -1) {
-  
       cart[existingProductIndex].quantity += productDetails.quantity;
       cart[existingProductIndex].totalPrice += productDetails.totalPrice;
     } else {
-
       cart.push(productDetails);
     }
-  
-   
+
     localStorage.setItem("cart", JSON.stringify(cart));
     toast("Product added to cart!");
   };
 
-  
   const handleOnclick = () => {
     addToCart();
     setIsCartOpen(!isCartOpen);
@@ -82,7 +83,8 @@ function ViewProduct() {
 
     setClearState();
     getOneProduct(id);
-  }, [id, oneProduct, getOneProduct, setClearState]);
+    randomProduct();
+  }, [id, oneProduct, getOneProduct, randomProduct, setClearState]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -136,8 +138,8 @@ function ViewProduct() {
               </p>
             </div>
             <div className="mt-4 flex justify-center gap-2">
-            <span className="text-2xl font-font2">₹ </span>
-            <span className="text-2xl font-font2">{oneProduct.price}</span>
+              <span className="text-2xl font-font2">₹ </span>
+              <span className="text-2xl font-font2">{oneProduct.price}</span>
             </div>
             <div className="mt-2">
               <div className="my-4 w-28 border border-black/30 rounded">
@@ -157,8 +159,8 @@ function ViewProduct() {
                   </button>
                 </div>
               </div>
-            
-               <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick}/>
+
+              <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} />
             </div>
           </div>
           <div className="flex justify-center">
@@ -227,6 +229,8 @@ function ViewProduct() {
           </div>
         </div>
       </section>
+
+      <section></section>
 
       <OatlyTv />
       <Footer />

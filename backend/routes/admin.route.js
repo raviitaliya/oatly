@@ -12,6 +12,7 @@ import {
   Oatgurt,
   IceCream,
   SoftServe,
+  randomProducts,
 } from "../controllers/admin.controllers.js";
 
 const router = express.Router();
@@ -38,6 +39,7 @@ router.get("/spread", Spread);
 router.get("/oatgurt", Oatgurt);
 router.get("/ice-cream", IceCream);
 router.get("/soft-serve", SoftServe);
+router.get("/random-products", randomProducts);
 
 router.get("/:id", getOneProduct);
 

@@ -86,13 +86,11 @@ export const AddProudct = async (req, res) => {
       message: "Product created successfully!",
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: 500,
-        message: "Product not added",
-        error: error.message,
-      });
+    return res.status(500).json({
+      status: 500,
+      message: "Product not added",
+      error: error.message,
+    });
   }
 };
 
@@ -309,6 +307,33 @@ export const getOneProduct = async (req, res) => {
     return res.status(500).json({
       status: 500,
       message: "Error while fetching product",
+      error: error.message,
+    });
+  }
+};
+
+export const randomProducts = async (req, res) => {
+  try {
+    const randomProducts = await Product.aggregate([{ $sample: { size: 4 } }]);
+
+    if (!randomProducts || randomProducts.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "Products not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      randomProducts,
+      message: "Products fetched successfully",
+    });
+  } catch (error) {
+    console.error("Error fetching random products:", error);
+
+    return res.status(500).json({
+      status: 500,
+      message: "An error occurred while fetching products",
       error: error.message,
     });
   }

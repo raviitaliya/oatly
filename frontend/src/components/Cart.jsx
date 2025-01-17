@@ -1,9 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -11,15 +7,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import bagicon from "../assets/AddToCartSheet/bagicon.svg";
 import AddToCard from "@/pages/AddToCard";
 import AddToCardBtn from "./ui/AddToCardBtn";
 
-export default function Cart({ isOpen,isbuttonclick }) {
+export default function Cart({ isbuttonclick }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <AddToCardBtn onClick={isbuttonclick}/>
+        <AddToCardBtn onClick={isbuttonclick} />
       </SheetTrigger>
       <SheetContent className="!w-full sm:!w-full md:!w-[740px] lg:!w-[700px]">
         <SheetHeader>

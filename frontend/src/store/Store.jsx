@@ -2,7 +2,6 @@ import { create } from "zustand";
 import api from "../api/api";
 
 export const useProductStore = create((set, get) => ({
-  // Initial state
   products: [],
   oatDrinkProducts: [],
   chilledoatdrinks: [],
@@ -11,6 +10,7 @@ export const useProductStore = create((set, get) => ({
   oatgurt: [],
   IceCream: [],
   SoftServe: [],
+  randomProducts:[],
   oneProduct: null,
   selectedProduct: null,
   loading: false,
@@ -25,12 +25,13 @@ export const useProductStore = create((set, get) => ({
   seticeCream: (IceCream) => set({ IceCream }),
   setsoftServe: (SoftServe) => set({ SoftServe }),
   setoneProduct: (oneProduct) => set({ oneProduct }),
+  setrandomProducts: (randomProduct) => set({randomProduct}),
 
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
 
   setClearState: () => set({ oneProduct: null, error: null, loading: false }),
-  // Async actions
+
   fetchProducts: async () => {
     if (get().loading) return;
     set({ loading: true, error: null });
@@ -180,12 +181,12 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const { tokens, notification } = notificationData;
-  
+
       // Validate that tokens is an array and not empty
       if (!Array.isArray(tokens) || tokens.length === 0) {
         throw new Error("No valid tokens provided");
       }
-  
+
       // Prepare the message payload
       const message = {
         notification: {
@@ -194,10 +195,10 @@ export const useProductStore = create((set, get) => ({
         },
         tokens: tokens, // Array of device tokens to send the notification to
       };
-  
+
       // Send the notification to multiple devices using sendToDevice
       const response = await api.post("/notify/send-notification", message);
-  
+
       if (response.status === 200) {
         set({ loading: false, error: null });
         console.log("Notification sent successfully", response.data);
@@ -207,6 +208,23 @@ export const useProductStore = create((set, get) => ({
     } catch (error) {
       set({ loading: false, error: error.message });
       console.error("Error sending notification:", error.message);
+    }
+  },
+
+  randomProduct: async () => {
+    if (get().loading) return;
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/random-products");
+      console.log(response);
+      set({ randomProducts: response.data.products, loading: false });
+    
+    } catch (error) {
+      console.error("Error:", error.message);
+      set({
+        error: error.response?.data?.message || "Failed to fetch products",
+        loading: false,
+      });
     }
   },
   
