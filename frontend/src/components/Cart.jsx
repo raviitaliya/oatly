@@ -13,12 +13,13 @@ import {
 } from "@/components/ui/sheet";
 import bagicon from "../assets/AddToCartSheet/bagicon.svg";
 import AddToCard from "@/pages/AddToCard";
+import AddToCardBtn from "./ui/AddToCardBtn";
 
 export default function Cart({ isOpen }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Open</Button>
+        <AddToCardBtn />
       </SheetTrigger>
       <SheetContent className="!w-full sm:!w-full md:!w-[740px] lg:!w-[700px]">
         <SheetHeader>

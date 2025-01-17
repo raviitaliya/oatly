@@ -153,8 +153,8 @@ function ViewProduct() {
                   </button>
                 </div>
               </div>
-              <AddToCardBtn onClick={handleOnclick} />
-              {isCartOpen && <Cart isOpen={isCartOpen} />}
+            
+               <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick}/>
             </div>
           </div>
           <div className="flex justify-center">
