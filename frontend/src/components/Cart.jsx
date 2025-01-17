@@ -15,11 +15,11 @@ import bagicon from "../assets/AddToCartSheet/bagicon.svg";
 import AddToCard from "@/pages/AddToCard";
 import AddToCardBtn from "./ui/AddToCardBtn";
 
-export default function Cart({ isOpen }) {
+export default function Cart({ isOpen,isbuttonclick }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <AddToCardBtn />
+        <AddToCardBtn onClick={isbuttonclick}/>
       </SheetTrigger>
       <SheetContent className="!w-full sm:!w-full md:!w-[740px] lg:!w-[700px]">
         <SheetHeader>

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import OatlyTv from "@/components/OatlyTv";
 import Footer from "@/components/Footer";
-import AddToCardBtn from "@/components/ui/AddToCardBtn";
+import { toast } from "sonner"
 
 function ViewProduct() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -68,7 +68,7 @@ function ViewProduct() {
   
    
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Product added to cart!");
+    toast("Product added to cart!");
   };
 
   
@@ -135,18 +135,22 @@ function ViewProduct() {
                 {oneProduct.desription}
               </p>
             </div>
-            <div className="mt-4">
-              <div className="my-4 p-2 w-32 border border-black rounded ">
+            <div className="mt-4 flex justify-center gap-2">
+            <span className="text-2xl font-font2">₹ </span>
+            <span className="text-2xl font-font2">{oneProduct.price}</span>
+            </div>
+            <div className="mt-2">
+              <div className="my-4 w-28 border border-black/30 rounded">
                 <div className="flex items-center justify-between">
                   <button
-                    className="border border-black px-3 rounded font-bold font-font2  hover:bg-gray-200"
+                    className=" px-3 rounded text-2xl font-bold font-font2  "
                     onClick={decreaseQuantity}
                   >
                     -
                   </button>
                   <span>{quantity}</span>
                   <button
-                    className="border border-black px-3 rounded  font-font2  hover:bg-gray-200"
+                    className="px-3 rounded text-2xl font-font2  "
                     onClick={increaseQuantity}
                   >
                     +
