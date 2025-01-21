@@ -108,14 +108,14 @@ function ViewProduct() {
 
 
     const options = {
-      key, // Enter the Key ID generated from the Dashboard
-      amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      key, 
+      amount: order.amount, 
       currency: "INR",
       name: "Oatly",
       dscription: "hello guys",
       image:
         "https://cdn.pixabay.com/photo/2016/12/27/13/10/logo-1933884_1280.png",
-      order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      order_id: order.id, 
       callback_url: "http://localhost:8000/api/payment/payment-verification",
       prefill: {
         name: "Gaurav Kumar",
@@ -123,10 +123,10 @@ function ViewProduct() {
         contact: "9000090000",
       },
       notes: {
-        item_name: "Max Ninja 200 Wireless Gaming Mouse", // Item description
-        quantity: "1", // Quantity of the item
-        price: "₹4,499", // Price of the item
-        address: "Razorpay Corporate Office", // Customer address or other order info
+        item_name: "Max Ninja 200 Wireless Gaming Mouse",
+        quantity: "1", 
+        price: "₹4,499",
+        address: "Razorpay Corporate Office",
       },
       theme: {
         color: "#000000",
@@ -135,7 +135,7 @@ function ViewProduct() {
 
     const razor = new window.Razorpay(options);
     razor.open();
-    console.log(window); //this to check rozerpay inigrate or not
+    console.log(window);
   };
 
   if (loading) return <div>Loading...</div>;
