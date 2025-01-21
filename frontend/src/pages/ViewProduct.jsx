@@ -5,6 +5,7 @@ import Oatme from "../assets/ProductSvg/Oatme.svg";
 import animation from "../assets/ProductSvg/animation.svg";
 import tree from "../assets/ProductSvg/tree.svg";
 import Cart from "../components/Cart";
+import api from "../api/api";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,9 +17,12 @@ import OatlyTv from "@/components/OatlyTv";
 import Footer from "@/components/Footer";
 import ProductCard from "./ProductCard";
 import { toast } from "sonner";
+import PaymentBtn from "@/components/PaymentBtn";
+import axios from "axios";
 
 function ViewProduct() {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -31,12 +35,7 @@ function ViewProduct() {
     setClearState,
   } = useProductStore();
 
-
-  console.log(random);
-
-
-
-  const [quantity, setQuantity] = useState(1);
+  // console.log(random);
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -92,7 +91,52 @@ function ViewProduct() {
     getOneProduct(id);
   }, [id, oneProduct, getOneProduct, randomProduct, setClearState]);
 
+  const checkoutHandler = async (amount) => {
+    console.log(amount);
 
+    const {
+      data: { key },
+    } = await api.get("/payment/getkey");
+
+    const {
+      data: { order },
+    } = await axios.post("http://localhost:8000/api/payment/create-order", {
+      amount,
+    });
+
+    // console.log(order);
+
+
+    const options = {
+      key, // Enter the Key ID generated from the Dashboard
+      amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "Oatly",
+      dscription: "hello guys",
+      image:
+        "https://cdn.pixabay.com/photo/2016/12/27/13/10/logo-1933884_1280.png",
+      order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      callback_url: "http://localhost:8000/api/payment/payment-verification",
+      prefill: {
+        name: "Gaurav Kumar",
+        email: "gaurav.kumar@example.com",
+        contact: "9000090000",
+      },
+      notes: {
+        item_name: "Max Ninja 200 Wireless Gaming Mouse", // Item description
+        quantity: "1", // Quantity of the item
+        price: "₹4,499", // Price of the item
+        address: "Razorpay Corporate Office", // Customer address or other order info
+      },
+      theme: {
+        color: "#000000",
+      },
+    };
+
+    const razor = new window.Razorpay(options);
+    razor.open();
+    console.log(window); //this to check rozerpay inigrate or not
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -169,6 +213,10 @@ function ViewProduct() {
               </div>
 
               <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} />
+              <PaymentBtn
+                amount={oneProduct.price * quantity}
+                onClick={() => checkoutHandler(oneProduct.price * quantity)}
+              />
             </div>
           </div>
           <div className="flex justify-center">
@@ -237,8 +285,7 @@ function ViewProduct() {
           </div>
         </div>
       </section>
-
-      <section >
+      <section>
         <div className=" flex justify-center items-center">
           <h1 className="text-[32px] sm:text-[40px] md:text-[52px] font-bold font-font1 mb-4">
             Our Popular Products

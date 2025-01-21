@@ -3,7 +3,7 @@ function AddToCardBtn({ onClick }) {
     <div>
       <button
         onClick={onClick}
-        className="bg-black hover:bg-black  text-white font-font1 text-pretty w-64 py-2 px-4 rounded"
+        className="bg-black hover:bg-black  text-white text-[22px] font-font1 text-pretty w-64 py-1  rounded"
       >
         Add To Cart
       </button>

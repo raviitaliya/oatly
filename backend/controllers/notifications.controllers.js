@@ -44,7 +44,7 @@ export const sendNotification = async (req, res) => {
       title: notification.title,
       body: notification.body,
     },
-    tokens: requestTokens, // Correct placement of tokens
+    tokens: requestTokens, 
   };
 
   console.log("Prepared Message:", message);
