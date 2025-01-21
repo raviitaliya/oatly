@@ -2,6 +2,8 @@ import AddToCardBtn from "@/components/ui/AddToCardBtn";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
 import  {useProductStore}  from "@/store/Store";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 
 const Home = () => {
   const { sendNotification, loading, error } = useProductStore();
@@ -94,6 +96,7 @@ const Home = () => {
       </form>
 
       {error && <p>Error: {error}</p>}
+      <SignUp/>
      
     </div>
 
