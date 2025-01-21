@@ -128,7 +128,7 @@ function ViewProduct() {
         price: "₹4,499",
         address: "Razorpay Corporate Office",
       },
-      theme: {
+      theme: { 
         color: "#000000",
       },
     };
