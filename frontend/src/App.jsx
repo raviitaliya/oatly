@@ -17,6 +17,9 @@ import AddToCard from "./pages/AddToCard";
 import { getToken, onMessage } from "firebase/messaging";
 import { useEffect } from "react";
 import { messaging } from "@/firebase/firebase";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+import ResetPass from "./pages/ResetPass";
 
 function App() {
   async function requestPermission() {
@@ -77,6 +80,9 @@ function App() {
           </Route>
           <Route path="oatly-who" element={<OatlyWho />} />
           <Route path="addToCard" element={<AddToCard />} />
+          <Route path="signUp" element={<SignUp />} />
+          <Route path="signIn" element={<SignIn/>} />
+          <Route path="reset-password" element={<ResetPass/>} />
         </Route>
       </Routes>
     </BrowserRouter>
