@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [step, setStep] = useState(1);
@@ -77,7 +78,15 @@ const SignUp = () => {
                   />
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-between">
+
+                <button
+                    type="button"
+                    className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
+                  >
+                    <Link to="/signIn">Back</Link>
+                  </button>
+
                   <button
                     type="button"
                     className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
@@ -85,6 +94,7 @@ const SignUp = () => {
                   >
                     Next
                   </button>
+                 
                 </div>
               </>
             )}

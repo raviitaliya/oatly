@@ -4,6 +4,7 @@ import { useState } from "react";
 import  {useProductStore}  from "@/store/Store";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
+import ResetPass from "./ResetPass";
 
 const Home = () => {
   const { sendNotification, loading, error } = useProductStore();
@@ -96,7 +97,7 @@ const Home = () => {
       </form>
 
       {error && <p>Error: {error}</p>}
-      <SignUp/>
+      <ResetPass/>
      
     </div>
 
