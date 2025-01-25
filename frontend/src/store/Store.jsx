@@ -1,9 +1,6 @@
 import { create } from "zustand";
 import api from "../api/api";
 
-
-
-
 export const useProductStore = create((set, get) => ({
   products: [],
   oatDrinkProducts: [],
@@ -13,7 +10,7 @@ export const useProductStore = create((set, get) => ({
   oatgurt: [],
   IceCream: [],
   SoftServe: [],
-  random:[],
+  random: [],
   oneProduct: null,
   selectedProduct: null,
   loading: false,
@@ -30,8 +27,8 @@ export const useProductStore = create((set, get) => ({
   seticeCream: (IceCream) => set({ IceCream }),
   setsoftServe: (SoftServe) => set({ SoftServe }),
   setoneProduct: (oneProduct) => set({ oneProduct }),
-  setrandom: (random) => set({random}),
-  setverificatonToken: (otp) => set({otp}),
+  setrandom: (random) => set({ random }),
+  setverificatonToken: (otp) => set({ otp }),
 
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
@@ -220,8 +217,6 @@ export const useProductStore = create((set, get) => ({
     if (get().loading) return;
     set({ loading: true, error: null });
     try {
-    
-      
       const response = await api.get("/admin/random-products");
       set({ random: response.data.randomProducts, loading: false });
     } catch (error) {
@@ -233,22 +228,20 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-  signUpUser: async (formData) => {
+signUpUser: async (formData) => {
     set({ loading: true, error: null });
     try {
       const response = await api.post("/auth/signup", formData);
-     
+
       if (response.status === 200) {
         set({ user: response.data.user, loading: false });
         console.log("Signup successful:", response.data);
-       set({otp: response.data.user.verificatonToken });
-       return response;
-       
+        set({ otp: response.data.user.verificatonToken });
+        return response;
       } else {
-        set({ User: null, loading: false, error: response.data.message  });
+        set({ User: null, loading: false, error: response.data.message });
       }
-    }
-    catch (error) {
+    } catch (error) {
       set({
         User: null,
         loading: false,
@@ -256,12 +249,15 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
-  
+
   verifyEmail: async (otp) => {
     set({ loading: true, error: null });
     try {
       const { user } = get();
-      const response = await api.post("/auth/verify-email", { email: user.email, otp });
+      const response = await api.post("/auth/verify-email", {
+        email: user.email,
+        otp,
+      });
       console.log("Responseeeeeeeeeeeeeeeeeee:", otp);
       console.log("Responseeeeeeeeeeeeeeeeeee:", user.email);
       console.log("Responseeeeeeeeeeeeeeeeeee:", response);
@@ -273,10 +269,15 @@ export const useProductStore = create((set, get) => ({
         return { success: false, message: response.data.message };
       }
     } catch (error) {
-      set({ loading: false, error: error.response?.data?.message || "Failed to verify email" });
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to verify email",
+      });
       console.error("Error during email verification:", error);
-      return { success: false, message: error.response?.data?.message || "Failed to verify email" };
+      return {
+        success: false,
+        message: error.response?.data?.message || "Failed to verify email",
+      };
     }
-  }
-  
+  },
 }));

@@ -19,7 +19,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
     };
 
     // Log mail options to ensure data is correct
-    console.log("Sending email with options:", mailOptions);
+    // console.log("Sending email with options:", mailOptions);
 
     const response = await transporter.sendMail(mailOptions);
     console.log("Email sent successfully:", response);
