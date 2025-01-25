@@ -1,8 +1,47 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useProductStore } from "../store/Store";
 
 const SignUp = () => {
   const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    mobile: "",
+    primaryMobile: "",
+    password: "",
+    confpassword: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    country: "",
+    zipcode: "",
+  });
+
+  const { signUpUser, loading, error } = useProductStore();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+   const response = await signUpUser(formData);
+   console.log("sucessssssss")
+    if (response && !error) {
+      navigate("/otp");
+    } else {
+      console.error("Signup failed:", response?.message || "Unknown error");
+    }
+  };
 
   const handleNext = () => {
     if (step < 3) {
@@ -16,30 +55,28 @@ const SignUp = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
-  };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-3xl relative border-2 border-dashed border-gray-300">
         <div className="p-8">
           <h2 className="text-5xl font-bold text-center font-font1 tracking-wide mb-6">
-          Become a Member
+            Become a Member
           </h2>
           <h2 className="text-2xl text-center font-font2 mb-6">
-          Become part of our plant-based community and enjoy high-quality, eco-friendly dairy alternatives for all.
+            Become part of our plant-based community and enjoy high-quality,
+            eco-friendly dairy alternatives for all.
           </h2>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-           
             {step === 1 && (
               <>
                 <div>
                   <label className="block text-2xl font-font2 mb-1">Name</label>
                   <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your name"
                   />
@@ -51,6 +88,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your username"
                   />
@@ -62,6 +102,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your email"
                   />
@@ -73,14 +116,16 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="mobile"
+                    value={formData.mobile}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your mobile number"
                   />
                 </div>
 
                 <div className="flex justify-between">
-
-                <button
+                  <button
                     type="button"
                     className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
                   >
@@ -94,12 +139,10 @@ const SignUp = () => {
                   >
                     Next
                   </button>
-                 
                 </div>
               </>
             )}
 
-         
             {step === 2 && (
               <>
                 <div>
@@ -108,6 +151,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="primaryMobile"
+                    value={formData.primaryMobile}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your primary mobile number"
                   />
@@ -119,6 +165,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your password"
                   />
@@ -130,6 +179,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="password"
+                    name="confpassword"
+                    value={formData.confpassword}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Confirm your password"
                   />
@@ -154,7 +206,6 @@ const SignUp = () => {
               </>
             )}
 
-            
             {step === 3 && (
               <>
                 <div>
@@ -163,6 +214,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="address1"
+                    value={formData.address1}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your address"
                   />
@@ -174,6 +228,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="address2"
+                    value={formData.address2}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your secondary address"
                   />
@@ -183,6 +240,9 @@ const SignUp = () => {
                   <label className="block text-2xl font-font2 mb-1">City</label>
                   <input
                     type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your city"
                   />
@@ -194,6 +254,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your state"
                   />
@@ -205,6 +268,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your country"
                   />
@@ -216,6 +282,9 @@ const SignUp = () => {
                   </label>
                   <input
                     type="text"
+                    name="zipcode"
+                    value={formData.zipcode}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your zipcode"
                   />
@@ -229,12 +298,16 @@ const SignUp = () => {
                   >
                     Back
                   </button>
+                  
+                  
                   <button
                     type="submit"
                     className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
                   >
                     Submit
                   </button>
+                 
+                  
                 </div>
               </>
             )}

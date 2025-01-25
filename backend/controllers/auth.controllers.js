@@ -73,6 +73,7 @@ export const signup = async (req, res) => {
       email,
       mobile,
       password: hashedPassword,
+      confpassword,
       address1,
       address2,
       city,

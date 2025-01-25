@@ -5,6 +5,7 @@ import  {useProductStore}  from "@/store/Store";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import ResetPass from "./ResetPass";
+import OtpPage from "./OtpPage";
 
 const Home = () => {
   const { sendNotification, loading, error } = useProductStore();
@@ -97,7 +98,7 @@ const Home = () => {
       </form>
 
       {error && <p>Error: {error}</p>}
-      <ResetPass/>
+      <SignUp/>
      
     </div>
 

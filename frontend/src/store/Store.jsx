@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import api from "../api/api";
 
+
+
+
 export const useProductStore = create((set, get) => ({
   products: [],
   oatDrinkProducts: [],
@@ -15,6 +18,8 @@ export const useProductStore = create((set, get) => ({
   selectedProduct: null,
   loading: false,
   error: null,
+  user: null,
+  otp: null,
 
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
@@ -26,6 +31,7 @@ export const useProductStore = create((set, get) => ({
   setsoftServe: (SoftServe) => set({ SoftServe }),
   setoneProduct: (oneProduct) => set({ oneProduct }),
   setrandom: (random) => set({random}),
+  setverificatonToken: (otp) => set({otp}),
 
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
@@ -226,5 +232,51 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
+
+  signUpUser: async (formData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/auth/signup", formData);
+     
+      if (response.status === 200) {
+        set({ user: response.data.user, loading: false });
+        console.log("Signup successful:", response.data);
+       set({otp: response.data.user.verificatonToken });
+       return response;
+       
+      } else {
+        set({ User: null, loading: false, error: response.data.message  });
+      }
+    }
+    catch (error) {
+      set({
+        User: null,
+        loading: false,
+        error: error.response?.data?.message || "Failed to sign up",
+      });
+    }
+  },
+  
+  verifyEmail: async (otp) => {
+    set({ loading: true, error: null });
+    try {
+      const { user } = get();
+      const response = await api.post("/auth/verify-email", { email: user.email, otp });
+      console.log("Responseeeeeeeeeeeeeeeeeee:", otp);
+      console.log("Responseeeeeeeeeeeeeeeeeee:", user.email);
+      console.log("Responseeeeeeeeeeeeeeeeeee:", response);
+      if (response.status === 200) {
+        set({ loading: false });
+        return { success: true };
+      } else {
+        set({ loading: false, error: response.data.message });
+        return { success: false, message: response.data.message };
+      }
+    } catch (error) {
+      set({ loading: false, error: error.response?.data?.message || "Failed to verify email" });
+      console.error("Error during email verification:", error);
+      return { success: false, message: error.response?.data?.message || "Failed to verify email" };
+    }
+  }
   
 }));
