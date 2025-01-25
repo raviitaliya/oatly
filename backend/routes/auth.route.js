@@ -1,5 +1,5 @@
 import express from "express";
-import {  signup, verifyEmail, login ,logout, forgotPassword, resetPassword, checkAuth} from "../controllers/auth.controllers.js";
+import {  signup, verifyEmail, login ,logout, forgotPassword, resetPassword, checkAuth, upadatePassword} from "../controllers/auth.controllers.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -19,8 +19,7 @@ router.post("/forgot-password", forgotPassword);
 
 router.post("/reset-password/:token", resetPassword);
 
-
-
+router.post("/update-password/", upadatePassword);
 
 
 
