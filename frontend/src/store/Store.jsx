@@ -228,7 +228,7 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-signUpUser: async (formData) => {
+  signUpUser: async (formData) => {
     set({ loading: true, error: null });
     try {
       const response = await api.post("/auth/signup", formData);
@@ -256,7 +256,7 @@ signUpUser: async (formData) => {
       const { user } = get();
       const response = await api.post("/auth/verify-email", {
         email: user.email,
-        otp,
+        code: otp,
       });
       console.log("Responseeeeeeeeeeeeeeeeeee:", otp);
       console.log("Responseeeeeeeeeeeeeeeeeee:", user.email);
