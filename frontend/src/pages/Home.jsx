@@ -98,7 +98,7 @@ const Home = () => {
       </form>
 
       {error && <p>Error: {error}</p>}
-      <SignUp/>
+      {/* <SignUp/> */}
      
     </div>
 

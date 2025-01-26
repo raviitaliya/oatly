@@ -292,7 +292,7 @@ function ViewProduct() {
           </h1>
         </div>
 
-        <div className=" flex justify-center gap-14 items-center">
+        <div className=" flex flex-wrap justify-center gap-14 items-center ">
           {random.map((product) => (
             <Link
               key={product._id}

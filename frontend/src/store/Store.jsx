@@ -30,6 +30,7 @@ export const useProductStore = create((set, get) => ({
   setrandom: (random) => set({ random }),
   setverificatonToken: (otp) => set({ otp }),
 
+
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
 
@@ -280,4 +281,27 @@ export const useProductStore = create((set, get) => ({
       };
     }
   },
+
+  signInUser: async (formData) => { 
+    set({ loading: true, error: null });
+    
+    try {
+      console.log("Form Data:", formData);
+      const response = await api.post("/auth/login", formData);
+      if (response.status === 200) {
+        set({ user: response.data.user, loading: false });
+        console.log("Login successful:", response.data);
+        return response;
+      } else {
+        set({ user: null, loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        user: null,
+        loading: false,
+        error: error.response?.data?.message || "Failed to sign in",
+      });
+    }
+  }
+
 }));
