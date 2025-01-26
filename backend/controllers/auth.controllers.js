@@ -8,6 +8,7 @@ import {
   sendResetSuccessfullEmail,
 } from "../email/email.js";
 import Crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   const {
@@ -163,7 +164,7 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Invalid credntials" });
     }
 
-    generateTokenAndSetCookie(res, user._id);
+    const token = generateTokenAndSetCookie(res, user._id);
 
     user.lastLogin = new Date();
     await user.save();
@@ -175,6 +176,7 @@ export const login = async (req, res) => {
         ...user._doc,
         password: undefined,
       },
+      token,
     });
   } catch (error) {
     console.log("Error in login:", error);
@@ -290,7 +292,11 @@ export const upadatePassword = async () => {
 
 export const checkAuth = async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
     if (!user) {
       return res
         .status(400)

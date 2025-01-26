@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useProductStore } from "../store/Store";
+import Cookies from "js-cookie";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const { signInUser, loading, error } = useProductStore();
+  const { signInUser, loading, error, user } = useProductStore();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,14 +18,17 @@ const SignIn = () => {
     });
   };
 
+  // console.log(user);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-
+    // console.log("Form Data:", formData);
     const response = await signInUser(formData);
-    console.log("sucessssssss", response.headers.get("Set-Cookie"), response.headers);
+
+    Cookies.get("token");
+    // console.log("Token:", token);
     if (response && !error) {
-      // navigate("/home");
+      navigate("/home");
     } else {
       console.error("Signup failed:", response?.message || "Unknown error");
     }

@@ -21,17 +21,20 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import ResetPass from "./pages/ResetPass";
 import OtpPage from "./pages/OtpPage";
+import { useProductStore } from "./store/Store";
 
 function App() {
+  const { fetchUser } = useProductStore();
+  
   async function requestPermission() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
       const token = await getToken(messaging, {
-        vapidKey: "BEL9fSsDVxDrSbZbi5-6dcFFN9CbcSVwZHP1PJF2tbjaqOHOdXEdfqcZ0BnoJUyrAiad4LvRb2k-jBZye8gnt9s",
+        vapidKey:
+          "BEL9fSsDVxDrSbZbi5-6dcFFN9CbcSVwZHP1PJF2tbjaqOHOdXEdfqcZ0BnoJUyrAiad4LvRb2k-jBZye8gnt9s",
       });
-      console.log("FCM Token:", token);
+      // console.log("FCM Token:", token);
 
-     
       await fetch("http://localhost:8000/api/notify/save-token", {
         method: "POST",
         headers: {
@@ -43,25 +46,26 @@ function App() {
       console.error("Notification permission denied");
     }
   }
+  useEffect(() => {
+    fetchUser(); 
+  }, []);
 
   useEffect(() => {
     requestPermission();
-  
-    
+
     onMessage(messaging, (payload) => {
       console.log("Foreground notification received:", payload);
-  
+
       const { title, body } = payload.notification;
-  
-     
+
       if (Notification.permission === "granted") {
         new Notification(title, { body });
       } else {
-        alert(`${title}: ${body}`); 
+        alert(`${title}: ${body}`);
       }
     });
   }, []);
-  
+
   return (
     <BrowserRouter>
       <Routes>
@@ -82,9 +86,9 @@ function App() {
           <Route path="oatly-who" element={<OatlyWho />} />
           <Route path="addToCard" element={<AddToCard />} />
           <Route path="signUp" element={<SignUp />} />
-          <Route path="signIn" element={<SignIn/>} />
-          <Route path="reset-password" element={<ResetPass/>} />
-          <Route path="otp" element={<OtpPage/>} />
+          <Route path="signIn" element={<SignIn />} />
+          <Route path="reset-password" element={<ResetPass />} />
+          <Route path="otp" element={<OtpPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

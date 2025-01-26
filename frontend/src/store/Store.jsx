@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import api from "../api/api";
+import Cookies from "js-cookie";
 
 export const useProductStore = create((set, get) => ({
   products: [],
@@ -11,6 +12,7 @@ export const useProductStore = create((set, get) => ({
   IceCream: [],
   SoftServe: [],
   random: [],
+
   oneProduct: null,
   selectedProduct: null,
   loading: false,
@@ -29,7 +31,7 @@ export const useProductStore = create((set, get) => ({
   setoneProduct: (oneProduct) => set({ oneProduct }),
   setrandom: (random) => set({ random }),
   setverificatonToken: (otp) => set({ otp }),
-
+  setUser: (user) => set({ user }),
 
   setLoading: (loading) => set({ loading }),
   setError: (error) => set({ error }),
@@ -282,14 +284,23 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-  signInUser: async (formData) => { 
+  signInUser: async (formData) => {
     set({ loading: true, error: null });
-    
+
     try {
       console.log("Form Data:", formData);
       const response = await api.post("/auth/login", formData);
       if (response.status === 200) {
         set({ user: response.data.user, loading: false });
+
+        const token = Cookies.set("token", response.data.token, { expires: 7 });
+
+        const cookie = response.data.token;
+
+        if (token) {
+          localStorage.setItem("token", cookie);
+        }
+
         console.log("Login successful:", response.data);
         return response;
       } else {
@@ -302,6 +313,20 @@ export const useProductStore = create((set, get) => ({
         error: error.response?.data?.message || "Failed to sign in",
       });
     }
-  }
-
+  },
+  fetchUser: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/auth/check-auth", {
+        withCredentials: true,
+      });
+      set({ user: response.data.user, loading: false });
+    } catch (error) {
+      set({
+        user: null,
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch user",
+      });
+    }
+  },
 }));
