@@ -8,7 +8,7 @@ const OatlyTv = () => {
       style={{ backgroundImage: `url(${pinkImage})` }}
     >
       {/* TV Image Section */}
-      <div className="flex items-center justify-end p-4 md:p-6">
+      <div className="flex items-center justify-end p-4 md:p-6 max-sm:justify-center">
         <img
           src={Oatlytv}
           alt="OatlyTV"
@@ -17,7 +17,7 @@ const OatlyTv = () => {
       </div>
 
       {/* Text Section */}
-      <div className="flex items-center justify-start p-4 md:p-6">
+      <div className="flex items-center justify-start p-4 md:p-6 max-sm:justify-center max-sm:text-center">
         <div className="max-w-lg">
           <h1 className="text-6xl md:text-6xl font-font1 mb-4 md:mb-6">
             HOW DO WE MAKE OUR OAT DRINKS?

@@ -1,7 +1,34 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useProductStore } from "../store/Store";
 
 const SignIn = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const { signInUser, loading, error } = useProductStore();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData);
+
+    const response = await signInUser(formData);
+    console.log("sucessssssss", response.headers.get("Set-Cookie"), response.headers);
+    if (response && !error) {
+      // navigate("/home");
+    } else {
+      console.error("Signup failed:", response?.message || "Unknown error");
+    }
+  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white  w-full max-w-3xl relative border-2 border-dashed border-gray-300">
@@ -15,13 +42,16 @@ const SignIn = () => {
             dairy-free delights
           </h2>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label className="block text-2xl font-font2 mb-1">
                 Username or Email
               </label>
               <input
                 type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                 placeholder="Enter your username or email"
               />
@@ -31,7 +61,11 @@ const SignIn = () => {
               <label className="block text-2xl font-font2 mb-1">Password</label>
               <input
                 type="password"
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                autoComplete="off"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl "
                 placeholder="Enter your password"
               />
             </div>
