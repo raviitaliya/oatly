@@ -46,7 +46,7 @@ const Navbar = () => {
                         <Link
                           to="/our-products"
                           className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block"
-                        >
+                        > 
                           OUR PRODUCTS
                         </Link>
                       </li>

@@ -4,17 +4,20 @@ import { FaTwitter } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo/Oatly_1.svg"
+import logo from "../assets/logo/Oatly_1.svg";
 
 function Footer() {
   return (
     <div className="bg-black p-20 ">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between ">
         <div>
-          <img src={logo} alt="oatlylogo" className="w-60
-          " />
+          <img
+            src={logo}
+            alt="oatlylogo"
+            className="w-60
+          "
+          />
         </div>
-
         <div className=" p-6">
           <div className="max-w-4xl mx-auto pb-10">
             <h2 className="text-base md:text-lg font-font2 mb-6 text-white">
@@ -41,7 +44,6 @@ function Footer() {
                   Privacy Policy
                 </Link>
               </div>
-
               <div className="space-y-2">
                 <Link
                   to="/sustainability"
