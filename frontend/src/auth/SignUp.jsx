@@ -57,12 +57,12 @@ const SignUp = () => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-3xl relative border-2 border-dashed border-gray-300">
+      <div className="bg-white w-full max-w-3xl relative border-2 border-dashed  border-gray-400">
         <div className="p-8">
-          <h2 className="text-5xl font-bold text-center font-font1 tracking-wide mb-6">
+          <h2 className="text-4xl font-bold text-center font-font1 tracking-wide mb-6">
             Become a Member
           </h2>
-          <h2 className="text-2xl text-center font-font2 mb-6">
+          <h2 className="text-xl text-gray-500 text-center font-font2 mb-6">
             Become part of our plant-based community and enjoy high-quality,
             eco-friendly dairy alternatives for all.
           </h2>
@@ -71,19 +71,19 @@ const SignUp = () => {
             {step === 1 && (
               <>
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">Name</label>
+                  <label className="block text-xl font-font2 mb-1">Name</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your name"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Username
                   </label>
                   <input
@@ -91,13 +91,13 @@ const SignUp = () => {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your username"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Email
                   </label>
                   <input
@@ -105,13 +105,13 @@ const SignUp = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your email"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Mobile
                   </label>
                   <input
@@ -119,7 +119,7 @@ const SignUp = () => {
                     name="mobile"
                     value={formData.mobile}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your mobile number"
                   />
                 </div>
@@ -146,7 +146,7 @@ const SignUp = () => {
             {step === 2 && (
               <>
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Primary Mobile
                   </label>
                   <input
@@ -160,7 +160,7 @@ const SignUp = () => {
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Password
                   </label>
                   <input
@@ -168,13 +168,13 @@ const SignUp = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your password"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Confirm Password
                   </label>
                   <input
@@ -182,7 +182,7 @@ const SignUp = () => {
                     name="confpassword"
                     value={formData.confpassword}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Confirm your password"
                   />
                 </div>
@@ -209,7 +209,7 @@ const SignUp = () => {
             {step === 3 && (
               <>
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Address Line 1
                   </label>
                   <input
@@ -217,13 +217,13 @@ const SignUp = () => {
                     name="address1"
                     value={formData.address1}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your address"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Address Line 2
                   </label>
                   <input
@@ -231,25 +231,25 @@ const SignUp = () => {
                     name="address2"
                     value={formData.address2}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your secondary address"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">City</label>
+                  <label className="block text-xl font-font2 mb-1">City</label>
                   <input
                     type="text"
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your city"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     State
                   </label>
                   <input
@@ -257,13 +257,13 @@ const SignUp = () => {
                     name="state"
                     value={formData.state}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your state"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Country
                   </label>
                   <input
@@ -271,13 +271,13 @@ const SignUp = () => {
                     name="country"
                     value={formData.country}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your country"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-2xl font-font2 mb-1">
+                  <label className="block text-xl font-font2 mb-1">
                     Zipcode
                   </label>
                   <input
@@ -285,7 +285,7 @@ const SignUp = () => {
                     name="zipcode"
                     value={formData.zipcode}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
+                    className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
                     placeholder="Enter your zipcode"
                   />
                 </div>
