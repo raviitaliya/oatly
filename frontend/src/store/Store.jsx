@@ -388,18 +388,20 @@ export const useProductStore = create((set, get) => ({
         withCredentials: true,
       });
 
-      if (response.success === true) {
+      if (response.data.success) {
+        localStorage.removeItem("token");
+        Cookies.remove("token");
         set({ user: null, loading: false });
+        console.log("Logout successful");
+      } else {
+        set({ loading: false, error: "Failed to log out" });
       }
-      console.log(response.data);
-
-      set({ user: response.data.user, loading: false });
     } catch (error) {
       set({
-        user: null,
         loading: false,
-        error: error.response?.data?.message || "Failed to fetch user",
+        error: error.response?.data?.message || "Failed to log out",
       });
+      console.error("Error during logout:", error);
     }
   },
 }));
