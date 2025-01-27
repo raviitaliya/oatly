@@ -1,14 +1,25 @@
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
+import { useState } from "react"
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
+import SignIn from "@/auth/SignIn";
+import SignUp from "@/auth/SignUp";
 
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Button } from "./ui/button";
 
 const Navbar = () => {
+
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
+
+
+
+
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
     <nav className="flex items-center fixed justify-between p-2 sm:p-3 w-full">
@@ -46,7 +57,7 @@ const Navbar = () => {
                         <Link
                           to="/our-products"
                           className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block"
-                        > 
+                        >
                           OUR PRODUCTS
                         </Link>
                       </li>
@@ -186,13 +197,30 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Right Side - Avatar */}
-      <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
-        <img
-          src={profileGif}
-          alt="Profile"
-          className="w-12 h-12  rounded-full object-cover shadow-lg"
-        />
+      <div className="flex justify-center items-center gap-8">
+        <div className="flex gap-4 font-font1">
+          <div >
+            <Button onClick={() => setShowSignIn(!showSignIn)}>
+              sign up
+            </Button>
+          </div>
+          {showSignIn && <SignUp />}
+
+          <div onClick={() => setShowSignUp(!showSignUp)}>
+            <Button>
+              log in
+            </Button>
+          </div>
+        </div>
+            {showSignUp && <SignIn />}
+
+        <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
+          <img
+            src={profileGif}
+            alt="Profile"
+            className="w-12 h-12  rounded-full object-cover shadow-lg"
+          />
+        </div>
       </div>
     </nav>
   );

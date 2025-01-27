@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useProductStore } from "../store/Store";
@@ -306,8 +306,7 @@ const SignUp = () => {
                   >
                     Submit
                   </button>
-                 
-                  
+              
                 </div>
               </>
             )}
