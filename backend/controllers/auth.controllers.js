@@ -184,7 +184,12 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+    path: "/", // Ensure the path matches where the cookie was set
+  });
   res.status(200).json({ success: true, message: "Logged out successfully" });
 };
 
@@ -211,7 +216,7 @@ export const forgotPassword = async (req, res) => {
 
     await sendPasswordResetEmail(
       user.email,
-      `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+      `${process.env.CLIENT_URL}/set-newPassword/${resetToken}`
     );
 
     res.status(200).json({
@@ -228,6 +233,9 @@ export const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
     const { password } = req.body;
+
+    console.log(token);
+    console.log(password);
 
     const user = await User.findOne({
       resetPasswordToken: token,

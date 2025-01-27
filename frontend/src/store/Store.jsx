@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import api from "../api/api";
 import Cookies from "js-cookie";
+import axios from "axios";
+
+const API = "http://localhost:8000/api";
 
 export const useProductStore = create((set, get) => ({
   products: [],
@@ -288,7 +291,7 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      console.log("Form Data:", formData);
+      // console.log("Form Data:", formData);
       const response = await api.post("/auth/login", formData);
       if (response.status === 200) {
         set({ user: response.data.user, loading: false });
@@ -314,12 +317,82 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
+
+  forgotPassword: async (email) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/auth/forgot-password", { email });
+
+      if (response.status === 200) {
+        set({ loading: false });
+        return { success: true };
+      } else {
+        set({ loading: false, error: response.data.message });
+        return { success: false, message: response.data.message };
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to send reset link",
+      });
+      console.error("Error sending reset link:", error);
+      return {
+        success: false,
+        message: error.response?.data?.message || "Failed to send reset link",
+      };
+    }
+  },
+
+  resetPassword: async (token, password) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axios.post(
+        `${API}/auth/set-newPassword/${token}`,
+        {
+          password,
+        }
+      );
+
+      console.log(response.data);
+
+      set({ message: response.data.message, loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response.data.message || "Error resetting password",
+      });
+      throw error;
+    }
+  },
+
   fetchUser: async () => {
     set({ loading: true, error: null });
     try {
       const response = await api.get("/auth/check-auth", {
         withCredentials: true,
       });
+      set({ user: response.data.user, loading: false });
+    } catch (error) {
+      set({
+        user: null,
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch user",
+      });
+    }
+  },
+
+  logOut: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/auth/logout", {
+        withCredentials: true,
+      });
+
+      if (response.success === true) {
+        set({ user: null, loading: false });
+      }
+      console.log(response.data);
+
       set({ user: response.data.user, loading: false });
     } catch (error) {
       set({

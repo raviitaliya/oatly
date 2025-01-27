@@ -35,7 +35,7 @@ const SignUp = () => {
     e.preventDefault();
 
    const response = await signUpUser(formData);
-   console.log("sucessssssss")
+  //  console.log("sucessssssss")
     if (response && !error) {
       navigate("/otp");
     } else {

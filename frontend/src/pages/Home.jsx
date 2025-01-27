@@ -1,18 +1,20 @@
 import AddToCardBtn from "@/components/ui/AddToCardBtn";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
-import  {useProductStore}  from "@/store/Store";
+import { useProductStore } from "@/store/Store";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import ResetPass from "./ResetPass";
 import OtpPage from "./OtpPage";
 
 const Home = () => {
-  const { sendNotification, loading, error } = useProductStore();
+  const { sendNotification, loading, error, logOut } = useProductStore();
   const [notificationData, setNotificationData] = useState({
     title: "",
     message: "",
-    tokens: ['fElDgF2WNo2xr3ioh-HHen:APA91bHGqyegXpXU5FM8twzZN3rkNEn1q-TammpBQynttEevi6v4SvzwzjkU8B3ynqiamrJtobhwx5zOdWIMk8d_2JenShtxOiWUo3zc4VX9J0lTu8vS1l4'], // This should be a valid array of device tokens
+    tokens: [
+      "fElDgF2WNo2xr3ioh-HHen:APA91bHGqyegXpXU5FM8twzZN3rkNEn1q-TammpBQynttEevi6v4SvzwzjkU8B3ynqiamrJtobhwx5zOdWIMk8d_2JenShtxOiWUo3zc4VX9J0lTu8vS1l4",
+    ], // This should be a valid array of device tokens
   });
 
   const handleChange = (e) => {
@@ -21,33 +23,37 @@ const Home = () => {
       ...prevData,
       [name]: value,
     }));
-  };  
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (notificationData.tokens.length === 0) {
       alert("Please provide at least one token");
       return;
     }
-  
+
     if (!notificationData.title || !notificationData.message) {
       alert("Title and message are required");
       return;
     }
-  
+
     const payload = {
       notification: {
-        title: notificationData.title,  
-        body: notificationData.message, 
+        title: notificationData.title,
+        body: notificationData.message,
       },
-      tokens: notificationData.tokens, 
+      tokens: notificationData.tokens,
     };
-  
-    console.log("Submitting notification data:", payload); 
-  
-    await sendNotification(payload); 
+
+    console.log("Submitting notification data:", payload);
+
+    await sendNotification(payload);
   };
+
+  const handlogout = async() => {
+    await logOut();
+  }
   return (
     <div>
       <Navbar />
@@ -97,13 +103,17 @@ const Home = () => {
         </button>
       </form>
 
+      <button
+        onClick={handlogout}
+        type="button"
+        className="w-40 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
+      >
+        Logout
+      </button>
+
       {error && <p>Error: {error}</p>}
       {/* <SignUp/> */}
-     
     </div>
-
-    
-
   );
 };
 

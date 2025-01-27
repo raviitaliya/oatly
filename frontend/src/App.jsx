@@ -22,6 +22,7 @@ import SignIn from "./pages/SignIn";
 import ResetPass from "./pages/ResetPass";
 import OtpPage from "./pages/OtpPage";
 import { useProductStore } from "./store/Store";
+import NewPassword from "./pages/NewPassword";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -88,6 +89,7 @@ function App() {
           <Route path="signUp" element={<SignUp />} />
           <Route path="signIn" element={<SignIn />} />
           <Route path="reset-password" element={<ResetPass />} />
+          <Route path="set-newPassword/:token" element={<NewPassword />} />
           <Route path="otp" element={<OtpPage />} />
         </Route>
       </Routes>
