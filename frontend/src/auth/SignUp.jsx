@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Toaster, toast } from 'sonner';
+import { Loader2 } from "lucide-react";
 
 import { useProductStore } from "../store/Store";
 
 const SignUp = () => {
   const [step, setStep] = useState(1);
+
+  console.log(step);
+
   const [formData, setFormData] = useState({
     name: "",
     username: "",
@@ -25,6 +30,91 @@ const SignUp = () => {
   const { signUpUser, loading, error } = useProductStore();
   const navigate = useNavigate();
 
+  // Add validation state
+  const [errors, setErrors] = useState({});
+
+  // Validation functions for each step
+  const validateStep1 = () => {
+    const stepErrors = {};
+
+    if (!formData.name.trim()) {
+      stepErrors.name = "Name is required";
+    }
+
+    if (!formData.username.trim()) {
+      stepErrors.username = "Username is required";
+    }
+
+    if (!formData.email.trim()) {
+      stepErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      stepErrors.email = "Please enter a valid email";
+    }
+
+    if (!formData.mobile.trim()) {
+      stepErrors.mobile = "Mobile number is required";
+    } else if (!/^\d{10}$/.test(formData.mobile)) {
+      stepErrors.mobile = "Please enter a valid 10-digit mobile number";
+    }
+
+    setErrors(stepErrors);
+    return Object.keys(stepErrors).length === 0;
+  };
+
+  const validateStep2 = () => {
+    const stepErrors = {};
+
+    if (!formData.primaryMobile.trim()) {
+      stepErrors.primaryMobile = "Primary mobile is required";
+    } else if (!/^\d{10}$/.test(formData.primaryMobile)) {
+      stepErrors.primaryMobile = "Please enter a valid 10-digit mobile number";
+    }
+
+    if (!formData.password) {
+      stepErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      stepErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (!formData.confpassword) {
+      stepErrors.confpassword = "Please confirm your password";
+    } else if (formData.password !== formData.confpassword) {
+      stepErrors.confpassword = "Passwords do not match";
+    }
+
+    setErrors(stepErrors);
+    return Object.keys(stepErrors).length === 0;
+  };
+
+  const validateStep3 = () => {
+    const stepErrors = {};
+
+    if (!formData.address1.trim()) {
+      stepErrors.address1 = "Building name and number is required";
+    }
+
+    if (!formData.city.trim()) {
+      stepErrors.city = "City is required";
+    }
+
+    if (!formData.state.trim()) {
+      stepErrors.state = "State is required";
+    }
+
+    if (!formData.country.trim()) {
+      stepErrors.country = "Country is required";
+    }
+
+    if (!formData.zipcode.trim()) {
+      stepErrors.zipcode = "Zipcode is required";
+    } else if (!/^\d{6}$/.test(formData.zipcode)) {
+      stepErrors.zipcode = "Please enter a valid 6-digit zipcode";
+    }
+
+    setErrors(stepErrors);
+    return Object.keys(stepErrors).length === 0;
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -33,20 +123,55 @@ const SignUp = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    const response = await signUpUser(formData);
-    //  console.log("sucessssssss")
-    if (response && !error) {
-      navigate("/otp");
-    } else {
-      console.error("Signup failed:", response?.message || "Unknown error");
+    const isValid = validateStep3();
+    if (!isValid) return;
+
+    try {
+      const response = await signUpUser(formData);
+      
+      // console.log("Response:", response);
+      
+      if (response.status === 200 && !error) {
+        toast.success('Registration successful. Please verify your OTP.', {
+          duration: 3000,
+          style: {
+            background: '#4CAF50',
+            color: 'white',
+          },
+        });
+        navigate("/otp");
+      } else {
+        toast.error(response?.data?.message || 'Something went wrong during signup', {
+          duration: 3000,
+        });
+      }
+    } catch (err) {
+      // console.log(response);
+      
+      toast.error('An unexpected error occurred', {
+        duration: 3000,
+      });
     }
   };
 
   const handleNext = () => {
-    if (step < 3) {
+    let isValid = false;
+
+    switch (step) {
+      case 1:
+        isValid = validateStep1();
+        break;
+      case 2:
+        isValid = validateStep2();
+        break;
+      default:
+        isValid = true;
+    }
+
+    if (isValid && step < 3) {
       setStep(step + 1);
+      setErrors({});
     }
   };
 
@@ -55,6 +180,25 @@ const SignUp = () => {
       setStep(step - 1);
     }
   };
+
+  // Update the input fields to show error messages
+  const renderInput = (name, label, type = "text", placeholder) => (
+    <div>
+      <label className="block text-xl font-font2 mb-1">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        className={`w-full px-3 py-[6px] border ${errors[name] ? 'border-red-500' : 'border-gray-300'
+          } rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl`}
+        placeholder={placeholder}
+      />
+      {errors[name] && (
+        <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
+      )}
+    </div>
+  );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -76,7 +220,7 @@ const SignUp = () => {
                   initial={{ x: 300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -300, opacity: 0 }}
-                  transition={{ 
+                  transition={{
                     type: "spring",
                     stiffness: 400,
                     damping: 30,
@@ -85,59 +229,10 @@ const SignUp = () => {
                   className="h-[450px]"
                 >
                   <motion.div className="space-y-6">
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">Name</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Username
-                      </label>
-                      <input
-                        type="text"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your username"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your email"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Mobile
-                      </label>
-                      <input
-                        type="text"
-                        name="mobile"
-                        value={formData.mobile}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your mobile number"
-                      />
-                    </div>
+                    {renderInput("name", "Name", "text", "Enter your name")}
+                    {renderInput("username", "Username", "text", "Enter your username")}
+                    {renderInput("email", "Email", "email", "Enter your email")}
+                    {renderInput("mobile", "Mobile", "text", "Enter your mobile number")}
                   </motion.div>
                 </motion.div>
               )}
@@ -148,7 +243,7 @@ const SignUp = () => {
                   initial={{ x: 300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -300, opacity: 0 }}
-                  transition={{ 
+                  transition={{
                     type: "spring",
                     stiffness: 400,
                     damping: 30,
@@ -157,47 +252,9 @@ const SignUp = () => {
                   className="h-[450px]"
                 >
                   <motion.div className="space-y-6">
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Primary Mobile
-                      </label>
-                      <input
-                        type="text"
-                        name="primaryMobile"
-                        value={formData.primaryMobile}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your primary mobile number"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your password"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Confirm Password
-                      </label>
-                      <input
-                        type="password"
-                        name="confpassword"
-                        value={formData.confpassword}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Confirm your password"
-                      />
-                    </div>
+                    {renderInput("primaryMobile", "Primary Mobile", "text", "Enter your primary mobile number")}
+                    {renderInput("password", "Password", "password", "Enter your password")}
+                    {renderInput("confpassword", "Confirm Password", "password", "Confirm your password")}
                   </motion.div>
                 </motion.div>
               )}
@@ -208,7 +265,7 @@ const SignUp = () => {
                   initial={{ x: 300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -300, opacity: 0 }}
-                  transition={{ 
+                  transition={{
                     type: "spring",
                     stiffness: 400,
                     damping: 30,
@@ -216,115 +273,53 @@ const SignUp = () => {
                   }}
                   className="h-[450px]"
                 >
-                  <div className="space-y-6 overflow-y-auto max-h-[430px]">
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Address Line 1
-                      </label>
-                      <input
-                        type="text"
-                        name="address1"
-                        value={formData.address1}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your address"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Address Line 2
-                      </label>
-                      <input
-                        type="text"
-                        name="address2"
-                        value={formData.address2}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your secondary address"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">City</label>
-                      <input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your city"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        State
-                      </label>
-                      <input
-                        type="text"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your state"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Country
-                      </label>
-                      <input
-                        type="text"
-                        name="country"
-                        value={formData.country}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your country"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xl font-font2 mb-1">
-                        Zipcode
-                      </label>
-                      <input
-                        type="text"
-                        name="zipcode"
-                        value={formData.zipcode}
-                        onChange={handleChange}
-                        className="w-full px-3 py-[6px] border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl"
-                        placeholder="Enter your zipcode"
-                      />
-                    </div>
+                  <div className="space-y-6 px-1 py-1 space-x-1  overflow-y-auto max-h-[430px]">
+                    {renderInput("address1", "Building Name & Number", "text", "Enter building name and number")}
+                    {renderInput("address2", "Street Address", "text", "Enter street name, area, landmark etc.")}
+                    {renderInput("city", "City", "text", "Enter your city")}
+                    {renderInput("state", "State", "text", "Enter your state")}
+                    {renderInput("country", "Country", "text", "Enter your country")}
+                    {renderInput("zipcode", "Zipcode", "text", "Enter your zipcode")}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 type="button"
-                className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
+                className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handlePrevious}
+                disabled={loading}
               >
                 Back
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                type={step === 3 ? "submit" : "button"}
-                className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
-                onClick={step === 3 ? undefined : handleNext}
+                type="button"
+                className="w-24 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => {
+                  if (step === 3) {
+                    handleSubmit();
+                  } else {
+                    handleNext();
+                  }
+                }}
+                disabled={loading}
               >
-                {step === 3 ? "Submit" : "Next"}
+                {loading ? (
+                  <Loader2 className="h-5 w-5 animate-spin mx-auto" />
+                ) : (
+                  step === 3 ? "Submit" : "Next"
+                )}
               </motion.button>
             </div>
           </form>
         </div>
       </div>
+      <Toaster position="top-center" richColors closeButton />
     </div>
   );
 };

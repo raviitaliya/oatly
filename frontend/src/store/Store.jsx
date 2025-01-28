@@ -235,17 +235,18 @@ export const useProductStore = create((set, get) => ({
   },
 
   signUpUser: async (formData) => {
+    if (get().loading) return;
     set({ loading: true, error: null });
     try {
       const response = await api.post("/auth/signup", formData);
 
       if (response.status === 200) {
         set({ user: response.data.user, loading: false });
-        console.log("Signup successful:", response.data);
         set({ otp: response.data.user.verificatonToken });
         return response;
       } else {
         set({ User: null, loading: false, error: response.data.message });
+        return response;
       }
     } catch (error) {
       set({
@@ -253,6 +254,7 @@ export const useProductStore = create((set, get) => ({
         loading: false,
         error: error.response?.data?.message || "Failed to sign up",
       });
+      return error.response;
     }
   },
 
@@ -264,9 +266,7 @@ export const useProductStore = create((set, get) => ({
         email: user.email,
         code: otp,
       });
-      console.log("Responseeeeeeeeeeeeeeeeeee:", otp);
-      console.log("Responseeeeeeeeeeeeeeeeeee:", user.email);
-      console.log("Responseeeeeeeeeeeeeeeeeee:", response);
+
       if (response.status === 200) {
         set({ loading: false });
         return { success: true };
