@@ -18,7 +18,7 @@ function Oatmeal() {
   if (error) return <div>Error: {error}</div>;
   return (
     <div>
-      <div className="flex flex-wrap gap-7 items-center">
+      <div className="flex flex-wrap gap-7 items-center justify-center">
         {oatgurt.map((product) => (
           <Link key={product._id} to={`/our-products/${product.category.replace(/\s+/g, '-').toLowerCase()}/${product._id}`}>
           <ProductCard

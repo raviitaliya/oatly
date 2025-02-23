@@ -23,7 +23,7 @@ const ChilledOatDrinks = () => {
 
   return (
     <div>
-    <div className='flex flex-wrap gap-7 items-center'>
+    <div className='flex flex-wrap gap-7 items-center justify-center'>
       {chilledoatdrinks.map((product) => (
           <Link key={product._id} to={`/our-products/${product.category.replace(/\s+/g, '-').toLowerCase()}/${product._id}`}>
         <ProductCard

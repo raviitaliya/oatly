@@ -21,7 +21,7 @@ const AllProduct = () => {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-7 items-center">
+      <div className="flex flex-wrap gap-7 items-center justify-center">
         <img src={MainImage} className="w-[700px] max-md:w-full" />
 
         {products.map((product) => (

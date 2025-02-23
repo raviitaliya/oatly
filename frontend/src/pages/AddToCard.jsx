@@ -16,13 +16,13 @@ function AddToCard() {
   };
 
   const increaseQuantity = (productId) => {
-    const updatedCart = cart.map(item => {
+    const updatedCart = cart.map((item) => {
       if (item.id === productId) {
         const newQuantity = item.quantity + 1;
         return {
           ...item,
           quantity: newQuantity,
-          totalPrice: item.price * newQuantity
+          totalPrice: item.price * newQuantity,
         };
       }
       return item;
@@ -32,13 +32,13 @@ function AddToCard() {
   };
 
   const decreaseQuantity = (productId) => {
-    const updatedCart = cart.map(item => {
+    const updatedCart = cart.map((item) => {
       if (item.id === productId && item.quantity > 1) {
         const newQuantity = item.quantity - 1;
         return {
           ...item,
           quantity: newQuantity,
-          totalPrice: item.price * newQuantity
+          totalPrice: item.price * newQuantity,
         };
       }
       return item;
@@ -60,13 +60,15 @@ function AddToCard() {
               <div className="flex  gap-4">
                 <div className="my-2 p-1 w-24 border border-black rounded ">
                   <div className="flex items-center justify-between">
-                    <button className="px-3 rounded font-bold font-font2"
+                    <button
+                      className="px-3 rounded font-bold font-font2"
                       onClick={() => decreaseQuantity(item.id)}
                     >
                       -
                     </button>
                     <span>{item.quantity}</span>
-                    <button className="px-3 rounded font-semibold font-font2"
+                    <button
+                      className="px-3 rounded font-semibold font-font2"
                       onClick={() => increaseQuantity(item.id)}
                     >
                       +
@@ -91,6 +93,10 @@ function AddToCard() {
           </div>
         ))}
       </div>
+      <PaymentBtn
+        amount={oneProduct.price * quantity}
+        onClick={() => checkoutHandler(oneProduct.price * quantity)}
+      />
     </div>
   );
 }

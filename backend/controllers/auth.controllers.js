@@ -301,23 +301,27 @@ export const upadatePassword = async () => {
 export const checkAuth = async (req, res) => {
   try {
     const token = req.cookies.token;
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId);
+    const user = await User.findById(decoded.userId).select("-password"); // Exclude password for security
+
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "user is not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
     res.status(200).json({
       success: true,
-      message: "check auth Successfully",
+      message: "User authenticated successfully",
       user,
     });
   } catch (error) {
-    console.log("Error in checkAuth:", error.message);
-    res.status(400).json({ success: false, message: error.message });
+    console.error("Error in checkAuth:", error.message);
+    res.status(500).json({ success: false, message: error.message });
   }
 };

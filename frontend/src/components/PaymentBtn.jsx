@@ -7,7 +7,7 @@ function PaymentBtn({ amount, onClick }) {
         onClick={onClick}
         className="bg-[#c8c8c8] hover:bg-[#e4e4e4] mt-2 text-[25px] text-black font-font1 text-pretty w-64  rounded"
       >
-        Paya  ₹{amount}
+        Pay  ₹{amount}
       </button>
     </div>
   );
