@@ -25,6 +25,8 @@ export const useProductStore = create((set, get) => ({
 
   isSignUpOpen: false,
   isSingInOpen: false,
+  isOtpOpen: false,
+  isResetOpen: false,
 
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
@@ -44,11 +46,21 @@ export const useProductStore = create((set, get) => ({
 
   setClearState: () => set({ oneProduct: null, error: null, loading: false }),
 
-  openSignUp: () => set({ isSignUpOpen: true, isSignInOpen: false }),
+  openSignUp: () =>
+    set({ isSignUpOpen: true, isOtpOpen: false, isSignInOpen: false }),
   closeSignUp: () => set({ isSignUpOpen: false }),
 
-  openSignIn: () => set({ isSignInOpen: true, isSignUpOpen: false }),
+  openOtp: () =>
+    set({ isOtpOpen: true, isSignUpOpen: false, isSignInOpen: false }),
+  closeOtp: () => set({ isOtpOpen: false }),
+
+  openSignIn: () =>
+    set({ isSignInOpen: true, isSignUpOpen: false, isOtpOpen: false }),
   closeSignIn: () => set({ isSignInOpen: false }),
+
+  openReset: () =>
+    set((state) => ({ ...state, isResetOpen: true, isSignInOpen: false })),
+  closeReset: () => set((state) => ({ ...state, isResetOpen: false })),
 
   fetchProducts: async () => {
     if (get().loading) return;
@@ -216,8 +228,13 @@ export const useProductStore = create((set, get) => ({
       const response = await api.post("/auth/signup", formData);
 
       if (response.status === 200) {
-        set({ user: response.data.user, loading: false });
-        set({ otp: response.data.user.verificatonToken });
+        set({
+          user: response.data.user,
+          otp: response.data.user.verificatonToken,
+          loading: false,
+          isSignUpOpen: false,
+          isOtpOpen: true,
+        });
         return response;
       } else {
         set({ User: null, loading: false, error: response.data.message });
@@ -229,6 +246,7 @@ export const useProductStore = create((set, get) => ({
         loading: false,
         error: error.response?.data?.message || "Failed to sign up",
       });
+      console.error("Signup Error:", error);
       return error.response;
     }
   },
@@ -243,7 +261,11 @@ export const useProductStore = create((set, get) => ({
       });
 
       if (response.status === 200) {
-        set({ loading: false });
+        set({
+          loading: false,
+          isOtpOpen: false,
+          isSignInOpen: true,
+        });
         return { success: true };
       } else {
         set({ loading: false, error: response.data.message });

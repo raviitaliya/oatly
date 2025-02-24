@@ -7,7 +7,7 @@ import ResetPass from "../auth/ResetPass";
 import OtpPage from "./OtpPage";
 
 const Home = () => {
-  const { loading, error, logOut, openSignUp, isSignUpOpen } =
+  const { loading, error, logOut, openSignUp, isSignUpOpen, openReset, isResetOpen } =
     useProductStore();
 
   const handleLogout = async () => {
@@ -44,9 +44,16 @@ const Home = () => {
         Sign Up
       </button>
 
-      <p>SignUp Modal State: {isSignUpOpen.toString()}</p>
-
       {isSignUpOpen && <SignUp />}
+
+      {/* <button
+        onClick={openReset}
+        className="w-40 bg-black text-white py-3 rounded"
+      >
+        Reset It
+      </button> */}
+
+      {isResetOpen && <ResetPass />}
 
       {error && <p className="text-red-500">Error: {error}</p>}
     </div>

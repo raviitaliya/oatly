@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import close from "../assets/logo/close.svg";
 import cross from "../assets/logo/cross.svg";
 import { motion } from "framer-motion";
-
+import ResetPass from "./ResetPass";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +20,11 @@ const SignIn = () => {
     openSignUp,
     closeSignIn,
     isSignInOpen,
+    isResetOpen,
   } = useProductStore();
+
+  const openReset = useProductStore((state) => state.openReset);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -108,12 +112,25 @@ const SignIn = () => {
                 </p>
                 <p className="text-md text-gray-600">
                   Forgot your password?{" "}
-                  <Link
-                    to="/reset-password"
+                  <button
+                    onClick={() => {
+                      console.log("Reset Password Button Clicked");
+                      openReset(); // Call Zustand function
+                      closeSignIn();
+                      setTimeout(
+                        () =>
+                          console.log(
+                            "Final isResetOpen:",
+                            useProductStore.getState().isResetOpen
+                          ),
+                        500
+                      );
+                    }}
                     className="text-black hover:underline font-medium"
                   >
                     Reset It
-                  </Link>
+                  </button>
+                  {isResetOpen && <ResetPass />}
                 </p>
               </div>
             </form>
@@ -126,7 +143,7 @@ const SignIn = () => {
                 alt="this is svg"
                 className="w-[120px]"
                 animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 10, ease: "linear" }} 
+                transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
               />
               <img
                 src={cross || "/cross.svg"}

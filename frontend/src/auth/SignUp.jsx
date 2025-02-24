@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -35,8 +34,6 @@ const SignUp = () => {
   const closeSignUp = useProductStore((state) => state.closeSignUp);
 
   console.log("SignUp Modal State:", isSignUpOpen);
-
-  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
 
@@ -135,11 +132,11 @@ const SignUp = () => {
   if (!isSignUpOpen) return null;
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
 
     const isValid = validateStep3();
     if (!isValid) return;
-    SignUp;
+
     try {
       const response = await signUpUser(formData);
 
@@ -151,8 +148,7 @@ const SignUp = () => {
             color: "white",
           },
         });
-        navigate("/otp");
-        closeSignUp(); // Close modal after successful submission
+        closeSignUp();
       } else {
         toast.error(
           response?.data?.message || "Something went wrong during signup",
@@ -244,7 +240,7 @@ const SignUp = () => {
               eco-friendly dairy alternatives for all.
             </h2>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-6" onClick={(e) => handleSubmit(e)}>
               <AnimatePresence mode="wait">
                 {step === 1 && (
                   <motion.div
@@ -409,7 +405,10 @@ const SignUp = () => {
                 <p className="text-md text-gray-600">
                   Already have an account?{" "}
                   <button
-                    onClick={openSignIn}
+                    onClick={() => {
+                      openReset();
+                      console.log("Reset Password Modal Opened"); // Debugging
+                    }}
                     className="text-black hover:underline font-medium"
                   >
                     Log in
