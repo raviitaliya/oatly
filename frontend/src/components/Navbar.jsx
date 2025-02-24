@@ -11,9 +11,11 @@ import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
+import { Toaster, toast } from "sonner";
 
 const Navbar = () => {
-  const { isSignInOpen, openSignIn, closeSignIn, user, logOut } = useProductStore();
+  const { isSignInOpen, openSignIn, closeSignIn, user, logOut } =
+    useProductStore();
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -31,7 +33,17 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logOut();
+      toast.success("Login successful! Redirecting...", {
+        duration: 3000,
+        style: {
+          background: "#4CAF50",
+          color: "white",
+        },
+      });
     } catch (err) {
+      toast.error("An unexpected error occurred", {
+        duration: 3000,
+      });
       console.error("Logout failed:", err);
     }
   };
@@ -238,6 +250,7 @@ const Navbar = () => {
             className="w-12 h-12  rounded-full object-cover shadow-lg"
           />
         </div>
+        <Toaster position="top-center" richColors closeButton />
       </div>
     </nav>
   );

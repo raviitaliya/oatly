@@ -26,15 +26,15 @@ const Home = () => {
       <h1 className="font-font2 text-2xl">hello world</h1>
       <h1 className="font-font2 text-2xl">hello world</h1>
 
-      <button
+      {/* <button
         onClick={handleLogout}
         type="button"
         className="w-40 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
       >
         Logout
-      </button>
+      </button> */}
 
-      <button
+      {/* <button
         onClick={() => {
           console.log("Opening SignUp from Home");
           openSignUp();
@@ -42,7 +42,7 @@ const Home = () => {
         className="w-40 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
       >
         Sign Up
-      </button>
+      </button> */}
 
       {isSignUpOpen && <SignUp />}
 

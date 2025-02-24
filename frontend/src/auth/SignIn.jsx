@@ -6,6 +6,7 @@ import close from "../assets/logo/close.svg";
 import cross from "../assets/logo/cross.svg";
 import { motion } from "framer-motion";
 import ResetPass from "./ResetPass";
+import { Toaster, toast } from "sonner";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -40,6 +41,15 @@ const SignIn = () => {
     e.preventDefault();
     // console.log("Form Data:", formData);
     const response = await signInUser(formData);
+    if (response && !error) {
+      toast.success("Login successful! Redirecting...", {
+        duration: 3000,
+        style: {
+          background: "#4CAF50",
+          color: "white",
+        },
+      });
+    }
 
     Cookies.get("token");
     // console.log("Token:", token);
@@ -47,6 +57,9 @@ const SignIn = () => {
       closeSignIn();
       navigate("/home");
     } else {
+      toast.error("An unexpected error occurred", {
+        duration: 3000,
+      });
       console.error("Signup failed:", response?.message || "Unknown error");
     }
   };
@@ -115,7 +128,7 @@ const SignIn = () => {
                   <button
                     onClick={() => {
                       console.log("Reset Password Button Clicked");
-                      openReset(); // Call Zustand function
+                      openReset();
                       closeSignIn();
                       setTimeout(
                         () =>
