@@ -406,8 +406,7 @@ const SignUp = () => {
                   Already have an account?{" "}
                   <button
                     onClick={() => {
-                      openReset();
-                      console.log("Reset Password Modal Opened"); // Debugging
+                      openSignIn();
                     }}
                     className="text-black hover:underline font-medium"
                   >

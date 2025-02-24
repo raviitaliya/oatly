@@ -14,6 +14,7 @@ const ResetPass = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     forgotPassword(email);
+    closeReset();
   };
 
   return (

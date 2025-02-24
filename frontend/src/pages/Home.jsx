@@ -5,9 +5,10 @@ import SignIn from "../auth/SignIn";
 import SignUp from "../auth/SignUp";
 import ResetPass from "../auth/ResetPass";
 import OtpPage from "./OtpPage";
+import NewPassword from "./NewPassword";
 
 const Home = () => {
-  const { loading, error, logOut, openSignUp, isSignUpOpen, openReset, isResetOpen } =
+  const { loading, error, logOut, openSignUp, isSignUpOpen, openReset, isResetOpen, isPasswordOpen } =
     useProductStore();
 
   const handleLogout = async () => {
@@ -55,7 +56,9 @@ const Home = () => {
 
       {isResetOpen && <ResetPass />}
 
-      {error && <p className="text-red-500">Error: {error}</p>}
+      {isPasswordOpen && <NewPassword />}
+
+      {/* {error && <p className="text-red-500">Error: {error}</p>} */}
     </div>
   );
 };
