@@ -23,6 +23,9 @@ export const useProductStore = create((set, get) => ({
   user: null,
   otp: null,
 
+  isSignUpOpen: false,
+  isSingInOpen: false,
+
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
   setchilledoatdrinks: (chilledoatdrinks) => set({ chilledoatdrinks }),
@@ -40,6 +43,12 @@ export const useProductStore = create((set, get) => ({
   setError: (error) => set({ error }),
 
   setClearState: () => set({ oneProduct: null, error: null, loading: false }),
+
+  openSignUp: () => set({ isSignUpOpen: true, isSignInOpen: false }),
+  closeSignUp: () => set({ isSignUpOpen: false }),
+
+  openSignIn: () => set({ isSignInOpen: true, isSignUpOpen: false }),
+  closeSignIn: () => set({ isSignInOpen: false }),
 
   fetchProducts: async () => {
     if (get().loading) return;
@@ -182,40 +191,6 @@ export const useProductStore = create((set, get) => ({
         loading: false,
         error: error.message,
       });
-    }
-  },
-
-  sendNotification: async (notificationData) => {
-    set({ loading: true, error: null });
-    try {
-      const { tokens, notification } = notificationData;
-
-      // Validate that tokens is an array and not empty
-      if (!Array.isArray(tokens) || tokens.length === 0) {
-        throw new Error("No valid tokens provided");
-      }
-
-      // Prepare the message payload
-      const message = {
-        notification: {
-          title: notification.title,
-          body: notification.body,
-        },
-        tokens: tokens, // Array of device tokens to send the notification to
-      };
-
-      // Send the notification to multiple devices using sendToDevice
-      const response = await api.post("/notify/send-notification", message);
-
-      if (response.status === 200) {
-        set({ loading: false, error: null });
-        console.log("Notification sent successfully", response.data);
-      } else {
-        set({ loading: false, error: "Failed to send notification" });
-      }
-    } catch (error) {
-      set({ loading: false, error: error.message });
-      console.error("Error sending notification:", error.message);
     }
   },
 

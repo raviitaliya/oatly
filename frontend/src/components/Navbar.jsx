@@ -1,5 +1,5 @@
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
-import { useState } from "react"
+import { useState } from "react";
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
@@ -7,18 +7,34 @@ import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 import SignIn from "@/auth/SignIn";
 import SignUp from "@/auth/SignUp";
-
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
+import { useProductStore } from "@/store/Store";
 
 const Navbar = () => {
+  const {
+    isSignInOpen,
+    isSignUpOpen,
+    openSignIn,
+    closeSignIn,
+    openSignUp,
+    closeSignUp,
+  } = useProductStore();
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
+  const handleSignUpClick = () => {
+    setShowSignUp(!showSignUp);
+    setShowSignIn(false); 
+  };
 
-
+  // Toggle SignIn
+  const handleSignInClick = () => {
+    setShowSignIn(!showSignIn);
+    setShowSignUp(false); 
+  };
 
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
@@ -198,22 +214,13 @@ const Navbar = () => {
       </div>
 
       <div className="flex justify-center items-center gap-8">
-        <div className="flex gap-4 font-font1">
-          <div >
-            <Button onClick={() => setShowSignIn(!showSignIn)}>
-              sign up
-            </Button>
-          </div>
-          {showSignIn && <SignUp />}
+        <div>
+          <Button onClick={openSignUp}>Sign Up</Button>
+          {isSignUpOpen && <SignUp />}
 
-          <div onClick={() => setShowSignUp(!showSignUp)}>
-            <Button>
-              log in
-            </Button>
-          </div>
+          <Button onClick={openSignIn}>Log In</Button>
+          {isSignInOpen && <SignIn onClose={closeSignIn} />}
         </div>
-            {showSignUp && <SignIn />}
-
         <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
           <img
             src={profileGif}
