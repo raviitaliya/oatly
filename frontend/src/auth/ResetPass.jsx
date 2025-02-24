@@ -1,6 +1,5 @@
 import { useProductStore } from "@/store/Store";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import close from "../assets/logo/close.svg";
 import cross from "../assets/logo/cross.svg";

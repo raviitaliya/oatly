@@ -13,27 +13,27 @@ import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
 
 const Navbar = () => {
-  const {
-    isSignInOpen,
-    isSignUpOpen,
-    openSignIn,
-    closeSignIn,
-    openSignUp,
-    closeSignUp,
-  } = useProductStore();
+  const { isSignInOpen, openSignIn, closeSignIn, user, logOut } = useProductStore();
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
   const handleSignUpClick = () => {
     setShowSignUp(!showSignUp);
-    setShowSignIn(false); 
+    setShowSignIn(false);
   };
 
-  // Toggle SignIn
   const handleSignInClick = () => {
     setShowSignIn(!showSignIn);
-    setShowSignUp(false); 
+    setShowSignUp(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
   };
 
   const profileGif = "/src/assets/gif/discord-avatar.gif";
@@ -215,10 +215,20 @@ const Navbar = () => {
 
       <div className="flex justify-center items-center gap-8">
         <div className="flex gap-4">
-          <Button onClick={openSignUp} className="cursor-hand">Sign Up</Button>
-          {isSignUpOpen && <SignUp />}
+          {/* <Button onClick={openSignUp} className="cursor-hand">
+            Sign Up
+          </Button>
+          {isSignUpOpen && <SignUp />} */}
 
-          <Button onClick={openSignIn} className="cursor-hand">Log In</Button>
+          {!user ? (
+            <Button onClick={openSignIn} className="cursor-hand">
+              Log In
+            </Button>
+          ) : (
+            <Button onClick={handleLogout} className="cursor-hand">
+              Log Out
+            </Button>
+          )}
           {isSignInOpen && <SignIn onClose={closeSignIn} />}
         </div>
         <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
