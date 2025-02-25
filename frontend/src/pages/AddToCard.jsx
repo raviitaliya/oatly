@@ -1,58 +1,10 @@
-import { useEffect, useState } from "react";
-import { LockKeyhole, LockKeyholeOpen } from "lucide-react";
 import { useProductStore } from "@/store/Store";
-import { Link } from "react-router-dom";
 
-function AddToCard() {
-  const [cart, setCart] = useState([]);
-  const { user, openAddToCart, closeAddToCart } = useProductStore();
-
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(storedCart);
-  }, []);
-
-  const removeFromCart = (productId) => {
-    const updatedCart = cart.filter((item) => item.id !== productId);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setCart(updatedCart);
-  };
-
-  const increaseQuantity = (productId) => {
-    const updatedCart = cart.map((item) => {
-      if (item.id === productId) {
-        const newQuantity = item.quantity + 1;
-        return {
-          ...item,
-          quantity: newQuantity,
-          totalPrice: item.price * newQuantity,
-        };
-      }
-      return item;
-    });
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setCart(updatedCart);
-  };
-
-  const decreaseQuantity = (productId) => {
-    const updatedCart = cart.map((item) => {
-      if (item.id === productId && item.quantity > 1) {
-        const newQuantity = item.quantity - 1;
-        return {
-          ...item,
-          quantity: newQuantity,
-          totalPrice: item.price * newQuantity,
-        };
-      }
-      return item;
-    });
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    setCart(updatedCart);
-  };
+function AddToCart() {
+  const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useProductStore();
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Scrollable Cart Items */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-4xl mx-auto">
           {cart.length === 0 ? (
@@ -102,10 +54,8 @@ function AddToCard() {
           )}
         </div>
       </div>
-
-      
     </div>
   );
 }
 
-export default AddToCard;
+export default AddToCart;

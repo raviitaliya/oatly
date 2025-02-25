@@ -12,13 +12,14 @@ import AddToCardBtn from "./ui/AddToCardBtn";
 import { useProductStore } from "@/store/Store";
 import { Link } from "react-router-dom";
 import { LockKeyhole, LockKeyholeOpen } from "lucide-react";
+import ShopBtn from "./ui/ShopBtn";
 
-export default function Cart({ isbuttonclick }) {
+export default function Cart({ isbuttonclick, buttonclick }) {
   const { closeAddToCart, user } = useProductStore();
   return (
     <Sheet onOpenChange={(open) => !open && closeAddToCart()}>
       <SheetTrigger asChild>
-        <AddToCardBtn onClick={isbuttonclick} />
+        <ShopBtn onClick={buttonclick} /> 
       </SheetTrigger>
       <SheetContent className="!w-full sm:!w-full md:!w-[740px] lg:!w-[700px] flex flex-col h-full">
         <SheetHeader>

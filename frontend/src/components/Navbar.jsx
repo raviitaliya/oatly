@@ -7,7 +7,7 @@ import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 import SignIn from "@/auth/SignIn";
 import SignUp from "@/auth/SignUp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
@@ -24,14 +24,15 @@ const Navbar = () => {
     user,
     logOut,
     isAddToCartOpen,
+    cart,
     openAddToCart,
   } = useProductStore();
 
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [cartLength, setCartLength] = useState(0);
+  const navigate = useNavigate();
 
   const handleSignUpClick = () => {
     setShowSignUp(!showSignUp);
@@ -41,12 +42,6 @@ const Navbar = () => {
   const handleSignInClick = () => {
     setShowSignIn(!showSignIn);
     setShowSignUp(false);
-  };
-
-  const handleOnclick = () => {
-    addToCart();
-    setIsCartOpen(!isCartOpen);
-    openAddToCart();
   };
 
   const addToCart = () => {
@@ -61,9 +56,6 @@ const Navbar = () => {
 
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    const cartLength = cart.length - 1 || 0;
-    setCartLength(cartLength);
-
     const existingProductIndex = cart.findIndex(
       (item) => item.id === productDetails.id
     );
@@ -77,6 +69,12 @@ const Navbar = () => {
 
     localStorage.setItem("cart", JSON.stringify(cart));
     toast("Product added to cart!");
+  };
+
+  const handleOnclick = () => {
+    addToCart();
+    setIsCartOpen(!isCartOpen);
+    openAddToCart();
   };
 
   const handleLogout = async () => {
@@ -287,13 +285,7 @@ const Navbar = () => {
                 Log Out
               </Button>
               <div className="relative">
-                <Button variant="ghost" className="cursor-hand p-2">
-                  <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} />
-                  <FaShoppingCart size={20} />
-                  <span className="absolute -top-2 -right-2 bg-[#c8c8c8] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center cursor-pointer">
-                    {cartLength}
-                  </span>
-                </Button>
+                  <Cart buttonclick={handleOnclick} />    
               </div>
             </>
           )}
