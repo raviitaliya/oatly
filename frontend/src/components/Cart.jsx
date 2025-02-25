@@ -58,6 +58,7 @@ export default function Cart({ isbuttonclick, variant }) {
             <div className="max-w-4xl mx-auto text-center">
               <Link
                 to="/checkout"
+                onClick={closeAddToCart}
                 className="bg-black flex hover:border-none justify-center items-center gap-3 hover:bg-[#c8c8c8] hover:text-black text-white text-[22px] font-font1 w-[40rem] py-2 rounded text-center"
               >
                 {!user ? (

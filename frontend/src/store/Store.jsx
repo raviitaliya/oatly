@@ -407,70 +407,56 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-  addToCart: (product) => {
+  addToCart: (product) =>
     set((state) => {
       const existingItem = state.cart.find((item) => item.id === product.id);
-      let updatedCart;
-
       if (existingItem) {
-        updatedCart = state.cart.map((item) =>
-          item.id === product.id
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-                totalPrice: item.price * (item.quantity + 1),
-              }
-            : item
-        );
+        return {
+          cart: state.cart.map((item) =>
+            item.id === product.id
+              ? { 
+                  ...item, 
+                  quantity: item.quantity + 1, 
+                  totalPrice: (item.quantity + 1) * item.price 
+                }
+              : item
+          ),
+        };
       } else {
-        updatedCart = [
-          ...state.cart,
-          { ...product, quantity: 1, totalPrice: product.price },
-        ];
+        return {
+          cart: [...state.cart, { ...product, quantity: 1, totalPrice: product.price }],
+        };
       }
+    }),
 
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return { cart: updatedCart };
-    });
-  },
-
-  removeFromCart: (productId) => {
-    set((state) => {
-      const updatedCart = state.cart.filter((item) => item.id !== productId);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return { cart: updatedCart };
-    });
-  },
-
-  increaseQuantity: (productId) => {
-    set((state) => {
-      const updatedCart = state.cart.map((item) =>
-        item.id === productId
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-              totalPrice: item.price * (item.quantity + 1),
+  increaseQuantity: (id) =>
+    set((state) => ({
+      cart: state.cart.map((item) =>
+        item.id == id // Use `==` to match string & number
+          ? { 
+              ...item, 
+              quantity: item.quantity + 1, 
+              totalPrice: (item.quantity + 1) * item.price 
             }
           : item
-      );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return { cart: updatedCart };
-    });
-  },
+      ),
+    })),
 
-  decreaseQuantity: (productId) => {
-    set((state) => {
-      const updatedCart = state.cart.map((item) =>
-        item.id === productId && item.quantity > 1
-          ? {
-              ...item,
-              quantity: item.quantity - 1,
-              totalPrice: item.price * (item.quantity - 1),
+  decreaseQuantity: (id) =>
+    set((state) => ({
+      cart: state.cart.map((item) =>
+        item.id == id && item.quantity > 1
+          ? { 
+              ...item, 
+              quantity: item.quantity - 1, 
+              totalPrice: (item.quantity - 1) * item.price 
             }
           : item
-      );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-      return { cart: updatedCart };
-    });
-  },
+      ),
+    })),
+
+    removeFromCart: (id) =>
+      set((state) => ({
+        cart: state.cart.filter((item) => item.id !== id),
+      })),
 }));

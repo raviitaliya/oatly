@@ -16,7 +16,6 @@ import {
 import OatlyTv from "@/components/OatlyTv";
 import Footer from "@/components/Footer";
 import ProductCard from "./ProductCard";
-import { toast } from "sonner";
 import PaymentBtn from "@/components/PaymentBtn";
 import axios from "axios";
 
@@ -34,7 +33,13 @@ function ViewProduct() {
     getOneProduct,
     setClearState,
     openAddToCart,
+    cart,
+    addToCart,
+    increaseQuantity,
+    decreaseQuantity,
   } = useProductStore();
+
+  const product = cart.find((item) => item.id === id);
 
   // console.log(random);
 
@@ -42,41 +47,41 @@ function ViewProduct() {
     navigate(path);
   };
 
-  const increaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
-  };
+  // const increaseQuantity = () => {
+  //   setQuantity((prev) => prev + 1);
+  // };
 
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
+  // const decreaseQuantity = () => {
+  //   if (quantity > 1) {
+  //     setQuantity((prev) => prev - 1);
+  //   }
+  // };
 
-  const addToCart = () => {
-    const productDetails = {
-      id: oneProduct._id,
-      name: oneProduct.productname,
-      image: oneProduct.image,
-      price: oneProduct.price,
-      quantity: quantity,
-      totalPrice: oneProduct.price * quantity,
-    };
+  // const addToCart = () => {
+  //   const productDetails = {
+  //     id: oneProduct._id,
+  //     name: oneProduct.productname,
+  //     image: oneProduct.image,
+  //     price: oneProduct.price,
+  //     quantity: quantity,
+  //     totalPrice: oneProduct.price * quantity,
+  //   };
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  //   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    const existingProductIndex = cart.findIndex(
-      (item) => item.id === productDetails.id
-    );
+  //   const existingProductIndex = cart.findIndex(
+  //     (item) => item.id === productDetails.id
+  //   );
 
-    if (existingProductIndex > -1) {
-      cart[existingProductIndex].quantity += productDetails.quantity;
-      cart[existingProductIndex].totalPrice += productDetails.totalPrice;
-    } else {
-      cart.push(productDetails);
-    }
+  //   if (existingProductIndex > -1) {
+  //     cart[existingProductIndex].quantity += productDetails.quantity;
+  //     cart[existingProductIndex].totalPrice += productDetails.totalPrice;
+  //   } else {
+  //     cart.push(productDetails);
+  //   }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-  };
+  //   localStorage.setItem("cart", JSON.stringify(cart));
+  // };
 
   const handleOnclick = () => {
     addToCart();
@@ -198,14 +203,15 @@ function ViewProduct() {
                 <div className="flex items-center justify-between">
                   <button
                     className=" px-3 rounded text-2xl font-bold font-font2  "
-                    onClick={decreaseQuantity}
+                    onClick={() => decreaseQuantity(product.id)}
+                    disabled={product.quantity <= 1}
                   >
                     -
                   </button>
-                  <span>{quantity}</span>
+                  <span>{product.quantity}</span>
                   <button
                     className="px-3 rounded text-2xl font-font2"
-                    onClick={increaseQuantity}
+                    onClick={() => increaseQuantity(product.id)}
                   >
                     +
                   </button>
@@ -213,12 +219,13 @@ function ViewProduct() {
               </div>
 
               <Cart
+                onClick={() => addToCart(product)}
                 isOpen={isCartOpen}
                 isbuttonclick={handleOnclick}
                 variant="default"
               />
               <PaymentBtn
-                amount={oneProduct.price * quantity}
+                amount={product.totalPrice}
                 onClick={() => checkoutHandler(oneProduct.price * quantity)}
               />
             </div>

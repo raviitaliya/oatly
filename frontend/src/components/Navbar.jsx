@@ -68,7 +68,6 @@ const Navbar = () => {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    toast("Product added to cart!");
   };
 
   const handleOnclick = () => {
