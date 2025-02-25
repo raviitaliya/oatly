@@ -1,5 +1,5 @@
 // import {profileGif} from "../assets/gif/discord-avatar.gif";
-import { useState } from "react"
+import { useState } from "react";
 import { FaInstagram } from "react-icons/fa";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
@@ -7,18 +7,46 @@ import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 import SignIn from "@/auth/SignIn";
 import SignUp from "@/auth/SignUp";
-
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
+import { useProductStore } from "@/store/Store";
+import { Toaster, toast } from "sonner";
 
 const Navbar = () => {
+  const { isSignInOpen, openSignIn, closeSignIn, user, logOut } =
+    useProductStore();
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
+  const handleSignUpClick = () => {
+    setShowSignUp(!showSignUp);
+    setShowSignIn(false);
+  };
 
+  const handleSignInClick = () => {
+    setShowSignIn(!showSignIn);
+    setShowSignUp(false);
+  };
 
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      toast.success("Login successful! Redirecting...", {
+        duration: 3000,
+        style: {
+          background: "#4CAF50",
+          color: "white",
+        },
+      });
+    } catch (err) {
+      toast.error("An unexpected error occurred", {
+        duration: 3000,
+      });
+      console.error("Logout failed:", err);
+    }
+  };
 
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
@@ -48,7 +76,7 @@ const Navbar = () => {
                       <li>
                         <Link
                           to="/"
-                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block"
+                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block cursor-hand"
                         >
                           HOME
                         </Link>
@@ -56,7 +84,7 @@ const Navbar = () => {
                       <li>
                         <Link
                           to="/our-products"
-                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block"
+                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block cursor-hand"
                         >
                           OUR PRODUCTS
                         </Link>
@@ -64,7 +92,7 @@ const Navbar = () => {
                       <li>
                         <Link
                           to="/things-we-do"
-                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block"
+                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block cursor-hand"
                         >
                           THINGS WE DO
                         </Link>
@@ -72,7 +100,7 @@ const Navbar = () => {
                       <li>
                         <Link
                           to="/oatly-who"
-                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block"
+                          className="text-5xl md:text-7xl font-extrabold font-font1 hover:text-gray-400 transition-colors tracking-tight block cursor-hand"
                         >
                           OATLY WHO?
                         </Link>
@@ -92,31 +120,31 @@ const Navbar = () => {
                         <div className="space-y-3">
                           <Link
                             to="/faq"
-                            className="block font-font2  text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2  text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             FAQ
                           </Link>
                           <Link
                             to="/careers"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Careers
                           </Link>
                           <Link
                             to="/contact"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Contact
                           </Link>
                           <Link
                             to="/privacy-policy"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Privacy Policy
                           </Link>
                           <Link
                             to="/cookie-consent"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Cookie consent
                           </Link>
@@ -125,25 +153,25 @@ const Navbar = () => {
                         <div className="space-y-3">
                           <Link
                             to="/sustainability"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Sustainability
                           </Link>
                           <Link
                             to="/investors"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             For Investors
                           </Link>
                           <Link
                             to="/accessibility"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Accessibility
                           </Link>
                           <Link
                             to="/cookie-policy"
-                            className="block font-font2 text-gray-400 hover:text-white transition-colors"
+                            className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Cookie Policy
                           </Link>
@@ -159,31 +187,31 @@ const Navbar = () => {
                       <div className="flex gap-3">
                         <a
                           href="#"
-                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors cursor-hand"
                         >
                           <FaFacebookF style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors cursor-hand"
                         >
                           <FaTwitter style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors cursor-hand"
                         >
                           <FaInstagram style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white  -rotate-6 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white  -rotate-6 transition-colors cursor-hand"
                         >
                           <FaYoutube style={{ color: "black" }} size={30} />
                         </a>
                         <a
                           href="#"
-                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors"
+                          className="w-12 h-12 bg-[#888] rounded-[20px] flex items-center justify-center hover:bg-white -rotate-6 transition-colors cursor-hand"
                         >
                           <MdMusicNote style={{ color: "black" }} size={30} />
                         </a>
@@ -198,22 +226,23 @@ const Navbar = () => {
       </div>
 
       <div className="flex justify-center items-center gap-8">
-        <div className="flex gap-4 font-font1">
-          <div >
-            <Button onClick={() => setShowSignIn(!showSignIn)}>
-              sign up
-            </Button>
-          </div>
-          {showSignIn && <SignUp />}
+        <div className="flex gap-4">
+          {/* <Button onClick={openSignUp} className="cursor-hand">
+            Sign Up
+          </Button>
+          {isSignUpOpen && <SignUp />} */}
 
-          <div onClick={() => setShowSignUp(!showSignUp)}>
-            <Button>
-              log in
+          {!user ? (
+            <Button onClick={openSignIn} className="cursor-hand">
+              Log In
             </Button>
-          </div>
+          ) : (
+            <Button onClick={handleLogout} className="cursor-hand">
+              Log Out
+            </Button>
+          )}
+          {isSignInOpen && <SignIn onClose={closeSignIn} />}
         </div>
-            {showSignUp && <SignIn />}
-
         <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
           <img
             src={profileGif}
@@ -221,6 +250,7 @@ const Navbar = () => {
             className="w-12 h-12  rounded-full object-cover shadow-lg"
           />
         </div>
+        <Toaster position="top-center" richColors closeButton />
       </div>
     </nav>
   );

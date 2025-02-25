@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 function AddToCard() {
   const [cart, setCart] = useState([]);
-
+  
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
@@ -93,10 +93,9 @@ function AddToCard() {
           </div>
         ))}
       </div>
-      <PaymentBtn
-        amount={oneProduct.price * quantity}
-        onClick={() => checkoutHandler(oneProduct.price * quantity)}
-      />
+
+      <div className="w-10 h-10"></div>
+     
     </div>
   );
 }

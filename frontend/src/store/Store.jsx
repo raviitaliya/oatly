@@ -23,6 +23,11 @@ export const useProductStore = create((set, get) => ({
   user: null,
   otp: null,
 
+  isSignUpOpen: false,
+  isSingInOpen: false,
+  isOtpOpen: false,
+  isResetOpen: false,
+
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
   setchilledoatdrinks: (chilledoatdrinks) => set({ chilledoatdrinks }),
@@ -40,6 +45,22 @@ export const useProductStore = create((set, get) => ({
   setError: (error) => set({ error }),
 
   setClearState: () => set({ oneProduct: null, error: null, loading: false }),
+
+  openSignUp: () =>
+    set({ isSignUpOpen: true, isOtpOpen: false, isSignInOpen: false }),
+  closeSignUp: () => set({ isSignUpOpen: false }),
+
+  openOtp: () =>
+    set({ isOtpOpen: true, isSignUpOpen: false, isSignInOpen: false }),
+  closeOtp: () => set({ isOtpOpen: false }),
+
+  openSignIn: () =>
+    set({ isSignInOpen: true, isSignUpOpen: false, isOtpOpen: false }),
+  closeSignIn: () => set({ isSignInOpen: false }),
+
+  openReset: () =>
+    set((state) => ({ ...state, isResetOpen: true, isSignInOpen: false })),
+  closeReset: () => set((state) => ({ ...state, isResetOpen: false })),
 
   fetchProducts: async () => {
     if (get().loading) return;
@@ -185,40 +206,6 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-  sendNotification: async (notificationData) => {
-    set({ loading: true, error: null });
-    try {
-      const { tokens, notification } = notificationData;
-
-      // Validate that tokens is an array and not empty
-      if (!Array.isArray(tokens) || tokens.length === 0) {
-        throw new Error("No valid tokens provided");
-      }
-
-      // Prepare the message payload
-      const message = {
-        notification: {
-          title: notification.title,
-          body: notification.body,
-        },
-        tokens: tokens, // Array of device tokens to send the notification to
-      };
-
-      // Send the notification to multiple devices using sendToDevice
-      const response = await api.post("/notify/send-notification", message);
-
-      if (response.status === 200) {
-        set({ loading: false, error: null });
-        console.log("Notification sent successfully", response.data);
-      } else {
-        set({ loading: false, error: "Failed to send notification" });
-      }
-    } catch (error) {
-      set({ loading: false, error: error.message });
-      console.error("Error sending notification:", error.message);
-    }
-  },
-
   randomProduct: async () => {
     if (get().loading) return;
     set({ loading: true, error: null });
@@ -241,8 +228,13 @@ export const useProductStore = create((set, get) => ({
       const response = await api.post("/auth/signup", formData);
 
       if (response.status === 200) {
-        set({ user: response.data.user, loading: false });
-        set({ otp: response.data.user.verificatonToken });
+        set({
+          user: response.data.user,
+          otp: response.data.user.verificatonToken,
+          loading: false,
+          isSignUpOpen: false,
+          isOtpOpen: true,
+        });
         return response;
       } else {
         set({ User: null, loading: false, error: response.data.message });
@@ -254,6 +246,7 @@ export const useProductStore = create((set, get) => ({
         loading: false,
         error: error.response?.data?.message || "Failed to sign up",
       });
+      console.error("Signup Error:", error);
       return error.response;
     }
   },
@@ -268,7 +261,11 @@ export const useProductStore = create((set, get) => ({
       });
 
       if (response.status === 200) {
-        set({ loading: false });
+        set({
+          loading: false,
+          isOtpOpen: false,
+          isSignInOpen: true,
+        });
         return { success: true };
       } else {
         set({ loading: false, error: response.data.message });
