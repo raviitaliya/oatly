@@ -204,7 +204,7 @@ function ViewProduct() {
                   </button>
                   <span>{quantity}</span>
                   <button
-                    className="px-3 rounded text-2xl font-font2  "
+                    className="px-3 rounded text-2xl font-font2"
                     onClick={increaseQuantity}
                   >
                     +

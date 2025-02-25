@@ -14,57 +14,20 @@ import SoftServe from "./pages/SoftServe";
 import ViewProduct from "./pages/ViewProduct";
 import OatlyWho from "./pages/OatlyWho";
 import AddToCard from "./pages/AddToCard";
-import { getToken, onMessage } from "firebase/messaging";
 import { useEffect } from "react";
-import { messaging } from "@/firebase/firebase";
 import SignUp from "./auth/SignUp";
 import SignIn from "./auth/SignIn";
 import ResetPass from "./auth/ResetPass";
 import OtpPage from "./pages/OtpPage";
 import { useProductStore } from "./store/Store";
 import NewPassword from "./pages/NewPassword";
+import Chackout from "./pages/Chackout";
 
 function App() {
   const { fetchUser } = useProductStore();
-  
-  async function requestPermission() {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      const token = await getToken(messaging, {
-        vapidKey:
-          "BEL9fSsDVxDrSbZbi5-6dcFFN9CbcSVwZHP1PJF2tbjaqOHOdXEdfqcZ0BnoJUyrAiad4LvRb2k-jBZye8gnt9s",
-      });
-      // console.log("FCM Token:", token);
-
-      await fetch("http://localhost:8000/api/notify/save-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-    } else {
-      console.error("Notification permission denied");
-    }
-  }
-  useEffect(() => {
-    fetchUser(); 
-  }, []);
 
   useEffect(() => {
-    requestPermission();
-
-    onMessage(messaging, (payload) => {
-      console.log("Foreground notification received:", payload);
-
-      const { title, body } = payload.notification;
-
-      if (Notification.permission === "granted") {
-        new Notification(title, { body });
-      } else {
-        alert(`${title}: ${body}`);
-      }
-    });
+    fetchUser();
   }, []);
 
   return (
@@ -84,6 +47,7 @@ function App() {
             <Route path="soft-serve" element={<SoftServe />} />
             <Route path=":category/:id" element={<ViewProduct />} />
           </Route>
+          <Route path="/checkout" element={<Chackout />} />
           <Route path="oatly-who" element={<OatlyWho />} />
           <Route path="addToCard" element={<AddToCard />} />
           <Route path="signUp" element={<SignUp />} />
