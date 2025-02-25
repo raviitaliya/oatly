@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function AddToCard() {
   const [cart, setCart] = useState([]);
-  const { user } = useProductStore();
+  const { user, openAddToCart, closeAddToCart } = useProductStore();
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];

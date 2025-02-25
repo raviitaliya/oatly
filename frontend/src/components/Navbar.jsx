@@ -15,7 +15,7 @@ import { Toaster, toast } from "sonner";
 import { FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
-  const { isSignInOpen, openSignIn, closeSignIn, user, logOut } =
+  const { isSignInOpen, openSignIn, closeSignIn, user, logOut, isAddToCartOpen } =
     useProductStore();
 
   const [showSignIn, setShowSignIn] = useState(false);
@@ -51,8 +51,9 @@ const Navbar = () => {
 
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
-    <nav className="flex z-[999999] items-center fixed justify-between p-2 sm:p-3 w-full">
+    <nav className={`flex ${isAddToCartOpen ? "z-[40]" :" z-[51]"} items-center fixed justify-between p-2 sm:p-3 w-full`}>
       <div className="flex items-center">
+        
         <div>
           <div className="grid grid-cols-1 gap-2">
             <Sheet>
@@ -71,7 +72,6 @@ const Navbar = () => {
                 className="!w-full sm:!w-full md:!w-[740px] lg:!w-[950px] bg-black border-none text-white p-4 sm:p-6"
               >
                 <div className="min-h-screen bg-black text-white p-4 md:p-8 lg:p-12 overflow-y-auto">
-                  {/* Main Navigation */}
                   <nav className="mb-20 md:mb-32">
                     <ul className="flex flex-col gap-3 md:gap-4 mt-20">
                       <li>
@@ -111,13 +111,13 @@ const Navbar = () => {
 
                   {/* Footer Section */}
                   <footer className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24  ">
-                    {/* Dig Deeper Section */}
+                    
                     <div>
                       <h2 className="text-base md:text-lg font-font2 mb-6">
                         DIG DEEPER
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Left Column */}
+                       
                         <div className="space-y-3">
                           <Link
                             to="/faq"
@@ -245,7 +245,7 @@ const Navbar = () => {
               <div className="relative">
                 <Button variant="ghost" className="cursor-hand p-2">
                   <FaShoppingCart size={20} />
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-[#c8c8c8] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center cursor-pointer">
                     0
                   </span>
                 </Button>

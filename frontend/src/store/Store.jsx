@@ -27,6 +27,7 @@ export const useProductStore = create((set, get) => ({
   isSingInOpen: false,
   isOtpOpen: false,
   isResetOpen: false,
+  isAddToCartOpen: false,
 
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
@@ -61,6 +62,9 @@ export const useProductStore = create((set, get) => ({
   openReset: () =>
     set((state) => ({ ...state, isResetOpen: true, isSignInOpen: false })),
   closeReset: () => set((state) => ({ ...state, isResetOpen: false })),
+
+  openAddToCart: () => set({ isAddToCartOpen: true }),
+  closeAddToCart: () => set({ isAddToCartOpen: false }),
 
   fetchProducts: async () => {
     if (get().loading) return;

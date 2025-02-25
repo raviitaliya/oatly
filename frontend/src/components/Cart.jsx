@@ -9,14 +9,19 @@ import {
 } from "@/components/ui/sheet";
 import AddToCard from "@/pages/AddToCard";
 import AddToCardBtn from "./ui/AddToCardBtn";
+import { useProductStore } from "@/store/Store";
 
 export default function Cart({ isbuttonclick }) {
+  const { closeAddToCart } = useProductStore();
   return (
-    <Sheet>
+    <Sheet onOpenChange={(open) => !open && closeAddToCart()}>
       <SheetTrigger asChild>
         <AddToCardBtn onClick={isbuttonclick} />
       </SheetTrigger>
-      <SheetContent className="!w-full sm:!w-full md:!w-[740px] lg:!w-[700px]">
+      <SheetContent
+        className="!w-full sm:!w-full md:!w-[740px] lg:!w-[700px]"
+
+      >
         <SheetHeader>
           <SheetTitle>
             <div className="flex items-center gap-3">
