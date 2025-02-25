@@ -21,7 +21,6 @@ function AddToCardBtn({ onClick, variant }) {
 
   if (variant === "navbar") {
 
-
     return (
       <Button onClick={onClick} className="cursor-hand p-2">
         <FaShoppingCart size={20} />

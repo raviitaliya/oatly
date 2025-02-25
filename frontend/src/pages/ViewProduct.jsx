@@ -76,7 +76,6 @@ function ViewProduct() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    toast("Product added to cart!");
   };
 
   const handleOnclick = () => {
@@ -213,7 +212,11 @@ function ViewProduct() {
                 </div>
               </div>
 
-              <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} variant="default" />
+              <Cart
+                isOpen={isCartOpen}
+                isbuttonclick={handleOnclick}
+                variant="default"
+              />
               <PaymentBtn
                 amount={oneProduct.price * quantity}
                 onClick={() => checkoutHandler(oneProduct.price * quantity)}
@@ -311,7 +314,6 @@ function ViewProduct() {
           ))}
         </div>
       </section>
-
       <OatlyTv />
       <Footer />
     </div>

@@ -48,7 +48,6 @@ export default function Cart({ isbuttonclick, variant }) {
           <hr className="border-t border-gray-300 my-4" />
         </SheetHeader>
 
-        {/* Make AddToCard scrollable */}
         <div className="flex-grow overflow-y-auto">
           <AddToCard />
         </div>
