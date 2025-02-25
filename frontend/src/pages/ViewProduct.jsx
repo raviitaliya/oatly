@@ -21,7 +21,7 @@ import axios from "axios";
 
 function ViewProduct() {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -40,6 +40,7 @@ function ViewProduct() {
   } = useProductStore();
 
   const product = cart.find((item) => item.id === id);
+  console.log("Product in Cart:", product);
 
   // console.log(random);
 
@@ -47,44 +48,8 @@ function ViewProduct() {
     navigate(path);
   };
 
-  // const increaseQuantity = () => {
-  //   setQuantity((prev) => prev + 1);
-  // };
-
-  // const decreaseQuantity = () => {
-  //   if (quantity > 1) {
-  //     setQuantity((prev) => prev - 1);
-  //   }
-  // };
-
-  // const addToCart = () => {
-  //   const productDetails = {
-  //     id: oneProduct._id,
-  //     name: oneProduct.productname,
-  //     image: oneProduct.image,
-  //     price: oneProduct.price,
-  //     quantity: quantity,
-  //     totalPrice: oneProduct.price * quantity,
-  //   };
-
-  //   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  //   const existingProductIndex = cart.findIndex(
-  //     (item) => item.id === productDetails.id
-  //   );
-
-  //   if (existingProductIndex > -1) {
-  //     cart[existingProductIndex].quantity += productDetails.quantity;
-  //     cart[existingProductIndex].totalPrice += productDetails.totalPrice;
-  //   } else {
-  //     cart.push(productDetails);
-  //   }
-
-  //   localStorage.setItem("cart", JSON.stringify(cart));
-  // };
-
   const handleOnclick = () => {
-    addToCart();
+    addToCart(product);
     setIsCartOpen(!isCartOpen);
     openAddToCart();
   };
@@ -109,6 +74,8 @@ function ViewProduct() {
     } = await axios.post("http://localhost:8000/api/payment/create-order", {
       amount,
     });
+
+    
 
     // console.log(order);
 

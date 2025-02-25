@@ -429,18 +429,14 @@ export const useProductStore = create((set, get) => ({
       }
     }),
 
-  increaseQuantity: (id) =>
-    set((state) => ({
-      cart: state.cart.map((item) =>
-        item.id == id // Use `==` to match string & number
-          ? { 
-              ...item, 
-              quantity: item.quantity + 1, 
-              totalPrice: (item.quantity + 1) * item.price 
-            }
-          : item
-      ),
-    })),
+    increaseQuantity: (id) => {
+      set((state) => {
+        const updatedCart = state.cart.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+        return { cart: updatedCart };
+      });
+    },
 
   decreaseQuantity: (id) =>
     set((state) => ({
