@@ -12,6 +12,7 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
 import { Toaster, toast } from "sonner";
+import { FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
   const { isSignInOpen, openSignIn, closeSignIn, user, logOut } =
@@ -50,7 +51,7 @@ const Navbar = () => {
 
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
-    <nav className="flex items-center fixed justify-between p-2 sm:p-3 w-full">
+    <nav className="flex z-[999999] items-center fixed justify-between p-2 sm:p-3 w-full">
       <div className="flex items-center">
         <div>
           <div className="grid grid-cols-1 gap-2">
@@ -237,9 +238,19 @@ const Navbar = () => {
               Log In
             </Button>
           ) : (
-            <Button onClick={handleLogout} className="cursor-hand">
-              Log Out
-            </Button>
+            <>
+              <Button onClick={handleLogout} className="cursor-hand">
+                Log Out
+              </Button>
+              <div className="relative">
+                <Button variant="ghost" className="cursor-hand p-2">
+                  <FaShoppingCart size={20} />
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    0
+                  </span>
+                </Button>
+              </div>
+            </>
           )}
           {isSignInOpen && <SignIn onClose={closeSignIn} />}
         </div>
