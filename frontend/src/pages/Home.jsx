@@ -8,8 +8,16 @@ import OtpPage from "./OtpPage";
 import NewPassword from "./NewPassword";
 
 const Home = () => {
-  const { loading, error, logOut, openSignUp, isSignUpOpen, openReset, isResetOpen, isPasswordOpen } =
-    useProductStore();
+  const {
+    loading,
+    error,
+    logOut,
+    openSignUp,
+    isSignUpOpen,
+    openReset,
+    isResetOpen,
+    isPasswordOpen,
+  } = useProductStore();
 
   // Add scroll handler
   const handleWheel = (e) => {
@@ -65,7 +73,6 @@ const Home = () => {
               className="h-[433px] w-[788px]"
             />
             <div className="flex gap-16">
-
               <img
                 src="https://a.storyblok.com/f/107921/985x1564/90247dd5c8/barbershop-quartet-9.jpg/m/384x0/filters:quality(75):format(webp)"
                 className="w-[303px] h-[481px] object-cover"
@@ -78,7 +85,6 @@ const Home = () => {
                 alt="background"
               />
             </div>
-
           </div>
         </div>
       </div>

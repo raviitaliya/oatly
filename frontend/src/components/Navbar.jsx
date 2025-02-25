@@ -13,13 +13,25 @@ import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
 import { Toaster, toast } from "sonner";
 import { FaShoppingCart } from "react-icons/fa";
+import Cart from "./Cart";
 
 const Navbar = () => {
-  const { isSignInOpen, openSignIn, closeSignIn, user, logOut, isAddToCartOpen } =
-    useProductStore();
+  const {
+    oneProduct,
+    isSignInOpen,
+    openSignIn,
+    closeSignIn,
+    user,
+    logOut,
+    isAddToCartOpen,
+    openAddToCart,
+  } = useProductStore();
 
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [cartLength, setCartLength] = useState(0);
 
   const handleSignUpClick = () => {
     setShowSignUp(!showSignUp);
@@ -29,6 +41,42 @@ const Navbar = () => {
   const handleSignInClick = () => {
     setShowSignIn(!showSignIn);
     setShowSignUp(false);
+  };
+
+  const handleOnclick = () => {
+    addToCart();
+    setIsCartOpen(!isCartOpen);
+    openAddToCart();
+  };
+
+  const addToCart = () => {
+    const productDetails = {
+      id: oneProduct._id,
+      name: oneProduct.productname,
+      image: oneProduct.image,
+      price: oneProduct.price,
+      quantity: quantity,
+      totalPrice: oneProduct.price * quantity,
+    };
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const cartLength = cart.length - 1 || 0;
+    setCartLength(cartLength);
+
+    const existingProductIndex = cart.findIndex(
+      (item) => item.id === productDetails.id
+    );
+
+    if (existingProductIndex > -1) {
+      cart[existingProductIndex].quantity += productDetails.quantity;
+      cart[existingProductIndex].totalPrice += productDetails.totalPrice;
+    } else {
+      cart.push(productDetails);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    toast("Product added to cart!");
   };
 
   const handleLogout = async () => {
@@ -51,9 +99,12 @@ const Navbar = () => {
 
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
-    <nav className={`flex ${isAddToCartOpen ? "z-[40]" :" z-[51]"} items-center fixed justify-between p-2 sm:p-3 w-full`}>
+    <nav
+      className={`flex ${
+        isAddToCartOpen ? "z-[40]" : " z-[51]"
+      } items-center fixed justify-between p-2 sm:p-3 w-full`}
+    >
       <div className="flex items-center">
-        
         <div>
           <div className="grid grid-cols-1 gap-2">
             <Sheet>
@@ -111,13 +162,11 @@ const Navbar = () => {
 
                   {/* Footer Section */}
                   <footer className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24  ">
-                    
                     <div>
                       <h2 className="text-base md:text-lg font-font2 mb-6">
                         DIG DEEPER
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                       
                         <div className="space-y-3">
                           <Link
                             to="/faq"
@@ -228,11 +277,6 @@ const Navbar = () => {
 
       <div className="flex justify-center items-center gap-8">
         <div className="flex gap-4">
-          {/* <Button onClick={openSignUp} className="cursor-hand">
-            Sign Up
-          </Button>
-          {isSignUpOpen && <SignUp />} */}
-
           {!user ? (
             <Button onClick={openSignIn} className="cursor-hand">
               Log In
@@ -244,9 +288,10 @@ const Navbar = () => {
               </Button>
               <div className="relative">
                 <Button variant="ghost" className="cursor-hand p-2">
+                  <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} />
                   <FaShoppingCart size={20} />
                   <span className="absolute -top-2 -right-2 bg-[#c8c8c8] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center cursor-pointer">
-                    0
+                    {cartLength}
                   </span>
                 </Button>
               </div>

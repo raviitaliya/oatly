@@ -103,21 +103,7 @@ function AddToCard() {
         </div>
       </div>
 
-      <div className="flex w-[42.3rem] bg-white h-32 border-[1px] border-t-gray-300 fixed bottom-0 right-[23px] justify-center items-center">
-        <div className="max-w-4xl mx-auto text-center">
-          <Link
-            to="/checkout"
-            className="bg-black flex hover:border-none justify-center items-center gap-3 hover:bg-[#c8c8c8] hover:text-black text-white text-[22px] font-font1 w-[40rem] py-2 rounded text-center"
-          >
-            {!user ? (
-              <LockKeyhole size={18} strokeWidth={3} />
-            ) : (
-              <LockKeyholeOpen size={18} strokeWidth={3} />
-            )}{" "}
-            CHECKOUT
-          </Link>
-        </div>
-      </div>
+      
     </div>
   );
 }
