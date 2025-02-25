@@ -10,7 +10,6 @@ function AddToCard() {
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
-    console.log(storedCart);
   }, []);
 
   const removeFromCart = (productId) => {
@@ -51,15 +50,11 @@ function AddToCard() {
     setCart(updatedCart);
   };
 
-  const calculateTotal = () => {
-    return cart.reduce((total, item) => total + item.totalPrice, 0);
-  };
-
   return (
-<<<<<<< HEAD
     <div className="h-screen flex flex-col">
+      {/* Scrollable Cart Items */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto ">
+        <div className="max-w-4xl mx-auto">
           {cart.length === 0 ? (
             <p className="text-center text-gray-500">Cart is empty</p>
           ) : (
@@ -88,20 +83,6 @@ function AddToCard() {
                         </button>
                       </div>
                     </div>
-=======
-    <div className="h-[calc(100vh-64px)]  overflow-y-auto px-4">
-      <div className="max-w-4xl mx-auto py-6">
-        {cart.map((item) => (
-          <div key={item.id} className="flex gap-6 my-5 ">
-            <div>
-              <img src={item.image} alt={item.name} className="w-36" />
-            </div>
-            <div className="w-56">
-              <h2 className="my-4 font-font2 text-">{item.name}</h2>
-              <div className="flex  gap-4">
-                <div className="my-2 p-1 w-24 border border-black rounded ">
-                  <div className="flex items-center justify-between">
->>>>>>> 9885c9b8395e76ab362b69275211b9338078fc06
                     <button
                       onClick={() => removeFromCart(item.id)}
                       className="underline underline-offset-4 text-sm text-black/60"
@@ -119,45 +100,24 @@ function AddToCard() {
               </div>
             ))
           )}
-          <div className="flex w-[42.3rem] bg-white h-32 border-[1px] border-t-gray-300 fixed bottom-0 right-[23px] justify-center items-center">
-            <div className="max-w-4xl mx-auto text-center">
-              <Link
-                to="/checkout"
-                className="bg-black flex hover:border-none justify-center items-center gap-3 hover:bg-[#c8c8c8] hover:text-black text-white text-[22px] font-font1 w-[40rem] py-2 rounded text-center"
-              >
-                {!user ? (
-                  <LockKeyhole size={18} strokeWidth={3} />
-                ) : (
-                  <LockKeyholeOpen size={18} strokeWidth={3} />
-                )}{" "}
-                CHECKOUT
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
 
-<<<<<<< HEAD
-      {/* Fixed Add to Cart Button */}
-=======
-      {cart.length > 0 && (
-        <div className="max-w-4xl mx-auto border-t border-gray-200 py-4">
-          <div className="flex justify-between items-center">
-            <div className="text-lg font-font2">
-              Total Amount: <span className="font-semibold">₹{calculateTotal()}</span>
-            </div>
-            <button 
-              className="bg-black text-white px-8 py-2 rounded-md hover:bg-black/80 transition-colors font-font2"
-              onClick={() => {
-                alert("Proceeding to payment...");
-              }}
-            >
-              Check out
-            </button>
-          </div>
+      <div className="flex w-[42.3rem] bg-white h-32 border-[1px] border-t-gray-300 fixed bottom-0 right-[23px] justify-center items-center">
+        <div className="max-w-4xl mx-auto text-center">
+          <Link
+            to="/checkout"
+            className="bg-black flex hover:border-none justify-center items-center gap-3 hover:bg-[#c8c8c8] hover:text-black text-white text-[22px] font-font1 w-[40rem] py-2 rounded text-center"
+          >
+            {!user ? (
+              <LockKeyhole size={18} strokeWidth={3} />
+            ) : (
+              <LockKeyholeOpen size={18} strokeWidth={3} />
+            )}{" "}
+            CHECKOUT
+          </Link>
         </div>
-      )}
->>>>>>> 9885c9b8395e76ab362b69275211b9338078fc06
+      </div>
     </div>
   );
 }
