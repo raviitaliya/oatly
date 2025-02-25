@@ -23,6 +23,8 @@ import ResetPass from "./auth/ResetPass";
 import OtpPage from "./pages/OtpPage";
 import { useProductStore } from "./store/Store";
 import NewPassword from "./pages/NewPassword";
+import ThingsWeDo from "./pages/ThingsWeDo";
+import Contact from "./pages/Contact";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -85,12 +87,14 @@ function App() {
             <Route path=":category/:id" element={<ViewProduct />} />
           </Route>
           <Route path="oatly-who" element={<OatlyWho />} />
+          <Route path="things-we-do" element={<ThingsWeDo/>}/>
           <Route path="addToCard" element={<AddToCard />} />
           <Route path="signUp" element={<SignUp />} />
           <Route path="signIn" element={<SignIn />} />
           <Route path="reset-password" element={<ResetPass />} />
           <Route path="set-newPassword/:token" element={<NewPassword />} />
           <Route path="otp" element={<OtpPage />} />
+          <Route path="contact" element={<Contact/>} />
         </Route>
       </Routes>
     </BrowserRouter>

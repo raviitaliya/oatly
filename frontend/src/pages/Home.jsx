@@ -6,6 +6,7 @@ import SignIn from "../auth/SignIn";
 import SignUp from "../auth/SignUp";
 import ResetPass from "../auth/ResetPass";
 import OtpPage from "./OtpPage";
+import ThingsWeDo from "./ThingsWeDo";
 
 const Home = () => {
   const { sendNotification, loading, error, logOut } = useProductStore();
@@ -113,6 +114,7 @@ const Home = () => {
 
       {error && <p>Error: {error}</p>}
       {/* <SignUp/> */}
+     
     </div>
   );
 };
