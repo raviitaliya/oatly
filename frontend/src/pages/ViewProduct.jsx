@@ -42,6 +42,13 @@ function ViewProduct() {
   const product = cart.find((item) => item.id === id);
   console.log("Product in Cart:", product);
 
+  const quantity = product ? product.quantity : 1;
+  const totalPrice = product
+    ? product.totalPrice
+    : oneProduct
+    ? oneProduct.price
+    : 0;
+
   // console.log(random);
 
   const handleNavigate = (path) => {
@@ -49,9 +56,16 @@ function ViewProduct() {
   };
 
   const handleOnclick = () => {
-    addToCart(product);
-    setIsCartOpen(!isCartOpen);
-    openAddToCart();
+    if (oneProduct) {
+      addToCart({
+        id: oneProduct._id,
+        name: oneProduct.productname,
+        price: oneProduct.price,
+        image: oneProduct.image,
+      });
+      setIsCartOpen(!isCartOpen);
+      openAddToCart();
+    }
   };
 
   useEffect(() => {
@@ -74,8 +88,6 @@ function ViewProduct() {
     } = await axios.post("http://localhost:8000/api/payment/create-order", {
       amount,
     });
-
-    
 
     // console.log(order);
 
@@ -171,11 +183,11 @@ function ViewProduct() {
                   <button
                     className=" px-3 rounded text-2xl font-bold font-font2  "
                     onClick={() => decreaseQuantity(product.id)}
-                    disabled={product.quantity <= 1}
+                    disabled={!product || product.quantity <= 1}
                   >
                     -
                   </button>
-                  <span>{product.quantity}</span>
+                  <span>{product ? product.quantity : 1}</span>
                   <button
                     className="px-3 rounded text-2xl font-font2"
                     onClick={() => increaseQuantity(product.id)}
@@ -186,13 +198,12 @@ function ViewProduct() {
               </div>
 
               <Cart
-                onClick={() => addToCart(product)}
                 isOpen={isCartOpen}
                 isbuttonclick={handleOnclick}
                 variant="default"
               />
               <PaymentBtn
-                amount={product.totalPrice}
+                amount={totalPrice}
                 onClick={() => checkoutHandler(oneProduct.price * quantity)}
               />
             </div>

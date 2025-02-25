@@ -15,7 +15,7 @@ export const useProductStore = create((set, get) => ({
   IceCream: [],
   SoftServe: [],
   random: [],
-  cart: JSON.parse(localStorage.getItem("cart")) || [],
+  cart: [],
 
   oneProduct: null,
   selectedProduct: null,
@@ -414,45 +414,50 @@ export const useProductStore = create((set, get) => ({
         return {
           cart: state.cart.map((item) =>
             item.id === product.id
-              ? { 
-                  ...item, 
-                  quantity: item.quantity + 1, 
-                  totalPrice: (item.quantity + 1) * item.price 
+              ? {
+                  ...item,
+                  quantity: item.quantity + 1,
+                  totalPrice: (item.quantity + 1) * item.price,
                 }
               : item
           ),
         };
       } else {
         return {
-          cart: [...state.cart, { ...product, quantity: 1, totalPrice: product.price }],
+          cart: [
+            ...state.cart,
+            { ...product, quantity: 1, totalPrice: product.price },
+          ],
         };
       }
     }),
-
-    increaseQuantity: (id) => {
-      set((state) => {
-        const updatedCart = state.cart.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-        return { cart: updatedCart };
-      });
-    },
-
+  increaseQuantity: (id) =>
+    set((state) => ({
+      cart: state.cart.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+              totalPrice: (item.quantity + 1) * item.price,
+            }
+          : item
+      ),
+    })),
   decreaseQuantity: (id) =>
     set((state) => ({
       cart: state.cart.map((item) =>
-        item.id == id && item.quantity > 1
-          ? { 
-              ...item, 
-              quantity: item.quantity - 1, 
-              totalPrice: (item.quantity - 1) * item.price 
+        item.id === id && item.quantity > 1
+          ? {
+              ...item,
+              quantity: item.quantity - 1,
+              totalPrice: (item.quantity - 1) * item.price,
             }
           : item
       ),
     })),
 
-    removeFromCart: (id) =>
-      set((state) => ({
-        cart: state.cart.filter((item) => item.id !== id),
-      })),
+  removeFromCart: (id) =>
+    set((state) => ({
+      cart: state.cart.filter((item) => item.id !== id),
+    })),
 }));
