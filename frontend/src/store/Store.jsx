@@ -5,6 +5,25 @@ import axios from "axios";
 
 const API = "http://localhost:8000/api";
 
+const loadCartFromLocalStorage = () => {
+  try {
+    const cartData = localStorage.getItem("cart");
+    return cartData ? JSON.parse(cartData) : [];
+  } catch (error) {
+    console.error("Error loading cart from localStorage:", error);
+    return [];
+  }
+};
+
+// Helper function to save cart to localStorage
+const saveCartToLocalStorage = (cart) => {
+  try {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  } catch (error) {
+    console.error("Error saving cart to localStorage:", error);
+  }
+};
+
 export const useProductStore = create((set, get) => ({
   products: [],
   oatDrinkProducts: [],
@@ -15,7 +34,7 @@ export const useProductStore = create((set, get) => ({
   IceCream: [],
   SoftServe: [],
   random: [],
-  cart: [],
+  cart: loadCartFromLocalStorage(),
 
   oneProduct: null,
   selectedProduct: null,
@@ -410,30 +429,35 @@ export const useProductStore = create((set, get) => ({
   addToCart: (product) =>
     set((state) => {
       const existingItem = state.cart.find((item) => item.id === product.id);
+      let updatedCart;
+
       if (existingItem) {
-        return {
-          cart: state.cart.map((item) =>
-            item.id === product.id
-              ? {
-                  ...item,
-                  quantity: item.quantity + 1,
-                  totalPrice: (item.quantity + 1) * item.price,
-                }
-              : item
-          ),
-        };
+        updatedCart = state.cart.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+                totalPrice: (item.quantity + 1) * item.price,
+              }
+            : item
+        );
       } else {
-        return {
-          cart: [
-            ...state.cart,
-            { ...product, quantity: 1, totalPrice: product.price },
-          ],
-        };
+        updatedCart = [
+          ...state.cart,
+          { ...product, quantity: 1, totalPrice: product.price },
+        ];
       }
+
+      // Save updated cart to localStorage
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
     }),
+
+  // Increase quantity
   increaseQuantity: (id) =>
-    set((state) => ({
-      cart: state.cart.map((item) =>
+    set((state) => {
+      const updatedCart = state.cart.map((item) =>
         item.id === id
           ? {
               ...item,
@@ -441,11 +465,18 @@ export const useProductStore = create((set, get) => ({
               totalPrice: (item.quantity + 1) * item.price,
             }
           : item
-      ),
-    })),
+      );
+
+      // Save updated cart to localStorage
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
+    }),
+
+  // Decrease quantity
   decreaseQuantity: (id) =>
-    set((state) => ({
-      cart: state.cart.map((item) =>
+    set((state) => {
+      const updatedCart = state.cart.map((item) =>
         item.id === id && item.quantity > 1
           ? {
               ...item,
@@ -453,11 +484,31 @@ export const useProductStore = create((set, get) => ({
               totalPrice: (item.quantity - 1) * item.price,
             }
           : item
-      ),
-    })),
+      );
 
+      // Save updated cart to localStorage
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
+    }),
+
+  // Remove from cart
   removeFromCart: (id) =>
-    set((state) => ({
-      cart: state.cart.filter((item) => item.id !== id),
-    })),
+    set((state) => {
+      const updatedCart = state.cart.filter((item) => item.id !== id);
+
+      // Save updated cart to localStorage
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
+    }),
+
+  // Clear cart
+  clearCart: () =>
+    set(() => {
+      // Clear cart from localStorage
+      localStorage.removeItem("cart");
+
+      return { cart: [] };
+    }),
 }));

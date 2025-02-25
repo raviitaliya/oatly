@@ -56,6 +56,7 @@ function ViewProduct() {
   };
 
   const handleOnclick = () => {
+    console.log("Add to Cart clicked");
     if (oneProduct) {
       addToCart({
         id: oneProduct._id,
@@ -64,8 +65,7 @@ function ViewProduct() {
         image: oneProduct.image,
       });
       setIsCartOpen(!isCartOpen);
-      openAddToCart();
-    }
+      openAddToCart();}
   };
 
   useEffect(() => {
@@ -186,7 +186,7 @@ function ViewProduct() {
                     disabled={!product || product.quantity <= 1}
                   >
                     -
-                  </button>
+                   </button>
                   <span>{product ? product.quantity : 1}</span>
                   <button
                     className="px-3 rounded text-2xl font-font2"

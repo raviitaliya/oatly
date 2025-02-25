@@ -13,7 +13,8 @@ import { useProductStore } from "@/store/Store";
 import { Link } from "react-router-dom";
 import { LockKeyhole, LockKeyholeOpen } from "lucide-react";
 
-export default function Cart({ isbuttonclick, variant }) {
+export default function Cart({  isbuttonclick, variant }) {
+
   const { closeAddToCart, user } = useProductStore();
   return (
     <Sheet onOpenChange={(open) => !open && closeAddToCart()}>
