@@ -47,8 +47,12 @@ function AddToCard() {
     setCart(updatedCart);
   };
 
+  const calculateTotal = () => {
+    return cart.reduce((total, item) => total + item.totalPrice, 0);
+  };
+
   return (
-    <div className="h-[calc(100vh-64px)] overflow-y-auto px-4">
+    <div className="h-[calc(100vh-64px)]  overflow-y-auto px-4">
       <div className="max-w-4xl mx-auto py-6">
         {cart.map((item) => (
           <div key={item.id} className="flex gap-6 my-5 ">
@@ -94,8 +98,23 @@ function AddToCard() {
         ))}
       </div>
 
-      <div className="w-10 h-10"></div>
-     
+      {cart.length > 0 && (
+        <div className="max-w-4xl mx-auto border-t border-gray-200 py-4">
+          <div className="flex justify-between items-center">
+            <div className="text-lg font-font2">
+              Total Amount: <span className="font-semibold">₹{calculateTotal()}</span>
+            </div>
+            <button 
+              className="bg-black text-white px-8 py-2 rounded-md hover:bg-black/80 transition-colors font-font2"
+              onClick={() => {
+                alert("Proceeding to payment...");
+              }}
+            >
+              Check out
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
