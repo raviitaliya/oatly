@@ -285,7 +285,7 @@ const Navbar = () => {
                 Log Out
               </Button>
               <div className="relative">
-                  <Cart buttonclick={handleOnclick} />    
+                <Cart isbuttonclick={handleOnclick} variant="navbar" />
               </div>
             </>
           )}

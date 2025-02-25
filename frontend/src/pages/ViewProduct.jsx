@@ -213,7 +213,7 @@ function ViewProduct() {
                 </div>
               </div>
 
-              <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} />
+              <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} variant="default" />
               <PaymentBtn
                 amount={oneProduct.price * quantity}
                 onClick={() => checkoutHandler(oneProduct.price * quantity)}
