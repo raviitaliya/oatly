@@ -7,7 +7,7 @@ import {
 import { useProductStore } from "../store/Store";
 import close from "../assets/logo/close.svg";
 import cross from "../assets/logo/cross.svg";
-import { motion } from "framer-motion"; // Correct import
+import { motion } from "framer-motion";
 
 
 const OtpPage = () => {
@@ -51,7 +51,7 @@ const OtpPage = () => {
             alt="Close"
             className="w-[120px]"
             animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 10, ease: "linear" }} // Fixed syntax
+            transition={{ repeat: Infinity, duration: 10, ease: "linear" }} 
           />
           <img
             src={cross || "/cross.svg"}
