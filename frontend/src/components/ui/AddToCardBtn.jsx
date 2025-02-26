@@ -3,8 +3,7 @@ import { Button } from "./button";
 import { useProductStore } from "@/store/Store";
 
 function AddToCardBtn({ onClick, variant }) {
-
-  const {cart} = useProductStore();
+  const { cart } = useProductStore();
 
   if (variant == "default") {
     return (
@@ -20,7 +19,6 @@ function AddToCardBtn({ onClick, variant }) {
   }
 
   if (variant === "navbar") {
-
     return (
       <Button onClick={onClick} className="cursor-hand p-2">
         <FaShoppingCart size={20} />

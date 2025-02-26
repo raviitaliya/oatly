@@ -15,7 +15,6 @@ const loadCartFromLocalStorage = () => {
   }
 };
 
-// Helper function to save cart to localStorage
 const saveCartToLocalStorage = (cart) => {
   try {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -448,13 +447,11 @@ export const useProductStore = create((set, get) => ({
         ];
       }
 
-      // Save updated cart to localStorage
       saveCartToLocalStorage(updatedCart);
 
       return { cart: updatedCart };
     }),
 
-  // Increase quantity
   increaseQuantity: (id) =>
     set((state) => {
       const updatedCart = state.cart.map((item) =>
@@ -467,13 +464,11 @@ export const useProductStore = create((set, get) => ({
           : item
       );
 
-      // Save updated cart to localStorage
       saveCartToLocalStorage(updatedCart);
 
       return { cart: updatedCart };
     }),
 
-  // Decrease quantity
   decreaseQuantity: (id) =>
     set((state) => {
       const updatedCart = state.cart.map((item) =>
@@ -486,27 +481,22 @@ export const useProductStore = create((set, get) => ({
           : item
       );
 
-      // Save updated cart to localStorage
       saveCartToLocalStorage(updatedCart);
 
       return { cart: updatedCart };
     }),
 
-  // Remove from cart
   removeFromCart: (id) =>
     set((state) => {
       const updatedCart = state.cart.filter((item) => item.id !== id);
 
-      // Save updated cart to localStorage
       saveCartToLocalStorage(updatedCart);
 
       return { cart: updatedCart };
     }),
 
-  // Clear cart
   clearCart: () =>
     set(() => {
-      // Clear cart from localStorage
       localStorage.removeItem("cart");
 
       return { cart: [] };

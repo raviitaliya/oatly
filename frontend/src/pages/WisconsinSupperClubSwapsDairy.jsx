@@ -58,13 +58,22 @@ const WisconsinSupperClubSwapsDairy = () => {
               </p>
             </div>
 
-            {/* Right Side Content */}
             <div>
               <p className="text-gray-300 text-lg md:text-xl  font-font2">
-              This was the scene we walked into on a very special weekend at The Duck Inn, when we swapped dairy with Oatly in five distinct items: a grasshopper (this is a bizarre concoction of ice cream and green liqueur), crème brûlée, clam chowder, vegetable pasta, and salmon with a dill sauce.
+                This was the scene we walked into on a very special weekend at
+                The Duck Inn, when we swapped dairy with Oatly in five distinct
+                items: a grasshopper (this is a bizarre concoction of ice cream
+                and green liqueur), crème brûlée, clam chowder, vegetable pasta,
+                and salmon with a dill sauce.
               </p>
               <p className="mt-4 text-gray-300 text-ld md:text-xl font-font2">
-              As has been the case with all our swaps, this particular experiment was wildly successful. Upwards of 15 people told us the dishes were “very good,” which they delivered in such understated tones that we imagine half of them were lying. But we’re not here to poke holes in the data. We’re here to celebrate a journey deep into America’s dairy capital, where we swapped dairy with Oatly and absolutely no chaos ensued.
+                As has been the case with all our swaps, this particular
+                experiment was wildly successful. Upwards of 15 people told us
+                the dishes were “very good,” which they delivered in such
+                understated tones that we imagine half of them were lying. But
+                we’re not here to poke holes in the data. We’re here to
+                celebrate a journey deep into America’s dairy capital, where we
+                swapped dairy with Oatly and absolutely no chaos ensued.
               </p>
             </div>
           </div>
@@ -72,7 +81,6 @@ const WisconsinSupperClubSwapsDairy = () => {
       </div>
       <div>
         <p>Binge all episodes!</p>
-        
       </div>
     </div>
   );
