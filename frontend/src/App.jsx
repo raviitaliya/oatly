@@ -21,6 +21,12 @@ import ResetPass from "./auth/ResetPass";
 import OtpPage from "./pages/OtpPage";
 import { useProductStore } from "./store/Store";
 import NewPassword from "./pages/NewPassword";
+import ThingsWeDo from "./pages/ThingsWeDo";
+import Contact from "./pages/Contact";
+import Faqs from "./pages/Faqs";
+import CookiePolicy from "./pages/CookiePolicy";
+import Accessibility from "./pages/Accessibility";
+import Careers from "./pages/Careers";
 import Chackout from "./pages/Chackout";
 
 function App() {
@@ -49,12 +55,18 @@ function App() {
           </Route>
           <Route path="/checkout" element={<Chackout />} />
           <Route path="oatly-who" element={<OatlyWho />} />
+          <Route path="things-we-do" element={<ThingsWeDo/>}/>
           <Route path="addToCard" element={<AddToCard />} />
           <Route path="signUp" element={<SignUp />} />
           <Route path="signIn" element={<SignIn />} />
           <Route path="reset-password" element={<ResetPass />} />
           <Route path="set-newPassword/:token" element={<NewPassword />} />
           <Route path="otp" element={<OtpPage />} />
+          <Route path="contact" element={<Contact/>} />
+          <Route path="faqs" element={<Faqs/>} />
+          <Route path="cookie-policy" element={<CookiePolicy/>} />
+          <Route path="accessibility" element={<Accessibility/>} />
+          <Route path="career" element={<Careers/>} />
         </Route>
       </Routes>
     </BrowserRouter>

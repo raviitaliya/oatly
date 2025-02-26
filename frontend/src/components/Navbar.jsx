@@ -139,13 +139,13 @@ const Navbar = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
                           <Link
-                            to="/faq"
+                            to="/faqs"
                             className="block font-font2  text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             FAQ
                           </Link>
                           <Link
-                            to="/careers"
+                            to="/career"
                             className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Careers

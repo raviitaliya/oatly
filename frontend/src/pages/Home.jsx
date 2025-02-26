@@ -1,10 +1,12 @@
-import AddToCardBtn from "@/components/ui/AddToCardBtn";
+
 import Navbar from "../components/Navbar";
 import { useProductStore } from "@/store/Store";
-import SignIn from "../auth/SignIn";
 import SignUp from "../auth/SignUp";
 import ResetPass from "../auth/ResetPass";
+<<<<<<< HEAD
 import OtpPage from "./OtpPage"; // Ensure this path is correct
+=======
+>>>>>>> 37ab26ac370a25ab624a817ad4b7dbf34df8f0c6
 import NewPassword from "./NewPassword";
 
 const Home = () => {
