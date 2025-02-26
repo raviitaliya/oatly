@@ -4,7 +4,7 @@ import { useProductStore } from "@/store/Store";
 import SignIn from "../auth/SignIn";
 import SignUp from "../auth/SignUp";
 import ResetPass from "../auth/ResetPass";
-import OtpPage from "./OtpPage";
+import OtpPage from "./OtpPage"; // Ensure this path is correct
 import NewPassword from "./NewPassword";
 
 const Home = () => {
@@ -17,6 +17,7 @@ const Home = () => {
     openReset,
     isResetOpen,
     isPasswordOpen,
+    isOtpOpen,
   } = useProductStore();
 
   // Add scroll handler
@@ -41,7 +42,7 @@ const Home = () => {
       className="h-screen overflow-x-auto overflow-y-hidden scrollbar-hide"
       onWheel={handleWheel}
     >
-      <div className=" w-full h-screen flex ">
+      <div className="w-full h-screen flex">
         <div className="relative flex">
           <img
             src="https://a.storyblok.com/f/107921/51x1601/bd217ddba2/edge-white-2.gif/m/32x0/filters:quality(75):format(webp)"
@@ -78,7 +79,6 @@ const Home = () => {
                 className="w-[303px] h-[481px] object-cover"
                 alt="background"
               />
-
               <img
                 src="https://a.storyblok.com/f/107921/x/bd6be96854/milkmyths.svg"
                 className="w-[303px] h-[220px] object-cover mt-3 hover:scale-105 transition-transform"
@@ -91,6 +91,7 @@ const Home = () => {
 
       <div className="flex min-w-max gap-8 p-8">
         {isSignUpOpen && <SignUp />}
+        {isOtpOpen && <OtpPage />}
         {isResetOpen && <ResetPass />}
         {isPasswordOpen && <NewPassword />}
       </div>
