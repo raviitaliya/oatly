@@ -6,8 +6,7 @@ import { FaTwitter } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 import SignIn from "@/auth/SignIn";
-import SignUp from "@/auth/SignUp";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
@@ -17,7 +16,6 @@ import Cart from "./Cart";
 
 const Navbar = () => {
   const {
-    oneProduct,
     isSignInOpen,
     openSignIn,
     closeSignIn,
@@ -28,11 +26,13 @@ const Navbar = () => {
     openAddToCart,
   } = useProductStore();
 
+  const { id } = useParams();
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const navigate = useNavigate();
+
+  const item = cart.find((p) => p.id === id);
 
   const handleSignUpClick = () => {
     setShowSignUp(!showSignUp);
@@ -44,34 +44,7 @@ const Navbar = () => {
     setShowSignUp(false);
   };
 
-  const addToCart = () => {
-    const productDetails = {
-      id: oneProduct._id,
-      name: oneProduct.productname,
-      image: oneProduct.image,
-      price: oneProduct.price,
-      quantity: quantity,
-      totalPrice: oneProduct.price * quantity,
-    };
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const existingProductIndex = cart.findIndex(
-      (item) => item.id === productDetails.id
-    );
-
-    if (existingProductIndex > -1) {
-      cart[existingProductIndex].quantity += productDetails.quantity;
-      cart[existingProductIndex].totalPrice += productDetails.totalPrice;
-    } else {
-      cart.push(productDetails);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-  };
-
-  const handleOnclick = () => {
-    addToCart();
+  const handleOnclick = (id) => {
     setIsCartOpen(!isCartOpen);
     openAddToCart();
   };

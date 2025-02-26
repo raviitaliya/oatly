@@ -23,7 +23,7 @@ function AddToCardBtn({ onClick, variant }) {
       <Button onClick={onClick} className="cursor-hand p-2">
         <FaShoppingCart size={20} />
         <span className="absolute -top-2 -right-2 bg-[#c8c8c8] text-black text-xs rounded-full h-5 w-5 flex items-center justify-center cursor-pointer">
-          {cart.length - 1}
+          {cart.length}
         </span>
       </Button>
     );
