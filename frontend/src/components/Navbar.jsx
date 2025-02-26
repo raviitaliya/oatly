@@ -119,13 +119,13 @@ const Navbar = () => {
                         {/* Left Column */}
                         <div className="space-y-3">
                           <Link
-                            to="/faq"
+                            to="/faqs"
                             className="block font-font2  text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             FAQ
                           </Link>
                           <Link
-                            to="/careers"
+                            to="/career"
                             className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Careers

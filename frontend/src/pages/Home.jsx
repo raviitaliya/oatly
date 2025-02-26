@@ -1,15 +1,9 @@
-import AddToCardBtn from "@/components/ui/AddToCardBtn";
+
 import Navbar from "../components/Navbar";
 import { useProductStore } from "@/store/Store";
-import SignIn from "../auth/SignIn";
 import SignUp from "../auth/SignUp";
 import ResetPass from "../auth/ResetPass";
-import OtpPage from "./OtpPage";
-<<<<<<< HEAD
-import ThingsWeDo from "./ThingsWeDo";
-=======
 import NewPassword from "./NewPassword";
->>>>>>> 9de7e8821d08e61cae89680c304aa53c6600ef78
 
 const Home = () => {
   const { loading, error, logOut, openSignUp, isSignUpOpen, openReset, isResetOpen, isPasswordOpen } =
@@ -39,11 +33,6 @@ const Home = () => {
         Logout
       </button> */}
 
-<<<<<<< HEAD
-      {error && <p>Error: {error}</p>}
-      {/* <SignUp/> */}
-     
-=======
       {/* <button
         onClick={() => {
           console.log("Opening SignUp from Home");
@@ -68,7 +57,6 @@ const Home = () => {
       {isPasswordOpen && <NewPassword />}
 
       {/* {error && <p className="text-red-500">Error: {error}</p>} */}
->>>>>>> 9de7e8821d08e61cae89680c304aa53c6600ef78
     </div>
   );
 };

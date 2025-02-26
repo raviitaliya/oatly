@@ -25,6 +25,10 @@ import { useProductStore } from "./store/Store";
 import NewPassword from "./pages/NewPassword";
 import ThingsWeDo from "./pages/ThingsWeDo";
 import Contact from "./pages/Contact";
+import Faqs from "./pages/Faqs";
+import CookiePolicy from "./pages/CookiePolicy";
+import Accessibility from "./pages/Accessibility";
+import Careers from "./pages/Careers";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -95,6 +99,10 @@ function App() {
           <Route path="set-newPassword/:token" element={<NewPassword />} />
           <Route path="otp" element={<OtpPage />} />
           <Route path="contact" element={<Contact/>} />
+          <Route path="faqs" element={<Faqs/>} />
+          <Route path="cookie-policy" element={<CookiePolicy/>} />
+          <Route path="accessibility" element={<Accessibility/>} />
+          <Route path="career" element={<Careers/>} />
         </Route>
       </Routes>
     </BrowserRouter>
