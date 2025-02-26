@@ -109,7 +109,7 @@ const Contact = () => {
               <div key={option.id} className="relative">
                 <button
                   onClick={() => setSelectedOption(option.id)}
-                  className="w-full bg-black text-white font-font2 py-16 px-6 flex items-center justify-center space-x-3"
+                  className="w-full bg-black text-white font-font2 py-16 px-6 cursor-hand flex items-center justify-center space-x-3"
                 >
                   <span className="w-6 h-6 border border-white rounded-full flex items-center justify-center"></span>
                   <span className="uppercase font-bold">{option.label}</span>
@@ -118,7 +118,7 @@ const Contact = () => {
                   <img
                     src={hand}
                     alt="Pointing Hand"
-                    className="absolute -left-28 top-6 w-32 hidden md:block"
+                    className="absolute -left-28 top-6 w-32 hidden md:block cursor-hand "
                   />
                 )}
               </div>
@@ -130,7 +130,7 @@ const Contact = () => {
             {/* Back Button */}
             <button
               onClick={() => setSelectedOption(null)}
-              className="w-full max-w-5xl bg-black text-white font-font2 py-16 px-6 flex items-center justify-center space-x-3"
+              className="w-full max-w-5xl bg-black text-white cursor-hand  font-font2 py-16 px-6 flex items-center justify-center space-x-3"
             >
               <span className="w-6 h-6 border border-white rounded-full flex items-center justify-center"></span>
               <span className="uppercase font-bold">
@@ -216,7 +216,7 @@ const Contact = () => {
                   </div>
                 </div>
                 <div className="flex justify-end ">
-                  <button className="bg-black text-white py-2 px-8 font-font1 mt-4 ">
+                  <button className="bg-black text-white py-2 cursor-hand  px-8 font-font1 mt-4 ">
                     Submit
                   </button>
                 </div>

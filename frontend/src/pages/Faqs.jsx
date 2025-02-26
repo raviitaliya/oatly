@@ -124,7 +124,7 @@ const Faqs = () => {
                   say and answer all your questions.
                 </p>
 
-                <button className="mt-14 bg-black text-white py-3 px-6 text-lg font-bold font-font1 tracking-wider">
+                <button className="mt-14 bg-black text-white cursor-hand  py-3 px-6 text-lg font-bold font-font1 tracking-wider">
                   ASK YOUR QUESTION!
                 </button>
               </div>
@@ -146,7 +146,7 @@ const Faqs = () => {
               >
                
                 <button
-                  className="w-full text-left text-xl font-semibold font-font2 flex items-center py-3"
+                  className="w-full text-left text-xl font-semibold cursor-hand  font-font2 flex items-center py-3"
                   onClick={() => toggleFAQ(index)}
                 >
                   
@@ -188,7 +188,7 @@ const Faqs = () => {
                 className="border-b-2 border-dashed border-black pb-7"
               >
                 <button
-                  className="w-full text-left text-xl font-semibold font-font2 flex items-center py-3"
+                  className="w-full text-left text-xl cursor-hand  font-semibold font-font2 flex items-center py-3"
                   onClick={() => toggleFAQ(index)}
                 >
                   <img src={pin} alt="Question Icon" className="w-6 h-6 mr-3" />
@@ -229,7 +229,7 @@ const Faqs = () => {
                 className="border-b-2 border-dashed border-black pb-7"
               >
                 <button
-                  className="w-full text-left text-xl font-semibold font-font2 flex items-center py-3"
+                  className="w-full text-left text-xl font-semibold cursor-hand  font-font2 flex items-center py-3"
                   onClick={() => toggleFAQ(index)}
                 >
                   <img src={pin} alt="Question Icon" className="w-6 h-6 mr-3" />

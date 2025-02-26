@@ -27,6 +27,7 @@ import Faqs from "./pages/Faqs";
 import CookiePolicy from "./pages/CookiePolicy";
 import Accessibility from "./pages/Accessibility";
 import Careers from "./pages/Careers";
+import Chackout from "./pages/Chackout";
 
 function App() {
   const { fetchUser } = useProductStore();

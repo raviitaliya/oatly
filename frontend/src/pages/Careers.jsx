@@ -106,12 +106,12 @@ const Careers = () => {
 
           {/* Buttons */}
           <div className="mt-20 space-y-4">
-            <button className="bg-black text-white px-10 py-3 text-xl font-bold font-font2  flex justify-between items-center">
+            <button className="bg-black text-white px-10 py-3 text-xl font-bold font-font2 cursor-hand  flex justify-between items-center">
               <span>Yes, show me the jobs on offer.</span>
               <span>&#x2794;</span>
             </button>
             <div className="flex justify-center items-center">
-              <button className="bg-black text-white px-10 py-3 text-xl font-bold  font-font2  flex justify-between items-center">
+              <button className="bg-black text-white px-10 py-3 text-xl font-bold  font-font2 cursor-hand  flex justify-between items-center">
                 <span>No, get me out of here.</span>
                 <span>&#x2794;</span>
               </button>
