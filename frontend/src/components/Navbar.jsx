@@ -6,19 +6,33 @@ import { FaTwitter } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { MdMusicNote } from "react-icons/md";
 import SignIn from "@/auth/SignIn";
-import SignUp from "@/auth/SignUp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
 import { Toaster, toast } from "sonner";
+import { FaShoppingCart } from "react-icons/fa";
+import Cart from "./Cart";
 
 const Navbar = () => {
-  const { isSignInOpen, openSignIn, closeSignIn, user, logOut } =
-    useProductStore();
+  const {
+    isSignInOpen,
+    openSignIn,
+    closeSignIn,
+    user,
+    logOut,
+    isAddToCartOpen,
+    cart,
+    openAddToCart,
+  } = useProductStore();
 
+  const { id } = useParams();
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+
+  const item = cart.find((p) => p.id === id);
 
   const handleSignUpClick = () => {
     setShowSignUp(!showSignUp);
@@ -28,6 +42,11 @@ const Navbar = () => {
   const handleSignInClick = () => {
     setShowSignIn(!showSignIn);
     setShowSignUp(false);
+  };
+
+  const handleOnclick = (id) => {
+    setIsCartOpen(!isCartOpen);
+    openAddToCart();
   };
 
   const handleLogout = async () => {
@@ -50,7 +69,11 @@ const Navbar = () => {
 
   const profileGif = "/src/assets/gif/discord-avatar.gif";
   return (
-    <nav className="flex items-center fixed justify-between p-2 sm:p-3 w-full">
+    <nav
+      className={`flex ${
+        isAddToCartOpen ? "z-[40]" : " z-[51]"
+      } items-center fixed justify-between p-2 sm:p-3 w-full`}
+    >
       <div className="flex items-center">
         <div>
           <div className="grid grid-cols-1 gap-2">
@@ -70,7 +93,6 @@ const Navbar = () => {
                 className="!w-full sm:!w-full md:!w-[740px] lg:!w-[950px] bg-black border-none text-white p-4 sm:p-6"
               >
                 <div className="min-h-screen bg-black text-white p-4 md:p-8 lg:p-12 overflow-y-auto">
-                  {/* Main Navigation */}
                   <nav className="mb-20 md:mb-32">
                     <ul className="flex flex-col gap-3 md:gap-4 mt-20">
                       <li>
@@ -110,13 +132,11 @@ const Navbar = () => {
 
                   {/* Footer Section */}
                   <footer className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24  ">
-                    {/* Dig Deeper Section */}
                     <div>
                       <h2 className="text-base md:text-lg font-font2 mb-6">
                         DIG DEEPER
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Left Column */}
                         <div className="space-y-3">
                           <Link
                             to="/faqs"
@@ -227,19 +247,19 @@ const Navbar = () => {
 
       <div className="flex justify-center items-center gap-8">
         <div className="flex gap-4">
-          {/* <Button onClick={openSignUp} className="cursor-hand">
-            Sign Up
-          </Button>
-          {isSignUpOpen && <SignUp />} */}
-
           {!user ? (
             <Button onClick={openSignIn} className="cursor-hand">
               Log In
             </Button>
           ) : (
-            <Button onClick={handleLogout} className="cursor-hand">
-              Log Out
-            </Button>
+            <>
+              <Button onClick={handleLogout} className="cursor-hand">
+                Log Out
+              </Button>
+              <div className="relative">
+                <Cart isbuttonclick={handleOnclick} variant="navbar" />
+              </div>
+            </>
           )}
           {isSignInOpen && <SignIn onClose={closeSignIn} />}
         </div>

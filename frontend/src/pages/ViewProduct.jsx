@@ -16,13 +16,12 @@ import {
 import OatlyTv from "@/components/OatlyTv";
 import Footer from "@/components/Footer";
 import ProductCard from "./ProductCard";
-import { toast } from "sonner";
 import PaymentBtn from "@/components/PaymentBtn";
 import axios from "axios";
 
 function ViewProduct() {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -33,7 +32,22 @@ function ViewProduct() {
     random,
     getOneProduct,
     setClearState,
+    openAddToCart,
+    cart,
+    addToCart,
+    increaseQuantity,
+    decreaseQuantity,
   } = useProductStore();
+
+  const product = cart.find((item) => item.id === id);
+  console.log("Product in Cart:", product);
+
+  const quantity = product ? product.quantity : 1;
+  const totalPrice = product
+    ? product.totalPrice
+    : oneProduct
+    ? oneProduct.price
+    : 0;
 
   // console.log(random);
 
@@ -41,46 +55,17 @@ function ViewProduct() {
     navigate(path);
   };
 
-  const increaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
-
-  const addToCart = () => {
-    const productDetails = {
-      id: oneProduct._id,
-      name: oneProduct.productname,
-      image: oneProduct.image,
-      price: oneProduct.price,
-      quantity: quantity,
-      totalPrice: oneProduct.price * quantity,
-    };
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const existingProductIndex = cart.findIndex(
-      (item) => item.id === productDetails.id
-    );
-
-    if (existingProductIndex > -1) {
-      cart[existingProductIndex].quantity += productDetails.quantity;
-      cart[existingProductIndex].totalPrice += productDetails.totalPrice;
-    } else {
-      cart.push(productDetails);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    toast("Product added to cart!");
-  };
-
   const handleOnclick = () => {
-    addToCart();
-    setIsCartOpen(!isCartOpen);
+    console.log("Add to Cart clicked");
+    if (oneProduct) {
+      addToCart({
+        id: oneProduct._id,
+        name: oneProduct.productname,
+        price: oneProduct.price,
+        image: oneProduct.image,
+      });
+      setIsCartOpen(!isCartOpen);
+      openAddToCart();}
   };
 
   useEffect(() => {
@@ -106,16 +91,15 @@ function ViewProduct() {
 
     // console.log(order);
 
-
     const options = {
-      key, 
-      amount: order.amount, 
+      key,
+      amount: order.amount,
       currency: "INR",
       name: "Oatly",
       dscription: "hello guys",
       image:
         "https://cdn.pixabay.com/photo/2016/12/27/13/10/logo-1933884_1280.png",
-      order_id: order.id, 
+      order_id: order.id,
       callback_url: "http://localhost:8000/api/payment/payment-verification",
       prefill: {
         name: "Gaurav Kumar",
@@ -124,11 +108,11 @@ function ViewProduct() {
       },
       notes: {
         item_name: "Max Ninja 200 Wireless Gaming Mouse",
-        quantity: "1", 
+        quantity: "1",
         price: "₹4,499",
         address: "Razorpay Corporate Office",
       },
-      theme: { 
+      theme: {
         color: "#000000",
       },
     };
@@ -198,23 +182,28 @@ function ViewProduct() {
                 <div className="flex items-center justify-between">
                   <button
                     className=" px-3 rounded text-2xl font-bold font-font2  "
-                    onClick={decreaseQuantity}
+                    onClick={() => decreaseQuantity(product.id)}
+                    disabled={!product || product.quantity <= 1}
                   >
                     -
-                  </button>
-                  <span>{quantity}</span>
+                   </button>
+                  <span>{product ? product.quantity : 1}</span>
                   <button
-                    className="px-3 rounded text-2xl font-font2  "
-                    onClick={increaseQuantity}
+                    className="px-3 rounded text-2xl font-font2"
+                    onClick={() => increaseQuantity(product.id)}
                   >
                     +
                   </button>
                 </div>
               </div>
 
-              <Cart isOpen={isCartOpen} isbuttonclick={handleOnclick} />
+              <Cart
+                isOpen={isCartOpen}
+                isbuttonclick={handleOnclick}
+                variant="default"
+              />
               <PaymentBtn
-                amount={oneProduct.price * quantity}
+                amount={totalPrice}
                 onClick={() => checkoutHandler(oneProduct.price * quantity)}
               />
             </div>
@@ -310,8 +299,6 @@ function ViewProduct() {
           ))}
         </div>
       </section>
-
-
       <OatlyTv />
       <Footer />
     </div>

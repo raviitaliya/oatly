@@ -5,6 +5,24 @@ import axios from "axios";
 
 const API = "http://localhost:8000/api";
 
+const loadCartFromLocalStorage = () => {
+  try {
+    const cartData = localStorage.getItem("cart");
+    return cartData ? JSON.parse(cartData) : [];
+  } catch (error) {
+    console.error("Error loading cart from localStorage:", error);
+    return [];
+  }
+};
+
+const saveCartToLocalStorage = (cart) => {
+  try {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  } catch (error) {
+    console.error("Error saving cart to localStorage:", error);
+  }
+};
+
 export const useProductStore = create((set, get) => ({
   products: [],
   oatDrinkProducts: [],
@@ -15,6 +33,7 @@ export const useProductStore = create((set, get) => ({
   IceCream: [],
   SoftServe: [],
   random: [],
+  cart: loadCartFromLocalStorage(),
 
   oneProduct: null,
   selectedProduct: null,
@@ -27,6 +46,7 @@ export const useProductStore = create((set, get) => ({
   isSingInOpen: false,
   isOtpOpen: false,
   isResetOpen: false,
+  isAddToCartOpen: false,
 
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
@@ -61,6 +81,9 @@ export const useProductStore = create((set, get) => ({
   openReset: () =>
     set((state) => ({ ...state, isResetOpen: true, isSignInOpen: false })),
   closeReset: () => set((state) => ({ ...state, isResetOpen: false })),
+
+  openAddToCart: () => set({ isAddToCartOpen: true }),
+  closeAddToCart: () => set({ isAddToCartOpen: false }),
 
   fetchProducts: async () => {
     if (get().loading) return;
@@ -401,4 +424,81 @@ export const useProductStore = create((set, get) => ({
       console.error("Error during logout:", error);
     }
   },
+
+  addToCart: (product) =>
+    set((state) => {
+      const existingItem = state.cart.find((item) => item.id === product.id);
+      let updatedCart;
+
+      if (existingItem) {
+        updatedCart = state.cart.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+                totalPrice: (item.quantity + 1) * item.price,
+              }
+            : item
+        );
+      } else {
+        updatedCart = [
+          ...state.cart,
+          { ...product, quantity: 1, totalPrice: product.price },
+        ];
+      }
+
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
+    }),
+
+  increaseQuantity: (id) =>
+    set((state) => {
+      const updatedCart = state.cart.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+              totalPrice: (item.quantity + 1) * item.price,
+            }
+          : item
+      );
+
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
+    }),
+
+  decreaseQuantity: (id) =>
+    set((state) => {
+      const updatedCart = state.cart.map((item) =>
+        item.id === id && item.quantity > 1
+          ? {
+              ...item,
+              quantity: item.quantity - 1,
+              totalPrice: (item.quantity - 1) * item.price,
+            }
+          : item
+      );
+
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
+    }),
+
+  removeFromCart: (id) =>
+    set((state) => {
+      const updatedCart = state.cart.filter((item) => item.id !== id);
+
+      saveCartToLocalStorage(updatedCart);
+
+      return { cart: updatedCart };
+    }),
+
+  clearCart: () =>
+    set(() => {
+      localStorage.removeItem("cart");
+
+      return { cart: [] };
+    }),
 }));
