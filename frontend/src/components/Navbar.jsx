@@ -11,8 +11,15 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
 import { Toaster, toast } from "sonner";
-import { FaShoppingCart } from "react-icons/fa";
 import Cart from "./Cart";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const {
@@ -266,13 +273,26 @@ const Navbar = () => {
           )}
           {isSignInOpen && <SignIn onClose={closeSignIn} />}
         </div>
-        <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
-          <img
-            src={profileGif}
-            alt="Profile"
-            className="w-12 h-12  rounded-full object-cover shadow-lg"
-          />
-        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
+              <img
+                src={profileGif}
+                alt="Profile"
+                className="w-12 h-12  rounded-full object-cover shadow-lg"
+              />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <Link to="/my-orders">My Orders</Link>
+          </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Toaster position="top-center" richColors closeButton />
       </div>
     </nav>

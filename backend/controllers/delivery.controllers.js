@@ -236,6 +236,27 @@ export const updateOrderStatus = async (req, res) => {
     if (status === "Out for Delivery" && coordinates) {
       order.location.coordinates = coordinates;
       deliveryBoy.location.coordinates = coordinates; // Sync delivery boy location
+
+      const payload = [
+        {
+          topic: "location-updates",
+          messages: JSON.stringify({
+            orderId: order._id.toString(),
+            coordinates,
+          }),
+        },
+      ];
+
+      await new Promise((resolve, reject) => {
+        producer.send(payload, (err, data) => {
+          if (err) {
+            console.error("Kafka send error:", err);
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        });
+      });
     }
     if (status === "Delivered") {
       order.deliveredAt = new Date();

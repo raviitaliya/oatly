@@ -2,8 +2,22 @@ import { create } from "zustand";
 import api from "../api/api";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const API = "http://localhost:8000/api";
+
+const socket = io("http://localhost:8000"); // Updated to port 8000
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // Adjust key as per your storage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const loadCartFromLocalStorage = () => {
   try {
@@ -34,6 +48,9 @@ export const useProductStore = create((set, get) => ({
   SoftServe: [],
   random: [],
   cart: loadCartFromLocalStorage(),
+  orders: [],
+  currentOrder: null,
+  location: null,
 
   oneProduct: null,
   selectedProduct: null,
@@ -501,4 +518,178 @@ export const useProductStore = create((set, get) => ({
 
       return { cart: [] };
     }),
+
+  placeOrder: async () => {
+    set({ error: null });
+    const { cart } = get();
+    if (!cart.length) {
+      set({ loading: false, error: "Cart is empty" });
+      return;
+    }
+
+    try {
+      // Get user's current location
+      const getCurrentLocation = () =>
+        new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error("Geolocation is not supported by this browser"));
+          }
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              resolve({ latitude, longitude });
+            },
+            (error) => {
+              reject(new Error(`Failed to get location: ${error.message}`));
+            }
+          );
+        });
+
+      let location;
+      try {
+        location = await getCurrentLocation();
+        console.log("User Location:", location);
+      } catch (locationError) {
+        set({ loading: false, error: locationError.message });
+        return;
+      }
+
+      const totalAmount = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+      const response = await api.post("/orders/create", {
+        items: cart.map((item) => ({
+          productImage: item.image,
+          productName: item.name || item.productName,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        totalAmount,
+        location: {
+          type: "Point",
+          coordinates: [location.longitude, location.latitude], 
+        },
+      });
+
+      if (response.data.success) {
+        const { order, pendingOrder } = response.data;
+
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => {
+          const options = {
+            key: order.key,
+            amount: order.amount * 100,
+            currency: order.currency,
+            name: "Oatly",
+            description: "Order Payment",
+            order_id: order.orderId,
+            handler: async (paymentResponse) => {
+              const verifyData = {
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+                items: pendingOrder.items,
+                totalAmount: pendingOrder.totalAmount,
+                deliveryAddress: pendingOrder.deliveryAddress,
+                location: pendingOrder.location, 
+              };
+              const verifyResponse = await api.post(
+                "/orders/verify-payment",
+                verifyData
+              );
+              if (verifyResponse.data.success) {
+                set({
+                  currentOrder: verifyResponse.data.order,
+                  cart: [],
+                  loading: false,
+                });
+                localStorage.removeItem("cart");
+              }
+            },
+            prefill: {
+              name: order.user.name,
+              email: order.user.email,
+              contact: order.user.mobile,
+            },
+          };
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        };
+        script.onerror = () => {
+          set({ loading: false, error: "Failed to load Razorpay script" });
+        };
+        document.body.appendChild(script);
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to place order",
+      });
+      console.error("Place Order Error:", error);
+    }
+  },
+
+  fetchOrders: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/orders/my-orders");
+      if (response.data.success) {
+        set({ orders: response.data.orders, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch orders",
+      });
+      console.error("Fetch Orders Error:", error);
+    }
+  },
+
+  cancelOrder: async (orderId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/orders/cancel", { orderId });
+      if (response.data.success) {
+        set((state) => ({
+          orders: state.orders.map((order) =>
+            order.orderId === orderId
+              ? { ...order, status: "Cancelled" }
+              : order
+          ),
+          loading: false,
+        }));
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to cancel order",
+      });
+      console.error("Cancel Order Error:", error);
+    }
+  },
+
+  // Live Tracking
+  startTracking: (orderId) => {
+    set({
+      currentOrder: get().orders.find((o) => o.orderId === orderId) || {
+        orderId,
+      },
+    });
+    socket.emit("trackOrder", orderId);
+    socket.on("locationUpdate", (data) => {
+      if (data.orderId === orderId) {
+        set({ location: data.coordinates });
+      }
+    });
+  },
+
+  stopTracking: () => {
+    socket.off("locationUpdate");
+    set({ currentOrder: null, location: null });
+  },
 }));

@@ -10,21 +10,21 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
-// Create a New Order with Razorpay Payment
+// Create a New Order with Razorpay Payment ✔
 export const createOrder = async (req, res) => {
-  const { items, totalAmount, deliveryAddress } = req.body;
-  const userId = req.userId; // From verifyToken middleware
+  const { items, totalAmount, deliveryAddress, location } = req.body;
+  const userId = req.userId;
 
   try {
     const user = await User.findById(userId);
     if (!user || user.role !== "user") {
-      return res.status(403).json({ success: false, message: "Only users can place orders" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Only users can place orders" });
     }
 
-    // Calculate total amount in paise (Razorpay uses smallest currency unit)
     const amountInPaise = Math.round(totalAmount * 100);
 
-    // Create Razorpay order
     const razorpayOrder = await razorpay.orders.create({
       amount: amountInPaise,
       currency: "INR",
@@ -35,7 +35,6 @@ export const createOrder = async (req, res) => {
       },
     });
 
-    // Temporarily store order intent (not yet confirmed)
     const pendingOrder = {
       userId,
       items,
@@ -48,25 +47,26 @@ export const createOrder = async (req, res) => {
         country: user.country,
         zipcode: user.zipcode,
       },
-      razorpayOrderId: razorpayOrder.id, // Store Razorpay order ID
-      status: "Pending Payment", // Custom status until payment is verified
+      razorpayOrderId: razorpayOrder.id,
+      status: "Pending Payment",
+      location, // Include the full location object from frontend
     };
 
     res.status(200).json({
       success: true,
       message: "Order created, proceed to payment",
       order: {
-        orderId: razorpayOrder.id, // Razorpay order ID for frontend
+        orderId: razorpayOrder.id,
         amount: totalAmount,
         currency: "INR",
-        key: process.env.RAZORPAY_KEY_ID, // Send key_id to frontend
+        key: process.env.RAZORPAY_KEY_ID,
         user: {
           name: user.name,
           email: user.email,
           mobile: user.mobile,
         },
       },
-      pendingOrder, // Send pending order details for reference
+      pendingOrder,
     });
   } catch (error) {
     console.error("Error creating order:", error);
@@ -74,40 +74,53 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Verify Payment and Confirm Order
+// Verify Payment and Confirm Order ✔
 export const verifyPayment = async (req, res) => {
   const {
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
     items,
+    productImage,
     totalAmount,
     deliveryAddress,
+    location, // Ensure location is destructured from req.body
   } = req.body;
   const userId = req.userId;
 
   try {
-    // Verify payment signature
+    console.log(
+      "RAZORPAY_KEY_SECRET in verifyPayment:",
+      process.env.RAZORPAY_API_SECRET
+    );
+    console.log("Location from req.body:", location); // Debug location
+    if (!process.env.RAZORPAY_API_SECRET) {
+      throw new Error("RAZORPAY_KEY_SECRET is not defined");
+    }
+
     const generatedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .createHmac("sha256", process.env.RAZORPAY_API_SECRET)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 
     if (generatedSignature !== razorpay_signature) {
-      return res.status(400).json({ success: false, message: "Invalid payment signature" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid payment signature" });
     }
 
-    // Fetch payment details from Razorpay (optional, for extra verification)
     const payment = await razorpay.payments.fetch(razorpay_payment_id);
     if (payment.status !== "captured") {
-      return res.status(400).json({ success: false, message: "Payment not captured" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Payment not captured" });
     }
 
-    // Confirm order in MongoDB
     const user = await User.findById(userId);
     const order = new Order({
       userId,
       items,
+      productImage,
       totalAmount,
       deliveryAddress: deliveryAddress || {
         address1: user.address1,
@@ -119,7 +132,12 @@ export const verifyPayment = async (req, res) => {
       },
       razorpayOrderId: razorpay_order_id,
       razorpayPaymentId: razorpay_payment_id,
-      status: "Pending", // Now ready for assignment
+      status: "Pending",
+      location: location || {
+        
+        type: "Point",
+        coordinates: [72.8311, 21.1702], 
+      },
     });
 
     await order.save();
@@ -156,7 +174,11 @@ export const assignOrder = async (req, res) => {
     }
 
     const deliveryBoy = await DeliveryBoy.findById(deliveryBoyId);
-    if (!deliveryBoy || !deliveryBoy.isAvailable || deliveryBoy.status !== "active") {
+    if (
+      !deliveryBoy ||
+      !deliveryBoy.isAvailable ||
+      deliveryBoy.status !== "active"
+    ) {
       return res.status(400).json({
         success: false,
         message: "Delivery boy not found or unavailable",
@@ -195,11 +217,15 @@ export const getOrderDetails = async (req, res) => {
       .populate("deliveryBoyId", "fullName mobile");
 
     if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
     }
 
     if (user.role === "user" && order.userId._id.toString() !== userId) {
-      return res.status(403).json({ success: false, message: "Unauthorized access" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Unauthorized access" });
     }
 
     res.status(200).json({
@@ -226,17 +252,22 @@ export const getOrderDetails = async (req, res) => {
   }
 };
 
-// Get User Orders
+// Get User Orders ✔
 export const getUserOrders = async (req, res) => {
   const userId = req.userId;
 
   try {
     const user = await User.findById(userId);
     if (!user || user.role !== "user") {
-      return res.status(403).json({ success: false, message: "Only users can view their orders" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Only users can view their orders" });
     }
 
-    const orders = await Order.find({ userId }).populate("deliveryBoyId", "fullName mobile");
+    const orders = await Order.find({ userId }).populate(
+      "deliveryBoyId",
+      "fullName mobile"
+    );
 
     res.status(200).json({
       success: true,
@@ -244,6 +275,7 @@ export const getUserOrders = async (req, res) => {
       orders: orders.map((order) => ({
         orderId: order._id,
         items: order.items,
+        productImage: order.productImage,
         totalAmount: order.totalAmount,
         status: order.status,
         deliveryBoy: order.deliveryBoyId || null,
@@ -257,7 +289,7 @@ export const getUserOrders = async (req, res) => {
   }
 };
 
-// Cancel Order (Before Assignment)
+// Cancel Order (Before Assignment) ✔
 export const cancelOrder = async (req, res) => {
   const { orderId } = req.body;
   const userId = req.userId;
@@ -265,7 +297,9 @@ export const cancelOrder = async (req, res) => {
   try {
     const order = await Order.findOne({ _id: orderId, userId });
     if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
     }
 
     if (order.status !== "Pending") {
