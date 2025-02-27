@@ -52,7 +52,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logOut();
-      toast.success("Login successful! Redirecting...", {
+      toast.success("Logout successful! ", {
         duration: 3000,
         style: {
           background: "#4CAF50",
@@ -248,12 +248,15 @@ const Navbar = () => {
       <div className="flex justify-center items-center gap-8">
         <div className="flex gap-4">
           {!user ? (
-            <Button onClick={openSignIn} className="cursor-hand">
+            <Button onClick={openSignIn} className="cursor-hand font-font1">
               Log In
             </Button>
           ) : (
             <>
-              <Button onClick={handleLogout} className="cursor-hand">
+              <Button
+                onClick={handleLogout}
+                className="cursor-hand bg-[#c8c8c8] hover:bg-[#e4e4e4] text-black font-font1 text-lg pb-1"
+              >
                 Log Out
               </Button>
               <div className="relative">
