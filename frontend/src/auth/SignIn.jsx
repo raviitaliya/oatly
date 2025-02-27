@@ -42,7 +42,7 @@ const SignIn = () => {
     // console.log("Form Data:", formData);
     const response = await signInUser(formData);
     if (response && !error) {
-      toast.success("Login successful! Redirecting...", {
+      toast.success("Login successful! ", {
         duration: 3000,
         style: {
           background: "#4CAF50",
