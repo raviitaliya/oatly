@@ -169,10 +169,10 @@ const ThingsWeDo = () => {
       </div>
 
       <div className="container mx-auto  py-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
         {story.map(({ id, title, description, date, category, image }) => (
-          <div key={id} className="flex flex-col">
-            <img src={image} alt={title} className="w-full h-auto  shadow-md" />
+          <div key={id} className="flex flex-col overflow-hidden">
+            <img src={image} alt={title} className="w-full h-auto transition duration-300 ease-in-out hover:scale-110 cursor-hand  shadow-md" />
             <div className="mt-4">
               <h2 className="text-2xl md:text-5xl font-font1 uppercase ">
                 {title}
@@ -193,13 +193,13 @@ const ThingsWeDo = () => {
         {storiesData.map(({ id, title, description, date, category, image }) => (
           <div
             key={id}
-            className="w-full sm:w-[48%] lg:w-[24%] flex flex-col"
+            className="w-full sm:w-[48%] lg:w-[24%] flex flex-col overflow-hidden"
           >
             {/* Image */}
             <img
               src={image}
               alt={title}
-              className="w-full  shadow-md"
+              className="w-full  shadow-md transition duration-300 ease-in-out hover:scale-110 cursor-hand  "
             />
 
             {/* Text Content */}
@@ -222,11 +222,11 @@ const ThingsWeDo = () => {
       <div className=" mx-auto px-6 lg:px-16 py-12 mb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left Side - Image */}
-          <div>
+          <div className="overflow-hidden">
             <img
               src={featureImage}
               alt="Nordic Seed Vault"
-              className="w-full h-auto "
+              className="w-full h-auto transition duration-300 ease-in-out hover:scale-110 cursor-hand "
             />
           </div>
 
@@ -250,9 +250,9 @@ const ThingsWeDo = () => {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-7">
           {stories.map((story) => (
-            <div key={story.id} className="space-y-4">
+            <div key={story.id} className="space-y-4 overflow-hidden">
               {/* Image */}
-              <img src={story.image} alt={story.title} className="w-full  " />
+              <img src={story.image} alt={story.title} className="w-full transition duration-300 ease-in-out hover:scale-110 cursor-hand " />
 
               {/* Text Content */}
               <div>
