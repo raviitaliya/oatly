@@ -10,8 +10,9 @@ dotenv.config({
 
 import authRoutes from "./routes/auth.route.js";
 import adminRoutes from "./routes/admin.route.js";
-import notificationRoutes from "./routes/notifications.route.js";
 import paymentRoutes from "./routes/payment.route.js";
+import deliveryBoyRoutes from "./routes/deliveryBoy.route.js";
+import orderRoutes from "./routes/order.route.js";
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -27,8 +28,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/notify", notificationRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/delivery_boy", deliveryBoyRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.listen(PORT, () => {
   connectDB();

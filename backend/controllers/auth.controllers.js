@@ -25,6 +25,7 @@ export const signup = async (req, res) => {
     country,
     zipcode,
     primaryMobile,
+    role,
   } = req.body;
 
   try {
@@ -74,7 +75,6 @@ export const signup = async (req, res) => {
       email,
       mobile,
       password: hashedPassword,
-      confpassword,
       address1,
       address2,
       city,
@@ -84,6 +84,7 @@ export const signup = async (req, res) => {
       primaryMobile,
       verificationToken,
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
+      role: role || "user",
     });
 
     await user.save();
@@ -164,7 +165,7 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Invalid credntials" });
     }
 
-    const token = generateTokenAndSetCookie(res, user._id);
+    const token = generateTokenAndSetCookie(res, user._id, user.role);
 
     user.lastLogin = new Date();
     await user.save();
@@ -306,7 +307,7 @@ export const checkAuth = async (req, res) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.userId).select("-password"); // Exclude password for security
+    const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
       return res.status(404).json({
