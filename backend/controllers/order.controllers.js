@@ -163,6 +163,7 @@ export const verifyPayment = async (req, res) => {
 // Assign Order to Delivery Boy (Admin or Automated)
 export const assignOrder = async (req, res) => {
   const { orderId, deliveryBoyId } = req.body;
+  console.log("Assign Order:", orderId, deliveryBoyId);
 
   try {
     const order = await Order.findById(orderId);

@@ -30,6 +30,7 @@ import Careers from "./pages/Careers";
 import Chackout from "./pages/Chackout";
 import Error from "./pages/Error";
 import MyOrders from "./pages/MyOrders";
+import DeliveryBoyDashbord from "./pages/DeliveryBoyDashbord";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -57,6 +58,7 @@ function App() {
           </Route>
           <Route path="/checkout" element={<Chackout />} />
           <Route path="/my-orders" element={<MyOrders />} />
+          <Route path="/delivert-boy" element={<DeliveryBoyDashbord />} />
           <Route path="/404-error" element={<Error />} />
           <Route path="oatly-who" element={<OatlyWho />} />
           <Route path="things-we-do" element={<ThingsWeDo/>}/>

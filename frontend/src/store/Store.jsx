@@ -453,17 +453,22 @@ export const useProductStore = create((set, get) => ({
             ? {
                 ...item,
                 quantity: item.quantity + 1,
-                totalPrice: (item.quantity + 1) * item.price,
+                totalPrice: (item.quantity + 1) * parseFloat(item.price),
               }
             : item
         );
       } else {
         updatedCart = [
           ...state.cart,
-          { ...product, quantity: 1, totalPrice: product.price },
+          {
+            ...product,
+            quantity: 1,
+            totalPrice: parseFloat(product.price),
+          },
         ];
       }
 
+      console.log("Updated Cart in addToCart:", updatedCart);
       saveCartToLocalStorage(updatedCart);
 
       return { cart: updatedCart };
@@ -554,18 +559,27 @@ export const useProductStore = create((set, get) => ({
         return;
       }
 
-      const totalAmount = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+      const totalAmount = cart.reduce((sum, item) => {
+        const itemTotal = parseFloat(item.price) * item.quantity;
+        console.log(
+          `Item ${item.name}: price=${item.price}, qty=${item.quantity}, total=${itemTotal}`
+        );
+        return sum + itemTotal;
+      }, 0);
+      console.log("Calculated totalAmount (rupees):", totalAmount);
+      console.log("Cart:", cart);
+
       const response = await api.post("/orders/create", {
         items: cart.map((item) => ({
           productImage: item.image,
           productName: item.name || item.productName,
           quantity: item.quantity,
-          price: item.price,
+          price: parseFloat(item.price),
         })),
         totalAmount,
         location: {
           type: "Point",
-          coordinates: [location.longitude, location.latitude], 
+          coordinates: [location.longitude, location.latitude],
         },
       });
 
@@ -590,7 +604,7 @@ export const useProductStore = create((set, get) => ({
                 items: pendingOrder.items,
                 totalAmount: pendingOrder.totalAmount,
                 deliveryAddress: pendingOrder.deliveryAddress,
-                location: pendingOrder.location, 
+                location: pendingOrder.location,
               };
               const verifyResponse = await api.post(
                 "/orders/verify-payment",
@@ -634,6 +648,9 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/orders/my-orders");
+      // console.log("Orders with images:", response.data.orders);
+      // console.log("Orders:", response.data.orders);
+
       if (response.data.success) {
         set({ orders: response.data.orders, loading: false });
       } else {
@@ -675,11 +692,6 @@ export const useProductStore = create((set, get) => ({
 
   // Live Tracking
   startTracking: (orderId) => {
-    set({
-      currentOrder: get().orders.find((o) => o.orderId === orderId) || {
-        orderId,
-      },
-    });
     socket.emit("trackOrder", orderId);
     socket.on("locationUpdate", (data) => {
       if (data.orderId === orderId) {
@@ -690,6 +702,6 @@ export const useProductStore = create((set, get) => ({
 
   stopTracking: () => {
     socket.off("locationUpdate");
-    set({ currentOrder: null, location: null });
+    set({ location: null });
   },
 }));

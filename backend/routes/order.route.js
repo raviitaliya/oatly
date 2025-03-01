@@ -2,6 +2,7 @@
 import express from "express";
 import { authorize, verifyToken } from "../middleware/verifyToken.js";
 import {
+  assignOrder,
   autoAssignOrder,
   cancelOrder,
   createOrder,
@@ -9,7 +10,6 @@ import {
   getUserOrders,
   verifyPayment,
 } from "../controllers/order.controllers.js";
-import { getAssignedOrders } from "../controllers/delivery.controllers.js";
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.get(
 );
 
 // Admin routes
-router.post("/assign", verifyToken, authorize("admin"), getAssignedOrders);
+router.post("/assign", verifyToken, authorize("admin"), assignOrder);
 router.post("/auto-assign", verifyToken, authorize("admin"), autoAssignOrder);
 
 export default router;

@@ -4,10 +4,12 @@ import express from "express";
 import { authorize, verifyToken } from "../middleware/verifyToken.js";
 import {
   acceptOrder,
+  acceptsOrder,
   createDeliveryBoyProfile,
   getAssignedOrders,
   getDeliveryBoyProfile,
   getEarnings,
+  startDummyTracking,
   toggleAvailability,
   updateDeliveryBoyProfile,
   updateOrderStatus,
@@ -26,7 +28,7 @@ router.post(
   verifyToken,
   authorize("delivery_boy"),
   createDeliveryBoyProfile
-); 
+);
 router.put(
   "/profile",
   verifyToken,
@@ -43,7 +45,7 @@ router.post(
   "/accept-order",
   verifyToken,
   authorize("delivery_boy"),
-  acceptOrder
+  acceptsOrder
 );
 router.post(
   "/update-status",
@@ -57,6 +59,20 @@ router.post(
   verifyToken,
   authorize("delivery_boy"),
   toggleAvailability
+);
+
+router.post(
+  "/accepts-order",
+  verifyToken,
+  authorize("delivery_boy"),
+  acceptOrder
+);
+
+router.post(
+  "/start-dummy-tracking",
+  verifyToken,
+  authorize("delivery_boy"),
+  startDummyTracking
 );
 
 export default router;

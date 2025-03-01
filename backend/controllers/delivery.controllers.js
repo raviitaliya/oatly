@@ -2,6 +2,17 @@
 import { DeliveryBoy } from "../models/deliveryProfile.model.js";
 import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
+import { io } from "../index.js";
+
+const dummyPath = [
+  [77.1025, 28.7041], // Starting point (Connaught Place)
+  [77.103, 28.705],
+  [77.104, 28.706],
+  [77.105, 28.707],
+  [77.106, 28.708], // Ending point
+];
+
+let simulationIntervals = {};
 
 // Get Delivery Boy Profile
 export const getDeliveryBoyProfile = async (req, res) => {
@@ -156,7 +167,7 @@ export const getAssignedOrders = async (req, res) => {
 };
 
 // Accept an Order
-export const acceptOrder = async (req, res) => {
+export const acceptsOrder = async (req, res) => {
   const { orderId } = req.body;
   const userId = req.userId;
 
@@ -197,6 +208,69 @@ export const acceptOrder = async (req, res) => {
   }
 };
 
+//dummyAccept
+export const acceptOrder = async (req, res) => {
+  const { orderId } = req.body;
+  const userId = req.userId;
+
+  try {
+    const deliveryBoy = await DeliveryBoy.findOne({ userId });
+    if (!deliveryBoy) return res.status(404).json({ success: false, message: "Delivery boy profile not found" });
+
+    const order = await Order.findOne({ _id: orderId, deliveryBoyId: deliveryBoy._id });
+    if (!order) return res.status(400).json({ success: false, message: "Order not found or not assigned to this delivery boy" });
+
+    if (order.status !== "Assigned") {
+      console.log(`Order ${orderId} not in Assigned state, current status: ${order.status}`);
+      return res.status(400).json({ success: false, message: `Order must be Assigned, current status: ${order.status}` });
+    }
+
+    order.status = "Out for Delivery";
+    await order.save();
+    console.log(`Order ${orderId} accepted, status: ${order.status}`);
+
+    if (simulationIntervals[orderId]) {
+      clearInterval(simulationIntervals[orderId]);
+    }
+
+    let step = 0;
+    simulationIntervals[orderId] = setInterval(async () => {
+      if (step >= dummyPath.length) {
+        clearInterval(simulationIntervals[orderId]);
+        delete simulationIntervals[orderId];
+        order.status = "Delivered";
+        order.deliveredAt = new Date();
+        deliveryBoy.totalDeliveries += 1;
+        deliveryBoy.earnings += 10;
+        await order.save();
+        await deliveryBoy.save();
+        io.to(orderId).emit("statusUpdate", { orderId, status: "Delivered" });
+        console.log(`Order ${orderId} delivered`);
+        return;
+      }
+
+      const coordinates = dummyPath[step];
+      order.location = { type: "Point", coordinates };
+      deliveryBoy.location = { type: "Point", coordinates };
+      console.log(`Step ${step}: Emitting location for ${orderId}:`, coordinates);
+      io.to(orderId).emit("locationUpdate", { orderId, coordinates });
+
+      await order.save();
+      await deliveryBoy.save();
+      step++;
+    }, 5000);
+
+    res.status(200).json({
+      success: true,
+      message: "Order accepted and tracking started",
+      order: { orderId: order._id, status: order.status },
+    });
+  } catch (error) {
+    console.error("Error in acceptOrder:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // Update Order Status and Location
 export const updateOrderStatus = async (req, res) => {
   const { orderId, status, coordinates } = req.body;
@@ -225,14 +299,15 @@ export const updateOrderStatus = async (req, res) => {
       Assigned: ["Out for Delivery"],
       "Out for Delivery": ["Delivered"],
     };
-    if (!validTransitions[order.status]?.includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: `Cannot change status from ${order.status} to ${status}`,
-      });
+    if (status && status !== order.status) {
+      if (!validTransitions[order.status]?.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot change status from ${order.status} to ${status}`,
+        });
+      }
+      order.status = status;
     }
-
-    order.status = status;
     if (status === "Out for Delivery" && coordinates) {
       order.location.coordinates = coordinates;
       deliveryBoy.location.coordinates = coordinates; // Sync delivery boy location
@@ -275,6 +350,85 @@ export const updateOrderStatus = async (req, res) => {
         location: order.location,
         deliveredAt: order.deliveredAt,
       },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const startDummyTracking = async (req, res) => {
+  const { orderId } = req.body;
+  const userId = req.userId;
+
+  try {
+    const deliveryBoy = await DeliveryBoy.findOne({ userId });
+    if (!deliveryBoy) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Delivery boy profile not found" });
+    }
+
+    const order = await Order.findOne({
+      _id: orderId,
+      deliveryBoyId: deliveryBoy._id,
+    });
+    if (!order || order.status !== "Out for Delivery") {
+      return res.status(400).json({
+        success: false,
+        message: "Order not found or not in 'Out for Delivery' status",
+      });
+    }
+
+    if (simulationIntervals[orderId]) {
+      clearInterval(simulationIntervals[orderId]);
+    }
+
+    let step = 0;
+    simulationIntervals[orderId] = setInterval(async () => {
+      if (step >= dummyPath.length) {
+        clearInterval(simulationIntervals[orderId]);
+        delete simulationIntervals[orderId];
+        order.status = "Delivered";
+        order.deliveredAt = new Date();
+        deliveryBoy.totalDeliveries += 1;
+        deliveryBoy.earnings += 10;
+        await order.save();
+        await deliveryBoy.save();
+        console.log(`Order ${orderId} delivered`);
+        return;
+      }
+
+      const coordinates = dummyPath[step];
+      order.location.coordinates = coordinates;
+      deliveryBoy.location.coordinates = coordinates;
+
+      const payload = [
+        {
+          topic: "location-updates",
+          messages: JSON.stringify({
+            orderId: order._id.toString(),
+            coordinates,
+          }),
+        },
+      ];
+
+      await new Promise((resolve, reject) => {
+        producer.send(payload, (err, data) => {
+          if (err) reject(err);
+          else resolve(data);
+        });
+      });
+
+      await order.save();
+      await deliveryBoy.save();
+      console.log(`Location update for ${orderId}:`, coordinates);
+      step++;
+    }, 5000);
+
+    res.status(200).json({
+      success: true,
+      message: "Started dummy tracking",
+      orderId,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
