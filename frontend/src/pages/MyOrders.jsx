@@ -5,11 +5,12 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useProductStore } from "@/store/Store";
 
+const socket = io("http://localhost:8000", { withCredentials: true });
+
 function MyOrders() {
   const { fetchOrders, orders, cancelOrder, loading, error } = useProductStore();
   const [trackingOrderId, setTrackingOrderId] = useState(null);
   const [location, setLocation] = useState(null);
-  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -18,14 +19,11 @@ function MyOrders() {
   }, [fetchOrders]);
 
   useEffect(() => {
-    const socketInstance = io("http://localhost:8000", { withCredentials: true });
-    setSocket(socketInstance);
+    socket.on("connect", () => console.log("Socket.IO connected"));
+    socket.on("connect_error", (err) => console.error("Socket.IO error:", err));
+    socket.on("disconnect", () => console.log("Socket.IO disconnected"));
 
-    socketInstance.on("connect", () => console.log("Socket.IO connected"));
-    socketInstance.on("connect_error", (err) => console.error("Socket.IO error:", err));
-    socketInstance.on("disconnect", () => console.log("Socket.IO disconnected"));
-
-    socketInstance.on("locationUpdate", (data) => {
+    socket.on("locationUpdate", (data) => {
       console.log("Received locationUpdate:", data);
       if (data.orderId === trackingOrderId) {
         console.log("Setting location to:", data.coordinates);
@@ -35,38 +33,34 @@ function MyOrders() {
       }
     });
 
-    socketInstance.on("statusUpdate", (data) => {
+    socket.on("statusUpdate", (data) => {
       console.log("Received statusUpdate:", data);
       if (data.orderId === trackingOrderId && data.status === "Delivered") {
         console.log("Stopping tracking due to Delivered");
         setTrackingOrderId(null);
         setLocation(null);
-        socketInstance.off("locationUpdate");
+        socket.off("locationUpdate");
       }
     });
 
     return () => {
-      socketInstance.disconnect();
+      socket.off("locationUpdate");
+      socket.off("statusUpdate");
     };
   }, [trackingOrderId]);
 
   const handleStartTracking = (orderId) => {
-    if (!socket) {
-      console.error("Socket not initialized");
-      return;
-    }
     const orderIdStr = orderId.toString();
     console.log("Starting tracking for:", orderIdStr);
     setTrackingOrderId(orderIdStr);
-    socket.emit("trackOrder", orderIdStr);
+    socket.emit("trackOrder", orderIdStr); // Join the room
   };
 
   const handleStopTracking = () => {
-    if (!socket) return;
     console.log("Stopping tracking for:", trackingOrderId);
-    socket.off("locationUpdate");
     setTrackingOrderId(null);
     setLocation(null);
+    socket.off("locationUpdate");
   };
 
   return (
@@ -95,7 +89,9 @@ function MyOrders() {
                     <div>
                       Order Id: {order.orderId}: {order.items[0].productName} - ₹{order.totalAmount} x {order.items[0].quantity}
                       <br />
-                      {new Date(order.createdAt).toLocaleString()} - Status: {order.status}
+                      Address: {order.deliveryAddress ? `${order.deliveryAddress.address1}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state}, ${order.deliveryAddress.zipcode}` : "Not specified"}
+                      <br />
+                      {order.createdAt ? new Date(order.createdAt).toLocaleString() : "Date not available"} - Status: {order.status}
                       {order.status === "Pending" && (
                         <button
                           onClick={() => cancelOrder(order.orderId)}

@@ -49,6 +49,7 @@ export const useProductStore = create((set, get) => ({
   random: [],
   cart: loadCartFromLocalStorage(),
   orders: [],
+  assignedOrders: [],
   currentOrder: null,
   location: null,
 
@@ -179,6 +180,7 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
+
   getoatgurt: async () => {
     if (get().loading) return;
 
@@ -524,6 +526,205 @@ export const useProductStore = create((set, get) => ({
       return { cart: [] };
     }),
 
+  getDeliveryBoyProfile: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/delivery_boy/profile");
+      if (response.data.success) {
+        set({
+          profile: response.data.profile,
+          loading: false,
+          isAvailable: response.data.profile.isAvailable,
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch profile",
+      });
+    }
+  },
+
+  createDeliveryBoyProfile: async (userId, profileData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post(
+        `/delivery_boy/create/${userId}`,
+        profileData
+      );
+      if (response.data.success) {
+        set({ profile: response.data.profile, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to create profile",
+      });
+    }
+  },
+
+  updateDeliveryBoyProfile: async (profileData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.put("/delivery_boy/profile", profileData);
+      if (response.data.success) {
+        set({
+          profile: response.data.profile,
+          loading: false,
+          isAvailable: response.data.profile.isAvailable,
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to update profile",
+      });
+    }
+  },
+
+  fetchAssignedOrders: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/delivery_boy/orders");
+      if (response.data.success) {
+        set({ assignedOrders: response.data.orders, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error:
+          error.response?.data?.message || "Failed to fetch assigned orders",
+      });
+    }
+  },
+
+  acceptOrder: async (orderId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/accepts-order", {
+        orderId,
+      });
+      if (response.data.success) {
+        console.log(`Accepted order ${orderId}`);
+        get().fetchAssignedOrders(); // Refresh orders
+        // Start listening for location updates
+        socket.on("locationUpdate", (data) => {
+          if (data.orderId === orderId) {
+            console.log("Received location update in store:", data.coordinates);
+            set({ location: data.coordinates });
+          }
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to accept order",
+      });
+    }
+  },
+
+  startDummyTracking: async (orderId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/start-dummy-tracking", {
+        orderId,
+      });
+      if (response.data.success) {
+        console.log(`Started dummy tracking for ${orderId}`);
+        get().fetchAssignedOrders();
+        socket.on("locationUpdate", (data) => {
+          if (data.orderId === orderId) {
+            console.log(
+              "Received dummy location update in store:",
+              data.coordinates
+            );
+            set({ location: data.coordinates });
+          }
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error:
+          error.response?.data?.message || "Failed to start dummy tracking",
+      });
+    }
+  },
+
+  updateOrderStatus: async (orderId, status, coordinates) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/update-status", {
+        orderId,
+        status,
+        coordinates,
+      });
+      if (response.data.success) {
+        console.log(`Updated order ${orderId} status to ${status}`);
+        get().fetchAssignedOrders();
+        if (status === "Delivered") {
+          socket.off("locationUpdate");
+          set({ location: null });
+        } else if (coordinates) {
+          set({ location: coordinates });
+        }
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to update order status",
+      });
+    }
+  },
+
+  getEarnings: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/delivery_boy/earnings");
+      if (response.data.success) {
+        set({ earnings: response.data.data, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch earnings",
+      });
+    }
+  },
+
+  toggleAvailability: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/toggle-availability");
+      if (response.data.success) {
+        set({ isAvailable: response.data.isAvailable, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to toggle availability",
+      });
+    }
+  },
+  
   placeOrder: async () => {
     set({ error: null });
     const { cart } = get();

@@ -6,9 +6,16 @@ import { io } from "../index.js";
 
 const dummyPath = [
   [77.1025, 28.7041], // Starting point (Connaught Place)
+  [77.1027, 28.7043],
   [77.103, 28.705],
+  [77.1033, 28.7053],
+  [77.1037, 28.7056],
   [77.104, 28.706],
+  [77.1043, 28.7063],
+  [77.1046, 28.7066],
   [77.105, 28.707],
+  [77.1053, 28.7073],
+  [77.1057, 28.7076],
   [77.106, 28.708], // Ending point
 ];
 
@@ -215,14 +222,33 @@ export const acceptOrder = async (req, res) => {
 
   try {
     const deliveryBoy = await DeliveryBoy.findOne({ userId });
-    if (!deliveryBoy) return res.status(404).json({ success: false, message: "Delivery boy profile not found" });
+    if (!deliveryBoy)
+      return res
+        .status(404)
+        .json({ success: false, message: "Delivery boy profile not found" });
 
-    const order = await Order.findOne({ _id: orderId, deliveryBoyId: deliveryBoy._id });
-    if (!order) return res.status(400).json({ success: false, message: "Order not found or not assigned to this delivery boy" });
+    const order = await Order.findOne({
+      _id: orderId,
+      deliveryBoyId: deliveryBoy._id,
+    });
+    if (!order)
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Order not found or not assigned to this delivery boy",
+        });
 
     if (order.status !== "Assigned") {
-      console.log(`Order ${orderId} not in Assigned state, current status: ${order.status}`);
-      return res.status(400).json({ success: false, message: `Order must be Assigned, current status: ${order.status}` });
+      console.log(
+        `Order ${orderId} not in Assigned state, current status: ${order.status}`
+      );
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: `Order must be Assigned, current status: ${order.status}`,
+        });
     }
 
     order.status = "Out for Delivery";
@@ -252,7 +278,10 @@ export const acceptOrder = async (req, res) => {
       const coordinates = dummyPath[step];
       order.location = { type: "Point", coordinates };
       deliveryBoy.location = { type: "Point", coordinates };
-      console.log(`Step ${step}: Emitting location for ${orderId}:`, coordinates);
+      console.log(
+        `Step ${step}: Emitting location for ${orderId}:`,
+        coordinates
+      );
       io.to(orderId).emit("locationUpdate", { orderId, coordinates });
 
       await order.save();
