@@ -614,8 +614,8 @@ export const useProductStore = create((set, get) => ({
       });
       if (response.data.success) {
         console.log(`Accepted order ${orderId}`);
-        get().fetchAssignedOrders(); // Refresh orders
-        // Start listening for location updates
+        get().fetchAssignedOrders(); 
+        
         socket.on("locationUpdate", (data) => {
           if (data.orderId === orderId) {
             console.log("Received location update in store:", data.coordinates);
@@ -724,7 +724,7 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
-  
+
   placeOrder: async () => {
     set({ error: null });
     const { cart } = get();
