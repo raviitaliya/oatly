@@ -11,6 +11,8 @@ import oatlywho from "../assets/Footer/oatlywho.jpg";
 
 const Faqs = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const [openIndexx, setOpenIndexx] = useState(null);
+  const [openIndexxx, setOpenIndexxx] = useState(null);
 
   const faqs = [
     {
@@ -100,7 +102,21 @@ const Faqs = () => {
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
+    setOpenIndexx(null);
+    setOpenIndexxx(null);
   };
+  const toggleFAQ1 = (index) => {
+    setOpenIndexx(openIndexx === index ? null : index);
+    setOpenIndex(null);
+    setOpenIndexxx(null);
+  };
+  const toggleFAQ2 = (index) => {
+    setOpenIndexxx(openIndexxx === index ? null : index);
+    setOpenIndex(null);
+    setOpenIndexx(null);
+  };
+  
+  
 
   return (
     <div>
@@ -189,18 +205,18 @@ const Faqs = () => {
               >
                 <button
                   className="w-full text-left text-xl cursor-hand  font-semibold font-font2 flex items-center py-3"
-                  onClick={() => toggleFAQ(index)}
+                  onClick={() => toggleFAQ1(index)}
                 >
                   <img src={pin} alt="Question Icon" className="w-6 h-6 mr-3" />
 
                   <span className="flex-1">{faq.question}</span>
 
                   <span className="text-4xl font-font1">
-                    {openIndex === index ? "−" : "+"}
+                    {openIndexx === index ? "−" : "+"}
                   </span>
                 </button>
 
-                {openIndex === index && (
+                {openIndexx === index && (
                   <p className="mt-7 text-xl font-font2 ">{faq.answer}</p>
                 )}
               </div>
@@ -230,17 +246,17 @@ const Faqs = () => {
               >
                 <button
                   className="w-full text-left text-xl font-semibold cursor-hand  font-font2 flex items-center py-3"
-                  onClick={() => toggleFAQ(index)}
+                  onClick={() => toggleFAQ2(index)}
                 >
                   <img src={pin} alt="Question Icon" className="w-6 h-6 mr-3" />
 
                   <span className="flex-1">{faq.question}</span>
 
                   <span className="text-4xl font-font1">
-                    {openIndex === index ? "−" : "+"}
+                    {openIndexxx === index ? "−" : "+"}
                   </span>
                 </button>
-                {openIndex === index && (
+                {openIndexxx === index && (
                   <p className="mt-7 text-xl font-font2 ">{faq.answer}</p>
                 )}
               </div>

@@ -28,6 +28,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import Accessibility from "./pages/Accessibility";
 import Careers from "./pages/Careers";
 import Chackout from "./pages/Chackout";
+import Formal from "./pages/Formal";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -67,6 +68,7 @@ function App() {
           <Route path="cookie-policy" element={<CookiePolicy/>} />
           <Route path="accessibility" element={<Accessibility/>} />
           <Route path="career" element={<Careers/>} />
+          <Route path="sustainability" element={<Formal/>} />
         </Route>
       </Routes>
     </BrowserRouter>
