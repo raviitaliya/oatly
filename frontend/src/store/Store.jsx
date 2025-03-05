@@ -2,8 +2,22 @@ import { create } from "zustand";
 import api from "../api/api";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const API = "http://localhost:8000/api";
+
+const socket = io("http://localhost:8000"); // Updated to port 8000
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // Adjust key as per your storage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const loadCartFromLocalStorage = () => {
   try {
@@ -34,6 +48,10 @@ export const useProductStore = create((set, get) => ({
   SoftServe: [],
   random: [],
   cart: loadCartFromLocalStorage(),
+  orders: [],
+  assignedOrders: [],
+  currentOrder: null,
+  location: null,
 
   oneProduct: null,
   selectedProduct: null,
@@ -162,6 +180,7 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
+
   getoatgurt: async () => {
     if (get().loading) return;
 
@@ -436,17 +455,22 @@ export const useProductStore = create((set, get) => ({
             ? {
                 ...item,
                 quantity: item.quantity + 1,
-                totalPrice: (item.quantity + 1) * item.price,
+                totalPrice: (item.quantity + 1) * parseFloat(item.price),
               }
             : item
         );
       } else {
         updatedCart = [
           ...state.cart,
-          { ...product, quantity: 1, totalPrice: product.price },
+          {
+            ...product,
+            quantity: 1,
+            totalPrice: parseFloat(product.price),
+          },
         ];
       }
 
+      console.log("Updated Cart in addToCart:", updatedCart);
       saveCartToLocalStorage(updatedCart);
 
       return { cart: updatedCart };
@@ -501,4 +525,384 @@ export const useProductStore = create((set, get) => ({
 
       return { cart: [] };
     }),
+
+  getDeliveryBoyProfile: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/delivery_boy/profile");
+      if (response.data.success) {
+        set({
+          profile: response.data.profile,
+          loading: false,
+          isAvailable: response.data.profile.isAvailable,
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch profile",
+      });
+    }
+  },
+
+  createDeliveryBoyProfile: async (userId, profileData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post(
+        `/delivery_boy/create/${userId}`,
+        profileData
+      );
+      if (response.data.success) {
+        set({ profile: response.data.profile, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to create profile",
+      });
+    }
+  },
+
+  updateDeliveryBoyProfile: async (profileData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.put("/delivery_boy/profile", profileData);
+      if (response.data.success) {
+        set({
+          profile: response.data.profile,
+          loading: false,
+          isAvailable: response.data.profile.isAvailable,
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to update profile",
+      });
+    }
+  },
+
+  fetchAssignedOrders: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/delivery_boy/orders");
+      if (response.data.success) {
+        set({ assignedOrders: response.data.orders, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error:
+          error.response?.data?.message || "Failed to fetch assigned orders",
+      });
+    }
+  },
+
+  acceptOrder: async (orderId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/accepts-order", {
+        orderId,
+      });
+      if (response.data.success) {
+        console.log(`Accepted order ${orderId}`);
+        get().fetchAssignedOrders(); 
+        
+        socket.on("locationUpdate", (data) => {
+          if (data.orderId === orderId) {
+            console.log("Received location update in store:", data.coordinates);
+            set({ location: data.coordinates });
+          }
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to accept order",
+      });
+    }
+  },
+
+  startDummyTracking: async (orderId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/start-dummy-tracking", {
+        orderId,
+      });
+      if (response.data.success) {
+        console.log(`Started dummy tracking for ${orderId}`);
+        get().fetchAssignedOrders();
+        socket.on("locationUpdate", (data) => {
+          if (data.orderId === orderId) {
+            console.log(
+              "Received dummy location update in store:",
+              data.coordinates
+            );
+            set({ location: data.coordinates });
+          }
+        });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error:
+          error.response?.data?.message || "Failed to start dummy tracking",
+      });
+    }
+  },
+
+  updateOrderStatus: async (orderId, status, coordinates) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/update-status", {
+        orderId,
+        status,
+        coordinates,
+      });
+      if (response.data.success) {
+        console.log(`Updated order ${orderId} status to ${status}`);
+        get().fetchAssignedOrders();
+        if (status === "Delivered") {
+          socket.off("locationUpdate");
+          set({ location: null });
+        } else if (coordinates) {
+          set({ location: coordinates });
+        }
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to update order status",
+      });
+    }
+  },
+
+  getEarnings: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/delivery_boy/earnings");
+      if (response.data.success) {
+        set({ earnings: response.data.data, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch earnings",
+      });
+    }
+  },
+
+  toggleAvailability: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/toggle-availability");
+      if (response.data.success) {
+        set({ isAvailable: response.data.isAvailable, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to toggle availability",
+      });
+    }
+  },
+
+  placeOrder: async () => {
+    set({ error: null });
+    const { cart } = get();
+    if (!cart.length) {
+      set({ loading: false, error: "Cart is empty" });
+      return;
+    }
+
+    try {
+      // Get user's current location
+      const getCurrentLocation = () =>
+        new Promise((resolve, reject) => {
+          if (!navigator.geolocation) {
+            reject(new Error("Geolocation is not supported by this browser"));
+          }
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              resolve({ latitude, longitude });
+            },
+            (error) => {
+              reject(new Error(`Failed to get location: ${error.message}`));
+            }
+          );
+        });
+
+      let location;
+      try {
+        location = await getCurrentLocation();
+        console.log("User Location:", location);
+      } catch (locationError) {
+        set({ loading: false, error: locationError.message });
+        return;
+      }
+
+      const totalAmount = cart.reduce((sum, item) => {
+        const itemTotal = parseFloat(item.price) * item.quantity;
+        console.log(
+          `Item ${item.name}: price=${item.price}, qty=${item.quantity}, total=${itemTotal}`
+        );
+        return sum + itemTotal;
+      }, 0);
+      console.log("Calculated totalAmount (rupees):", totalAmount);
+      console.log("Cart:", cart);
+
+      const response = await api.post("/orders/create", {
+        items: cart.map((item) => ({
+          productImage: item.image,
+          productName: item.name || item.productName,
+          quantity: item.quantity,
+          price: parseFloat(item.price),
+        })),
+        totalAmount,
+        location: {
+          type: "Point",
+          coordinates: [location.longitude, location.latitude],
+        },
+      });
+
+      if (response.data.success) {
+        const { order, pendingOrder } = response.data;
+
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => {
+          const options = {
+            key: order.key,
+            amount: order.amount * 100,
+            currency: order.currency,
+            name: "Oatly",
+            description: "Order Payment",
+            order_id: order.orderId,
+            handler: async (paymentResponse) => {
+              const verifyData = {
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+                items: pendingOrder.items,
+                totalAmount: pendingOrder.totalAmount,
+                deliveryAddress: pendingOrder.deliveryAddress,
+                location: pendingOrder.location,
+              };
+              const verifyResponse = await api.post(
+                "/orders/verify-payment",
+                verifyData
+              );
+              if (verifyResponse.data.success) {
+                set({
+                  currentOrder: verifyResponse.data.order,
+                  cart: [],
+                  loading: false,
+                });
+                localStorage.removeItem("cart");
+              }
+            },
+            prefill: {
+              name: order.user.name,
+              email: order.user.email,
+              contact: order.user.mobile,
+            },
+          };
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        };
+        script.onerror = () => {
+          set({ loading: false, error: "Failed to load Razorpay script" });
+        };
+        document.body.appendChild(script);
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to place order",
+      });
+      console.error("Place Order Error:", error);
+    }
+  },
+
+  fetchOrders: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/orders/my-orders");
+      // console.log("Orders with images:", response.data.orders);
+      // console.log("Orders:", response.data.orders);
+
+      if (response.data.success) {
+        set({ orders: response.data.orders, loading: false });
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch orders",
+      });
+      console.error("Fetch Orders Error:", error);
+    }
+  },
+
+  cancelOrder: async (orderId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/orders/cancel", { orderId });
+      if (response.data.success) {
+        set((state) => ({
+          orders: state.orders.map((order) =>
+            order.orderId === orderId
+              ? { ...order, status: "Cancelled" }
+              : order
+          ),
+          loading: false,
+        }));
+      } else {
+        set({ loading: false, error: response.data.message });
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to cancel order",
+      });
+      console.error("Cancel Order Error:", error);
+    }
+  },
+
+  // Live Tracking
+  startTracking: (orderId) => {
+    socket.emit("trackOrder", orderId);
+    socket.on("locationUpdate", (data) => {
+      if (data.orderId === orderId) {
+        set({ location: data.coordinates });
+      }
+    });
+  },
+
+  stopTracking: () => {
+    socket.off("locationUpdate");
+    set({ location: null });
+  },
 }));

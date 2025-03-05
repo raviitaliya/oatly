@@ -37,6 +37,7 @@ function ViewProduct() {
     addToCart,
     increaseQuantity,
     decreaseQuantity,
+    placeOrder,
   } = useProductStore();
 
   const product = cart.find((item) => item.id === id);
@@ -65,7 +66,8 @@ function ViewProduct() {
         image: oneProduct.image,
       });
       setIsCartOpen(!isCartOpen);
-      openAddToCart();}
+      openAddToCart();
+    }
   };
 
   useEffect(() => {
@@ -76,51 +78,51 @@ function ViewProduct() {
     getOneProduct(id);
   }, [id, oneProduct, getOneProduct, randomProduct, setClearState]);
 
-  const checkoutHandler = async (amount) => {
-    console.log(amount);
+  // const checkoutHandler = async (amount) => {
+  //   console.log(amount);
 
-    const {
-      data: { key },
-    } = await api.get("/payment/getkey");
+  //   const {
+  //     data: { key },
+  //   } = await api.get("/payment/getkey");
 
-    const {
-      data: { order },
-    } = await axios.post("http://localhost:8000/api/payment/create-order", {
-      amount,
-    });
+  //   const {
+  //     data: { order },
+  //   } = await axios.post("http://localhost:8000/api/payment/create-order", {
+  //     amount,
+  //   });
 
-    // console.log(order);
+  //   // console.log(order);
 
-    const options = {
-      key,
-      amount: order.amount,
-      currency: "INR",
-      name: "Oatly",
-      dscription: "hello guys",
-      image:
-        "https://cdn.pixabay.com/photo/2016/12/27/13/10/logo-1933884_1280.png",
-      order_id: order.id,
-      callback_url: "http://localhost:8000/api/payment/payment-verification",
-      prefill: {
-        name: "Gaurav Kumar",
-        email: "gaurav.kumar@example.com",
-        contact: "9000090000",
-      },
-      notes: {
-        item_name: "Max Ninja 200 Wireless Gaming Mouse",
-        quantity: "1",
-        price: "₹4,499",
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#000000",
-      },
-    };
+  //   const options = {
+  //     key,
+  //     amount: order.amount,
+  //     currency: "INR",
+  //     name: "Oatly",
+  //     dscription: "hello guys",
+  //     image:
+  //       "https://cdn.pixabay.com/photo/2016/12/27/13/10/logo-1933884_1280.png",
+  //     order_id: order.id,
+  //     callback_url: "http://localhost:8000/api/payment/payment-verification",
+  //     prefill: {
+  //       name: "Gaurav Kumar",
+  //       email: "gaurav.kumar@example.com",
+  //       contact: "9000090000",
+  //     },
+  //     notes: {
+  //       item_name: "Max Ninja 200 Wireless Gaming Mouse",
+  //       quantity: "1",
+  //       price: "₹4,499",
+  //       address: "Razorpay Corporate Office",
+  //     },
+  //     theme: {
+  //       color: "#000000",
+  //     },
+  //   };
 
-    const razor = new window.Razorpay(options);
-    razor.open();
-    console.log(window);
-  };
+  //   const razor = new window.Razorpay(options);
+  //   razor.open();
+  //   console.log(window);
+  // };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -186,7 +188,7 @@ function ViewProduct() {
                     disabled={!product || product.quantity <= 1}
                   >
                     -
-                   </button>
+                  </button>
                   <span>{product ? product.quantity : 1}</span>
                   <button
                     className="px-3 rounded text-2xl font-font2"
@@ -204,7 +206,8 @@ function ViewProduct() {
               />
               <PaymentBtn
                 amount={totalPrice}
-                onClick={() => checkoutHandler(oneProduct.price * quantity)}
+                onClick={placeOrder}
+                disabled={loading}
               />
             </div>
           </div>

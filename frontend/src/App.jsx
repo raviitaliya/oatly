@@ -28,6 +28,9 @@ import CookiePolicy from "./pages/CookiePolicy";
 import Accessibility from "./pages/Accessibility";
 import Careers from "./pages/Careers";
 import Chackout from "./pages/Chackout";
+import Error from "./pages/Error";
+import MyOrders from "./pages/MyOrders";
+import DeliveryBoyDashbord from "./pages/DeliveryBoyDashbord";
 import Formal from "./pages/Formal";
 
 function App() {
@@ -55,6 +58,9 @@ function App() {
             <Route path=":category/:id" element={<ViewProduct />} />
           </Route>
           <Route path="/checkout" element={<Chackout />} />
+          <Route path="/my-orders" element={<MyOrders />} />
+          <Route path="/delivery-boy" element={<DeliveryBoyDashbord />} />
+          <Route path="/404-error" element={<Error />} />
           <Route path="oatly-who" element={<OatlyWho />} />
           <Route path="things-we-do" element={<ThingsWeDo/>}/>
           <Route path="addToCard" element={<AddToCard />} />

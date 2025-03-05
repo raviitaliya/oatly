@@ -97,7 +97,7 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (step !== 3) return; // Only submit on step 3
+    if (step !== 3) return;
 
     const isValid = validateStep3();
     if (!isValid) return;
@@ -111,7 +111,7 @@ const SignUp = () => {
           style: { background: "#4CAF50", color: "white" },
         });
         closeSignUp();
-        openOtp(); // Open OTP page after successful signup
+        openOtp(); 
         console.log("openOtp called"); 
         console.log("isOtpOpen after openOtp:", useProductStore.getState().isOtpOpen);
       } else {

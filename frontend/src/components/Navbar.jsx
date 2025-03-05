@@ -11,8 +11,15 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { useProductStore } from "@/store/Store";
 import { Toaster, toast } from "sonner";
-import { FaShoppingCart } from "react-icons/fa";
 import Cart from "./Cart";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const {
@@ -52,7 +59,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logOut();
-      toast.success("Login successful! Redirecting...", {
+      toast.success("Logout successful! ", {
         duration: 3000,
         style: {
           background: "#4CAF50",
@@ -248,12 +255,15 @@ const Navbar = () => {
       <div className="flex justify-center items-center gap-8">
         <div className="flex gap-4">
           {!user ? (
-            <Button onClick={openSignIn} className="cursor-hand">
+            <Button onClick={openSignIn} className="cursor-hand font-font1">
               Log In
             </Button>
           ) : (
             <>
-              <Button onClick={handleLogout} className="cursor-hand">
+              <Button
+                onClick={handleLogout}
+                className="cursor-hand bg-[#c8c8c8] hover:bg-[#e4e4e4] text-black font-font1 text-lg pb-1"
+              >
                 Log Out
               </Button>
               <div className="relative">
@@ -263,13 +273,26 @@ const Navbar = () => {
           )}
           {isSignInOpen && <SignIn onClose={closeSignIn} />}
         </div>
-        <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
-          <img
-            src={profileGif}
-            alt="Profile"
-            className="w-12 h-12  rounded-full object-cover shadow-lg"
-          />
-        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex items-center sm:w-12 sm:h-12 bg-black rounded-full outline-white mr-2 cursor-hand">
+              <img
+                src={profileGif}
+                alt="Profile"
+                className="w-12 h-12  rounded-full object-cover shadow-lg"
+              />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <Link to="/my-orders">My Orders</Link>
+          </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Toaster position="top-center" richColors closeButton />
       </div>
     </nav>
