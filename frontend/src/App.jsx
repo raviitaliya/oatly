@@ -32,6 +32,7 @@ import Error from "./pages/Error";
 import MyOrders from "./pages/MyOrders";
 import DeliveryBoyDashbord from "./pages/DeliveryBoyDashbord";
 import Formal from "./pages/Formal";
+import Milkfacts from "./pages/Milkfacts";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -75,6 +76,7 @@ function App() {
           <Route path="accessibility" element={<Accessibility/>} />
           <Route path="career" element={<Careers/>} />
           <Route path="sustainability" element={<Formal/>} />
+          <Route path="milkfacts" element={<Milkfacts/>} />
         </Route>
       </Routes>
     </BrowserRouter>

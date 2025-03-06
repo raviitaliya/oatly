@@ -170,7 +170,7 @@ const Navbar = () => {
                             Privacy Policy
                           </Link>
                           <Link
-                            to="/cookie-consent"
+                            to="/milkfacts"
                             className="block font-font2 text-gray-400 hover:text-white transition-colors cursor-hand"
                           >
                             Cookie consent
