@@ -1,95 +1,158 @@
-// components/DeliveryBoyDashboard.jsx
-import React, { useEffect } from "react";
 import { useProductStore } from "@/store/Store";
+import React, { useEffect, useState } from "react";
 
 function DeliveryBoyDashboard() {
   const {
-    user,
-    fetchUser,
-    logOut,
+    profile,
+    assignedOrders,
+    loading,
+    error,
     fetchAssignedOrders,
     acceptOrder,
     updateOrderStatus,
     getDeliveryBoyProfile,
-    assignedOrders,
-    profile,
-    loading,
-    error,
-    location,
+    isAvailable,
+    toggleAvailability,
   } = useProductStore();
 
-  useEffect(() => {
-    if (!user) fetchUser();
-    fetchAssignedOrders();
-    getDeliveryBoyProfile();
-  }, [fetchUser, fetchAssignedOrders, getDeliveryBoyProfile]);
+  const [activeOrderId, setActiveOrderId] = useState(null); // Track active delivery
+  const [deliveryInterval, setDeliveryInterval] = useState(null); // Store interval for cleanup
 
-  if (!user || user.role !== "delivery_boy") {
-    return <p>Please log in as a delivery boy</p>;
-  }
+  useEffect(() => {
+    getDeliveryBoyProfile();
+    fetchAssignedOrders();
+  }, [getDeliveryBoyProfile, fetchAssignedOrders]);
+
+  useEffect(() => {
+    if (isAvailable) {
+      const interval = setInterval(fetchAssignedOrders, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [isAvailable, fetchAssignedOrders]);
+
+  const handleAcceptOrder = (orderId) => {
+    console.log("Accepting Order:", orderId);
+    acceptOrder(orderId);
+  };
+
+  const handleStartDelivery = (orderId) => {
+    console.log("Starting Delivery for Order:", orderId);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coordinates = [position.coords.longitude, position.coords.latitude];
+        updateOrderStatus(orderId, "Out for Delivery", coordinates);
+        setActiveOrderId(orderId);
+
+        // Start periodic updates
+        const interval = setInterval(() => {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const newCoords = [pos.coords.longitude, pos.coords.latitude];
+              console.log("Sending new coordinates:", newCoords);
+              updateOrderStatus(orderId, "Out for Delivery", newCoords);
+            },
+            (err) => console.error("Geolocation Error:", err)
+          );
+        }, 10000); // Every 10 seconds
+        setDeliveryInterval(interval);
+      },
+      (err) => {
+        console.error("Geolocation Error:", err);
+        updateOrderStatus(orderId, "Out for Delivery");
+      }
+    );
+  };
 
   const handleMarkDelivered = (orderId) => {
-    updateOrderStatus(orderId, "Delivered");
+    console.log("Marking Order as Delivered:", orderId);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const coordinates = [position.coords.longitude, position.coords.latitude];
+        updateOrderStatus(orderId, "Delivered", coordinates);
+        if (deliveryInterval) {
+          clearInterval(deliveryInterval); // Stop periodic updates
+          setDeliveryInterval(null);
+        }
+        setActiveOrderId(null); // Clear active order
+      },
+      (err) => {
+        console.error("Geolocation Error:", err);
+        updateOrderStatus(orderId, "Delivered"); // Fallback without coordinates
+        if (deliveryInterval) {
+          clearInterval(deliveryInterval);
+          setDeliveryInterval(null);
+        }
+        setActiveOrderId(null);
+      }
+    );
   };
 
   return (
-    <div className="container mx-auto p-4 h-screen w-full">
-      <div>
-        <h1 className="font-font1 text-[44px] mt-24">Delivery Boy Dashboard</h1>
-        <button onClick={logOut} className="mb-4 p-2 bg-red-500 text-white">Logout</button>
-        {profile && (
-          <div className="mb-4">
-            <p>Welcome, {profile.fullName}!</p>
-            <p>Mobile: {profile.mobile}</p>
-            <p>Total Deliveries: {profile.totalDeliveries}</p>
-            <p>Earnings: ₹{profile.earnings}</p>
-          </div>
-        )}
-        <div className="flex flex-col gap-4">
-          {loading && <p>Loading...</p>}
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {assignedOrders.length === 0 ? (
-            <p>No assigned orders</p>
-          ) : (
-            <ul>
-              {assignedOrders.map((order) => (
-                <div className="border p-5" key={order.orderId}>
-                  <li className="flex items-center gap-4 mb-2">
-                    <div>
-                      Order Id: {order.orderId}: {order.items[0].productName} - ₹{order.totalAmount} x {order.items[0].quantity}
-                      <br />
-                      Address: {order.deliveryAddress ? `${order.deliveryAddress.address1}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state}, ${order.deliveryAddress.zipcode}` : "Not specified"}
-                      <br />
-                      Customer: {order.user?.name || "Unknown"} ({order.user?.mobile || "N/A"})
-                      <br />
-                      {order.createdAt ? new Date(order.createdAt).toLocaleString() : "Date not available"} - Status: {order.status}
-                      <button
-                        onClick={() => acceptOrder(order.orderId)}
-                        className="ml-2 text-green-500"
-                        disabled={order.status !== "Assigned"}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        onClick={() => handleMarkDelivered(order.orderId)}
-                        className="ml-2 text-blue-500"
-                        disabled={order.status !== "Out for Delivery"}
-                      >
-                        Mark Delivered
-                      </button>
-                    </div>
-                  </li>
-                  {order.status === "Out for Delivery" && location && (
-                    <div className="mt-2">
-                      <p>Current Location: Lat {location[1]}, Lng {location[0]}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </ul>
-          )}
+    <div className="container mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-4">Delivery Boy Dashboard</h1>
+      {profile && (
+        <div className="mb-6">
+          <p className="text-lg">Welcome, {profile.fullName}</p>
+          <p>Availability: {isAvailable ? "Available" : "Unavailable"}</p>
+          <button
+            onClick={toggleAvailability}
+            className={`mt-2 px-4 py-2 rounded ${isAvailable ? "bg-red-500" : "bg-green-500"} text-white`}
+          >
+            {isAvailable ? "Go Offline" : "Go Online"}
+          </button>
         </div>
-      </div>
+      )}
+      {loading && <p className="text-gray-500">Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      <h2 className="text-2xl font-semibold mb-2">Assigned Orders</h2>
+      {assignedOrders.length === 0 ? (
+        <p className="text-gray-500">No orders available</p>
+      ) : (
+        <ul className="flex flex-col gap-4">
+          {assignedOrders.map((order) => (
+            <li key={order.orderId} className="border p-4 rounded-lg shadow-md">
+              <p className="font-semibold">Order #{order.orderId}</p>
+              <p>Customer: {order.customerName} ({order.customerMobile})</p>
+              <p>Total: ₹{order.totalAmount}</p>
+              <p>Status: {order.status}</p>
+              <p>Address: {order.deliveryAddress.address1}, {order.deliveryAddress.city}</p>
+              <div className="mt-2">
+                {order.items.map((item, index) => (
+                  <p key={index} className="text-sm">
+                    {item.productName} - ₹{item.price} x {item.quantity}
+                  </p>
+                ))}
+              </div>
+              <div className="mt-2 flex gap-2">
+                {order.status === "Pending" && (
+                  <button
+                    onClick={() => handleAcceptOrder(order.orderId)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Accept Order
+                  </button>
+                )}
+                {order.status === "Assigned" && (
+                  <button
+                    onClick={() => handleStartDelivery(order.orderId)}
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  >
+                    Start Delivery
+                  </button>
+                )}
+                {order.status === "Out for Delivery" && (
+                  <button
+                    onClick={() => handleMarkDelivered(order.orderId)}
+                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+                  >
+                    Mark as Delivered
+                  </button>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
