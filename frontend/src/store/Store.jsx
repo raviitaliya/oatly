@@ -607,69 +607,34 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/delivery_boy/orders");
-      console.log("Fetched Assigned Orders:", response.data.orders); // Debug log
-      if (response.data.success)
-        set({ assignedOrders: response.data.orders, loading: false });
+      console.log("Fetched Assigned Orders:", response.data.orders);
+      if (response.data.success) set({ assignedOrders: response.data.orders, loading: false });
     } catch (error) {
-      set({
-        loading: false,
-        error:
-          error.response?.data?.message || "Failed to fetch assigned orders",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to fetch assigned orders" });
     }
   },
 
   acceptOrder: async (orderId) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post("/delivery_boy/accept-order", {
-        orderId,
-      });
-      console.log("Accept Order Response:", response.data); // Debug log
-      if (response.data.success) {
-        get().fetchAssignedOrders(); // Refresh orders after acceptance
-      }
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to accept order",
-      });
-    }
-  },
-
-  acceptOrder: async (orderId) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.post("/delivery_boy/accept-order", {
-        orderId,
-      });
+      const response = await api.post("/delivery_boy/accept-order", { orderId });
+      console.log("Accept Order Response:", response.data);
       if (response.data.success) get().fetchAssignedOrders();
     } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to accept order",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to accept order" });
     }
   },
 
   updateOrderStatus: async (orderId, status, coordinates) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post("/delivery_boy/update-status", {
-        orderId,
-        status,
-        coordinates,
-      });
+      const response = await api.post("/delivery_boy/update-status", { orderId, status, coordinates });
       console.log("Update Order Status Response:", response.data);
       if (response.data.success) {
-        get().fetchAssignedOrders(); // Refresh orders after update
-        if (status === "Delivered") set({ location: null }); // Clear location
+        get().fetchAssignedOrders();
       }
     } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to update order status",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to update order status" });
     }
   },
 
@@ -691,16 +656,11 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.post("/delivery_boy/toggle-availability");
-      if (response.data.success)
-        set({ isAvailable: response.data.isAvailable, loading: false });
+      if (response.data.success) set({ isAvailable: response.data.isAvailable, loading: false });
     } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to toggle availability",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to toggle availability" });
     }
   },
-
   placeOrder: async () => {
     set({ loading: true, error: null });
     const { cart } = get();
@@ -712,23 +672,15 @@ export const useProductStore = create((set, get) => ({
     try {
       const getCurrentLocation = () =>
         new Promise((resolve, reject) => {
-          if (!navigator.geolocation)
-            reject(new Error("Geolocation not supported"));
+          if (!navigator.geolocation) reject(new Error("Geolocation not supported"));
           navigator.geolocation.getCurrentPosition(
-            (position) =>
-              resolve({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-              }),
+            (position) => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
             (error) => reject(new Error(`Location error: ${error.message}`))
           );
         });
 
       const location = await getCurrentLocation();
-      const totalAmount = cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
+      const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
       const orderData = {
         items: cart.map((item) => ({
@@ -738,13 +690,10 @@ export const useProductStore = create((set, get) => ({
           productImage: item.image,
         })),
         totalAmount,
-        location: {
-          type: "Point",
-          coordinates: [location.longitude, location.latitude],
-        },
+        location: { type: "Point", coordinates: [location.longitude, location.latitude] },
       };
 
-      console.log("Sending to /orders/create:", orderData); // Debug log
+      console.log("Sending to /orders/create:", orderData);
 
       const response = await api.post("/orders/create", orderData);
 
@@ -770,39 +719,24 @@ export const useProductStore = create((set, get) => ({
                 deliveryAddress: pendingOrder.deliveryAddress,
                 location: pendingOrder.location,
               };
-              console.log("Sending to /orders/verify-payment:", verifyData); // Debug log
-              const verifyResponse = await api.post(
-                "/orders/verify-payment",
-                verifyData
-              );
+              console.log("Sending to /orders/verify-payment:", verifyData);
+              const verifyResponse = await api.post("/orders/verify-payment", verifyData);
               if (verifyResponse.data.success) {
-                set({
-                  currentOrder: verifyResponse.data.order,
-                  cart: [],
-                  loading: false,
-                });
+                set({ currentOrder: verifyResponse.data.order, cart: [], loading: false });
                 localStorage.removeItem("cart");
               }
             },
-            prefill: {
-              name: order.user.name,
-              email: order.user.email,
-              contact: order.user.mobile,
-            },
+            prefill: { name: order.user.name, email: order.user.email, contact: order.user.mobile },
           };
           const rzp = new window.Razorpay(options);
           rzp.open();
         };
-        script.onerror = () =>
-          set({ loading: false, error: "Failed to load Razorpay script" });
+        script.onerror = () => set({ loading: false, error: "Failed to load Razorpay script" });
         document.body.appendChild(script);
       }
     } catch (error) {
       console.error("Error in placeOrder:", error);
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to place order",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to place order" });
     }
   },
 
@@ -810,17 +744,14 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/orders/my-orders");
-      console.log("Orders from Backend:", response.data.orders);
+      console.log("Fetched Orders:", response.data.orders);
       if (response.data.success) {
         set({ orders: response.data.orders, loading: false });
       } else {
         set({ loading: false, error: response.data.message });
       }
     } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to fetch orders",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to fetch orders" });
     }
   },
 
@@ -831,31 +762,14 @@ export const useProductStore = create((set, get) => ({
       if (response.data.success) {
         set((state) => ({
           orders: state.orders.map((order) =>
-            order.orderId === orderId
-              ? { ...order, status: "Cancelled" }
-              : order
+            order.orderId === orderId ? { ...order, status: "Cancelled" } : order
           ),
           loading: false,
         }));
       }
     } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to cancel order",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to cancel order" });
     }
-  },
-
-  // Live Tracking
-  startTracking: (orderId) => {
-    console.log("Starting tracking for Order:", orderId);
-    socket.emit("trackOrder", orderId);
-    set({ trackingOrderId: orderId });
-  },
-
-  stopTracking: () => {
-    set({ trackingOrderId: null, location: null });
-    console.log("Stopped tracking");
   },
 
   submitFeedback: async (orderId, rating, comment) => {

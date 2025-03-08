@@ -15,8 +15,8 @@ function DeliveryBoyDashboard() {
     toggleAvailability,
   } = useProductStore();
 
-  const [activeOrderId, setActiveOrderId] = useState(null); // Track active delivery
-  const [deliveryInterval, setDeliveryInterval] = useState(null); // Store interval for cleanup
+  const [activeOrderId, setActiveOrderId] = useState(null);
+  const [deliveryInterval, setDeliveryInterval] = useState(null);
 
   useEffect(() => {
     getDeliveryBoyProfile();
@@ -43,7 +43,6 @@ function DeliveryBoyDashboard() {
         updateOrderStatus(orderId, "Out for Delivery", coordinates);
         setActiveOrderId(orderId);
 
-        // Start periodic updates
         const interval = setInterval(() => {
           navigator.geolocation.getCurrentPosition(
             (pos) => {
@@ -53,7 +52,7 @@ function DeliveryBoyDashboard() {
             },
             (err) => console.error("Geolocation Error:", err)
           );
-        }, 10000); // Every 10 seconds
+        }, 10000);
         setDeliveryInterval(interval);
       },
       (err) => {
@@ -70,14 +69,14 @@ function DeliveryBoyDashboard() {
         const coordinates = [position.coords.longitude, position.coords.latitude];
         updateOrderStatus(orderId, "Delivered", coordinates);
         if (deliveryInterval) {
-          clearInterval(deliveryInterval); // Stop periodic updates
+          clearInterval(deliveryInterval);
           setDeliveryInterval(null);
         }
-        setActiveOrderId(null); // Clear active order
+        setActiveOrderId(null);
       },
       (err) => {
         console.error("Geolocation Error:", err);
-        updateOrderStatus(orderId, "Delivered"); // Fallback without coordinates
+        updateOrderStatus(orderId, "Delivered");
         if (deliveryInterval) {
           clearInterval(deliveryInterval);
           setDeliveryInterval(null);

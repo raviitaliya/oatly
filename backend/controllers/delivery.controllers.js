@@ -213,13 +213,6 @@ export const updateOrderStatus = async (req, res) => {
 
     console.log("Order After Update:", order);
 
-    io.to(orderId).emit("orderUpdate", {
-      orderId: order._id.toString(),
-      status: order.status,
-      coordinates: order.location.coordinates,
-    });
-    console.log("Emitted orderUpdate for Order:", orderId, "with coordinates:", coordinates);
-
     res.status(200).json({
       success: true,
       message: "Order status updated",
