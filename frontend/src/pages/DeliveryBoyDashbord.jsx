@@ -39,7 +39,10 @@ function DeliveryBoyDashboard() {
     console.log("Starting Delivery for Order:", orderId);
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coordinates = [position.coords.longitude, position.coords.latitude];
+        const coordinates = [
+          position.coords.longitude,
+          position.coords.latitude,
+        ];
         updateOrderStatus(orderId, "Out for Delivery", coordinates);
         setActiveOrderId(orderId);
 
@@ -66,7 +69,10 @@ function DeliveryBoyDashboard() {
     console.log("Marking Order as Delivered:", orderId);
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coordinates = [position.coords.longitude, position.coords.latitude];
+        const coordinates = [
+          position.coords.longitude,
+          position.coords.latitude,
+        ];
         updateOrderStatus(orderId, "Delivered", coordinates);
         if (deliveryInterval) {
           clearInterval(deliveryInterval);
@@ -95,7 +101,9 @@ function DeliveryBoyDashboard() {
           <p>Availability: {isAvailable ? "Available" : "Unavailable"}</p>
           <button
             onClick={toggleAvailability}
-            className={`mt-2 px-4 py-2 rounded ${isAvailable ? "bg-red-500" : "bg-green-500"} text-white`}
+            className={`mt-2 px-4 py-2 rounded ${
+              isAvailable ? "bg-red-500" : "bg-green-500"
+            } text-white`}
           >
             {isAvailable ? "Go Offline" : "Go Online"}
           </button>
@@ -111,10 +119,15 @@ function DeliveryBoyDashboard() {
           {assignedOrders.map((order) => (
             <li key={order.orderId} className="border p-4 rounded-lg shadow-md">
               <p className="font-semibold">Order #{order.orderId}</p>
-              <p>Customer: {order.customerName} ({order.customerMobile})</p>
+              <p>
+                Customer: {order.customerName} ({order.customerMobile})
+              </p>
               <p>Total: ₹{order.totalAmount}</p>
               <p>Status: {order.status}</p>
-              <p>Address: {order.deliveryAddress.address1}, {order.deliveryAddress.city}</p>
+              <p>
+                Address: {order.deliveryAddress.address1},{" "}
+                {order.deliveryAddress.city}
+              </p>
               <div className="mt-2">
                 {order.items.map((item, index) => (
                   <p key={index} className="text-sm">
