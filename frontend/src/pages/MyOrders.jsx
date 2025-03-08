@@ -25,6 +25,7 @@ import {
   Settings,
   Bell,
   LogOut,
+  Mail,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -41,7 +42,7 @@ function MyOrders() {
     updateUser,
     loading,
     error,
-    logOut, // Assuming this exists in your store
+    logOut, 
   } = useProductStore();
 
   const [activeSection, setActiveSection] = useState("profile");
@@ -50,8 +51,6 @@ function MyOrders() {
   useEffect(() => {
     fetchUser();
     fetchOrders();
-    const interval = setInterval(fetchOrders, 30000); // Refresh every 30s
-    return () => clearInterval(interval);
   }, [fetchUser, fetchOrders]);
 
   const currentOrders = orders.filter((order) =>
@@ -114,8 +113,8 @@ function MyOrders() {
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-lg flex flex-col">
         <div className="p-4">
-          <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
-          <p className="text-sm text-gray-600">Manage your dashboard</p>
+          <h2 className="text-2xl font-bold text-gray-800">User Dashbord</h2>
+          <p className="text-sm text-gray-600">Manage Your Order</p>
         </div>
         <Separator />
         <ScrollArea className="flex-1">
@@ -350,6 +349,11 @@ function MyOrders() {
                           <span className="font-medium">Mobile:</span>
                           <span className="ml-2">{user?.mobile || "Not specified"}</span>
                         </div>
+                        <div className="flex items-center">
+                          <Mail className="h-4 w-4 mr-2 text-gray-500" />
+                          <span className="font-medium">Email:</span>
+                          <span className="ml-2">{user?.email || "Not specified"}</span>
+                        </div>
                       </div>
                     </div>
                     <div>
@@ -358,12 +362,11 @@ function MyOrders() {
                         <div className="flex items-start">
                           <Home className="h-4 w-4 mr-2 mt-1 text-gray-500" />
                           <div>
-                            <p>{user?.deliveryAddress?.address1 || "No address specified"}</p>
-                            {user?.deliveryAddress?.address2 && <p>{user.deliveryAddress.address2}</p>}
-                            {user?.deliveryAddress?.city && (
+                            <p>{user?.address1 || "No address specified"},</p>
+                            {user?.city && (
                               <p>
-                                {user.deliveryAddress.city}, {user.deliveryAddress.state}{" "}
-                                {user.deliveryAddress.zipcode}
+                                {user.city}, {user.state}{" "}
+                                {user.zipcode}
                               </p>
                             )}
                           </div>

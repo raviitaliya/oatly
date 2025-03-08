@@ -13,12 +13,15 @@ socket.on("orderUpdate", (data) => {
   useProductStore.setState((state) => {
     if (state.trackingOrderId === data.orderId) {
       const updatedOrders = state.orders.map((order) =>
-        order.orderId === data.orderId ? { ...order, status: data.status, location: data.coordinates } : order
+        order.orderId === data.orderId
+          ? { ...order, status: data.status, location: data.coordinates }
+          : order
       );
       return {
         orders: updatedOrders,
         location: data.status === "Delivered" ? null : data.coordinates,
-        trackingOrderId: data.status === "Delivered" ? null : state.trackingOrderId,
+        trackingOrderId:
+          data.status === "Delivered" ? null : state.trackingOrderId,
       };
     }
     return state;
@@ -548,24 +551,26 @@ export const useProductStore = create((set, get) => ({
       return { cart: [] };
     }),
 
-  getDeliveryBoyProfile: async () => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.get("/delivery_boy/profile");
-      if (response.data.success) {
+    getDeliveryBoyProfile: async () => {
+      set({ loading: true, error: null });
+      try {
+        const response = await api.get("/delivery_boy/profile");
+        if (response.data.success) {
+          set({
+            profile: response.data.profile,
+            loading: false,
+            isAvailable: response.data.profile.isAvailable,
+          });
+        }
+      } catch (error) {
         set({
-          profile: response.data.profile,
           loading: false,
-          isAvailable: response.data.profile.isAvailable,
+          error: error.response?.data?.message || "Failed to fetch profile",
         });
       }
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to fetch profile",
-      });
-    }
-  },
+    },
+  
+  
 
   createDeliveryBoyProfile: async (userId, profileData) => {
     set({ loading: true, error: null });
@@ -617,24 +622,36 @@ export const useProductStore = create((set, get) => ({
   acceptOrder: async (orderId) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post("/delivery_boy/accept-order", { orderId });
+      const response = await api.post("/delivery_boy/accept-order", {
+        orderId,
+      });
       console.log("Accept Order Response:", response.data);
       if (response.data.success) get().fetchAssignedOrders();
     } catch (error) {
-      set({ loading: false, error: error.response?.data?.message || "Failed to accept order" });
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to accept order",
+      });
     }
   },
 
   updateOrderStatus: async (orderId, status, coordinates) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post("/delivery_boy/update-status", { orderId, status, coordinates });
+      const response = await api.post("/delivery_boy/update-status", {
+        orderId,
+        status,
+        coordinates,
+      });
       console.log("Update Order Status Response:", response.data);
       if (response.data.success) {
         get().fetchAssignedOrders();
       }
     } catch (error) {
-      set({ loading: false, error: error.response?.data?.message || "Failed to update order status" });
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to update order status",
+      });
     }
   },
 
@@ -656,9 +673,13 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.post("/delivery_boy/toggle-availability");
-      if (response.data.success) set({ isAvailable: response.data.isAvailable, loading: false });
+      if (response.data.success)
+        set({ isAvailable: response.data.isAvailable, loading: false });
     } catch (error) {
-      set({ loading: false, error: error.response?.data?.message || "Failed to toggle availability" });
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to toggle availability",
+      });
     }
   },
   placeOrder: async () => {
@@ -672,15 +693,23 @@ export const useProductStore = create((set, get) => ({
     try {
       const getCurrentLocation = () =>
         new Promise((resolve, reject) => {
-          if (!navigator.geolocation) reject(new Error("Geolocation not supported"));
+          if (!navigator.geolocation)
+            reject(new Error("Geolocation not supported"));
           navigator.geolocation.getCurrentPosition(
-            (position) => resolve({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
+            (position) =>
+              resolve({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              }),
             (error) => reject(new Error(`Location error: ${error.message}`))
           );
         });
 
       const location = await getCurrentLocation();
-      const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const totalAmount = cart.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
 
       const orderData = {
         items: cart.map((item) => ({
@@ -690,7 +719,10 @@ export const useProductStore = create((set, get) => ({
           productImage: item.image,
         })),
         totalAmount,
-        location: { type: "Point", coordinates: [location.longitude, location.latitude] },
+        location: {
+          type: "Point",
+          coordinates: [location.longitude, location.latitude],
+        },
       };
 
       console.log("Sending to /orders/create:", orderData);
@@ -720,23 +752,38 @@ export const useProductStore = create((set, get) => ({
                 location: pendingOrder.location,
               };
               console.log("Sending to /orders/verify-payment:", verifyData);
-              const verifyResponse = await api.post("/orders/verify-payment", verifyData);
+              const verifyResponse = await api.post(
+                "/orders/verify-payment",
+                verifyData
+              );
               if (verifyResponse.data.success) {
-                set({ currentOrder: verifyResponse.data.order, cart: [], loading: false });
+                set({
+                  currentOrder: verifyResponse.data.order,
+                  cart: [],
+                  loading: false,
+                });
                 localStorage.removeItem("cart");
               }
             },
-            prefill: { name: order.user.name, email: order.user.email, contact: order.user.mobile },
+            prefill: {
+              name: order.user.name,
+              email: order.user.email,
+              contact: order.user.mobile,
+            },
           };
           const rzp = new window.Razorpay(options);
           rzp.open();
         };
-        script.onerror = () => set({ loading: false, error: "Failed to load Razorpay script" });
+        script.onerror = () =>
+          set({ loading: false, error: "Failed to load Razorpay script" });
         document.body.appendChild(script);
       }
     } catch (error) {
       console.error("Error in placeOrder:", error);
-      set({ loading: false, error: error.response?.data?.message || "Failed to place order" });
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to place order",
+      });
     }
   },
 
@@ -751,7 +798,10 @@ export const useProductStore = create((set, get) => ({
         set({ loading: false, error: response.data.message });
       }
     } catch (error) {
-      set({ loading: false, error: error.response?.data?.message || "Failed to fetch orders" });
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch orders",
+      });
     }
   },
 
@@ -762,13 +812,18 @@ export const useProductStore = create((set, get) => ({
       if (response.data.success) {
         set((state) => ({
           orders: state.orders.map((order) =>
-            order.orderId === orderId ? { ...order, status: "Cancelled" } : order
+            order.orderId === orderId
+              ? { ...order, status: "Cancelled" }
+              : order
           ),
           loading: false,
         }));
       }
     } catch (error) {
-      set({ loading: false, error: error.response?.data?.message || "Failed to cancel order" });
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to cancel order",
+      });
     }
   },
 
