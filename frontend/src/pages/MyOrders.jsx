@@ -194,11 +194,6 @@ function MyOrders() {
       {/* Main Content */}
       <div className="flex-1 overflow-auto bg-gray-100">
         <div className="p-6">
-          {loading && (
-            <div className="flex justify-center items-center h-32">
-              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-            </div>
-          )}
 
           {error && (
             <Card className="mb-6 border-red-200 bg-red-50">
