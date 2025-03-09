@@ -1,6 +1,7 @@
 import React from "react";
 import german from "../assets/home/german.png";
 import section2 from "../assets/home/section2.jpg";
+import truck from "../assets/home/truck.png";
 
 const CanvasSection1 = () => {
   return (
@@ -24,14 +25,14 @@ const CanvasSection1 = () => {
       </div>
 
       {/* Hey Food Industry Link */}
-      <div className="relative w-[18vh] left-0 top-[2%] hover:scale-105 transition-transform">
+      <div className="relative w-[18vh] left-[4%] top-[-45%] hover:scale-105 transition-transform">
         <a
           href="/things-we-do/initiatives/hey-food-industry"
           aria-label="/things-we-do/initiatives/hey-food-industry"
           className="block w-full h-full"
         >
           <div className="relative">
-            <div className="w-full h-full absolute top-[-23rem] left-5">
+            <div className="w-full h-full ">
               <img
                 src={german}
                 alt="this is img"
@@ -44,7 +45,7 @@ const CanvasSection1 = () => {
       </div>
 
       {/* Milk Myths Link */}
-      <div className="relative w-[33.3vh] left-[44.4vh] top-[5%] hover:scale-105 transition-transform">
+      <div className="relative w-[33.3vh] left-[44.4vh] top-[-18%] hover:scale-105 transition-transform">
         <a
           href="/things-we-do/brainwashing/milk-myths"
           aria-label="Is everything you have learnt about cow's milk true? We decided to find out."
@@ -61,18 +62,14 @@ const CanvasSection1 = () => {
       </div>
 
       {/* Resurrecting Oats Link */}
-      <div className="relative w-[42.18vh] left-[57.72vh] bottom-[-2%] hover:scale-105 transition-transform">
+      <div className="relative w-[42.18vh] left-[57.72vh] bottom-[10%] hover:scale-105 transition-transform">
         <a
-          href="/things-we-do/initiatives/resurrecting-oats-in-the-us"
+          href="/things-we-do"
           aria-label="When we heard that some US farmers were putting oats back into their rotations to achieve a more sustainable agricultural system, we were pretty excited."
           className="block w-full h-full"
         >
           <div className="relative pb-[61.9565%]">
-            <canvas
-              className="absolute inset-0 w-full h-full"
-              width="255"
-              height="158"
-            ></canvas>
+          <img src={truck} alt="truck" />
           </div>
         </a>
       </div>
@@ -87,7 +84,7 @@ const CanvasSection1 = () => {
         />
       </div>
 
-      <div className="relative w-[7.548vh] left-[81.696vh] bottom-[27%]">
+      <div className="relative w-[7.548vh] left-[81.696vh] bottom-[80%]">
         <img
           src="https://a.storyblok.com/f/107921/x/21ede820ed/oat1.svg"
           alt="Oat Images"
@@ -96,7 +93,7 @@ const CanvasSection1 = () => {
         />
       </div>
 
-      <div className="relative w-[5.772vh] left-[97.68vh] bottom-[45%]">
+      <div className="relative w-[5.772vh] left-[97.68vh] bottom-[100%]">
         <img
           src="https://a.storyblok.com/f/107921/x/feedac692b/oat5.svg"
           alt="Oat Images"
@@ -104,7 +101,7 @@ const CanvasSection1 = () => {
         />
       </div>
 
-      <div className="relative w-[8.436vh] left-[44.4vh] bottom-[25%]">
+      <div className="relative w-[8.436vh] left-[44.4vh] bottom-[80%]">
         <img
           src="https://a.storyblok.com/f/107921/x/f60ad047dd/oat3.svg"
           alt="Oat Images"
@@ -112,7 +109,7 @@ const CanvasSection1 = () => {
         />
       </div>
 
-      <div className="relative w-[8.436vh] left-[44.4vh] top-[-110%]">
+      <div className="relative w-[8.436vh] left-[44.4vh] top-[-145%]">
         <img
           src="https://a.storyblok.com/f/107921/x/333a0ef09f/oat2.svg"
           alt="Oat Images"
@@ -122,7 +119,7 @@ const CanvasSection1 = () => {
       </div>
 
       {/* Barbershop Quartet Image */}
-      <div className="relative w-[33.3vh] left-[4.44vh] bottom-[84%]">
+      <div className="relative w-[33.3vh] left-[6vh] bottom-[120%]">
         <img
           src={section2}
           alt="Barbershop Quartet Image"
