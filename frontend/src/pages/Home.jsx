@@ -6,6 +6,7 @@ import ResetPass from "../auth/ResetPass";
 import OtpPage from "./OtpPage";
 import NewPassword from "./NewPassword";
 import CanvasSection from "@/components/CanvasSection";
+import CanvasSection1 from "@/components/CanvasSection1";
 
 const Home = () => {
   const {
@@ -43,6 +44,7 @@ const Home = () => {
     >
       <div className="w-full h-screen flex">
         <CanvasSection />
+        <CanvasSection1 />
       </div>
 
       <div className="flex min-w-max gap-8 p-8">
