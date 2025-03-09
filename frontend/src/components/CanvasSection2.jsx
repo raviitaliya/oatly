@@ -3,9 +3,9 @@ import React from 'react';
 
 const CanvasSection2 = () => {
   return (
-    <div className="relative w-[42.18vh] ml-[9rem]">
+    <div className="relative w-[42.18vh] ">
       <div 
-        className="absolute w-[42.18vh] left-[-8.88vh] top-[6%] transition-transform hover:scale-105 cursor-pointer"
+        className="absolute w-[42.18vh] left-[8.88vh] top-[6%] transition-transform hover:scale-105 cursor-pointer"
       >
         <div className="relative w-full overflow-hidden">
           <img  
@@ -40,7 +40,7 @@ const CanvasSection2 = () => {
       <a
         href="/products/oat-drink/oat-drink-barista-edition-organic-1l"
         aria-label="/products/oat-drink/oat-drink-barista-edition-organic-1l"
-        className="absolute w-[42.18vh] left-0 bottom-0 block transition-transform hover:scale-105 cursor-pointer"
+        className="absolute w-[42.18vh] left-[17.88vh] bottom-0 block transition-transform hover:scale-105 cursor-pointer"
       >
         <div className="relative w-full overflow-hidden">
           <img

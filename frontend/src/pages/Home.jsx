@@ -8,6 +8,8 @@ import NewPassword from "./NewPassword";
 import CanvasSection from "@/components/CanvasSection";
 import CanvasSection1 from "@/components/CanvasSection1";
 import CanvasSection2 from "@/components/CanvasSection2";
+import CanvasSection3 from "@/components/CanvasSection3";
+import CanvasSection4 from "@/components/CanvasSection4";
 
 const Home = () => {
   const {
@@ -47,7 +49,8 @@ const Home = () => {
         <CanvasSection />
         <CanvasSection1 />
         <CanvasSection2 />
-
+        <CanvasSection3 />
+         <CanvasSection4 />
       </div>
 
       <div className="flex min-w-max gap-8 p-8">
