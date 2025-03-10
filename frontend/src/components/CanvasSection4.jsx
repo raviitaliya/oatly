@@ -108,23 +108,6 @@ const CanvasSection4 = () => {
               decoding="async"
               className="w-full h-auto object-cover rounded"
               sizes="60.828vh"
-              srcSet="
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/16x0/filters:quality(75):format(webp) 16w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/32x0/filters:quality(75):format(webp) 32w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/48x0/filters:quality(75):format(webp) 48w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/64x0/filters:quality(75):format(webp) 64w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/96x0/filters:quality(75):format(webp) 96w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/128x0/filters:quality(75):format(webp) 128w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/256x0/filters:quality(75):format(webp) 256w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/384x0/filters:quality(75):format(webp) 384w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/640x0/filters:quality(75):format(webp) 640w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/750x0/filters:quality(75):format(webp) 750w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/828x0/filters:quality(75):format(webp) 828w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/1080x0/filters:quality(75):format(webp) 1080w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/1200x0/filters:quality(75):format(webp) 1200w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/1920x0/filters:quality(75):format(webp) 1920w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/2048x0/filters:quality(75):format(webp) 2048w,
-              https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/3840x0/filters:quality(75):format(webp) 3840w"
             />
             <div className="sm:mt-2 lg:mt-4 sm:text-[10px]/3 md:text-[25px]/4 lg:text-[40px]/7 font-font1">
               Oatly x Nespresso
