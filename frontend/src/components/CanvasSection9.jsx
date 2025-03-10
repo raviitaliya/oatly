@@ -5,7 +5,7 @@ const CanvasSection9 = () => {
   return (
     <div className="relative sm:w-[10vh] w-[40.404vh] left-[650vh]">
       {/* Will It Swap Logo */}
-      <div className="absolute w-[33.3vh] left-[-31.08vh] top-[10%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[33.3vh] left-[-45.08vh] top-[10%] transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
           aria-label="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
@@ -40,7 +40,7 @@ const CanvasSection9 = () => {
         </a>
       </div>
       {/* Vimeo Video Trailer */}
-      <div className="absolute w-[51.06vh] left-[-10.656vh] top-[6%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[51.06vh] left-[-25.656vh] top-[6%] transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
           aria-label="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
