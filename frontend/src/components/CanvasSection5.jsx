@@ -13,7 +13,7 @@ import tape from "../assets/home/tape.svg";
 
 const CanvasSection5 = () => {
   return (
-    <div className="relative sm-[10vh] w-[30.74vh] left-[250vh] ">
+    <div className="relative sm-[10vh] w-[30.74vh] left-[247vh] ">
       {/* Tea Report Link */}
       <div className="absolute w-[51.06vh] left-[-13.32vh] top-0 transition-transform hover:scale-105 cursor-pointer">
         <a
