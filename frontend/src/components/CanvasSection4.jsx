@@ -3,7 +3,7 @@ import React from "react";
 
 const CanvasSection4 = () => {
   return (
-    <div className="relative w-[130.98vh] left-[106.5vh]">
+    <div className="relative sm:[10vh] w-[130.98vh] left-[106.5vh]">
       {/* Pixel Dots Background */}
       <div className="absolute w-[146.964vh] left-[-15.984vh] top-[-2%]">
         <img
@@ -125,7 +125,9 @@ const CanvasSection4 = () => {
               https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/2048x0/filters:quality(75):format(webp) 2048w,
               https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/3840x0/filters:quality(75):format(webp) 3840w"
           />
-          <div className="sm:mt-2 lg:mt-4 sm:text-[10px]/3 md:text-[25px]/4 lg:text-[40px]/7 font-font1 lg:w-[10vh] ">Oatly x Nespresso</div>
+          <div className="sm:mt-2 lg:mt-4 sm:text-[10px]/3 md:text-[25px]/4 lg:text-[40px]/7 font-font1">
+            Oatly x Nespresso
+          </div>
           <div className="sm:text-[5px] md:text-[12px] lg:text-sm text-black font-font2">
             brainwashing • Jan 14, 2025
           </div>
@@ -206,9 +208,43 @@ const CanvasSection4 = () => {
           <div className="sm:mt-1 sm:text-[8px] md:text-[20px]/4 lg:mt-2 lg:text-[35px]/7  font-bold font-font1">
             Enter the Dairy Deprogramming Zone
           </div>
-          <div className="sm:text-[5px] md:text-[10px] lg:text-sm text-black font-font2">stories • Jul 9, 2024</div>
+          <div className="sm:text-[5px] md:text-[10px] lg:text-sm text-black font-font2">
+            stories • Jul 9, 2024
+          </div>
         </div>
       </a>
+
+      <a
+        href="https://hey-barista.com/"
+        aria-label="https://hey-barista.com/"
+        className="absolute w-[43.956vh] left-[92.52vh] top-[-3%] block transition-transform hover:scale-105 cursor-pointer"
+      >
+        <img
+          src="https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/3840x0/filters:quality(75):format(webp)"
+          alt="hand pointing at a mobile phone and a splash saying Look its an app!"
+          decoding="async"
+          className="w-full h-auto object-cover"
+          sizes="43.956vh"
+          srcSet="
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/16x0/filters:quality(75):format(webp) 16w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/32x0/filters:quality(75):format(webp) 32w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/48x0/filters:quality(75):format(webp) 48w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/64x0/filters:quality(75):format(webp) 64w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/96x0/filters:quality(75):format(webp) 96w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/128x0/filters:quality(75):format(webp) 128w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/256x0/filters:quality(75):format(webp) 256w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/384x0/filters:quality(75):format(webp) 384w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/640x0/filters:quality(75):format(webp) 640w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/750x0/filters:quality(75):format(webp) 750w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/828x0/filters:quality(75):format(webp) 828w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/1080x0/filters:quality(75):format(webp) 1080w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/1200x0/filters:quality(75):format(webp) 1200w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/1920x0/filters:quality(75):format(webp) 1920w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/2048x0/filters:quality(75):format(webp) 2048w,
+            https://a.storyblok.com/f/107921/914x2060/388a8e24e3/look-its-an-app.png/m/3840x0/filters:quality(75):format(webp) 3840w"
+        />
+      </a>
+      
     </div>
   );
 };

@@ -45,7 +45,7 @@ const CanvasSection1 = () => {
       </div>
 
       {/* Milk Myths Link */}
-      <div className="relative sm:w-[10vh] lg:w-[33.3vh] left-[44.4vh] top-[-18%] hover:scale-105 transition-transform">
+      <div className="relative w-[33.3vh] left-[44.4vh] top-[-18%] hover:scale-105 transition-transform">
         <a
           href="/things-we-do/brainwashing/milk-myths"
           aria-label="Is everything you have learnt about cow's milk true? We decided to find out."
@@ -119,7 +119,7 @@ const CanvasSection1 = () => {
       </div>
 
       {/* Barbershop Quartet Image */}
-      <div className="relative sm:w-[10vh] lg:w-[33.3vh] left-[6vh] bottom-[120%]">
+      <div className="relative w-[33.3vh] left-[6vh] bottom-[120%]">
         <img
           src={section2}
           alt="Barbershop Quartet Image"
