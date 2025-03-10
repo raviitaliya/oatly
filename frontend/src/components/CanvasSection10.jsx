@@ -1,5 +1,13 @@
 // src/components/CanvasSection12.jsx
 import React from "react";
+import choclate from "../assets/home/Chocolate.jpg";
+import dats from "../assets/home/24k.svg";
+import finder from "../assets/home/finder.svg";
+import monster from "../assets/home/monster.svg";
+import oat3 from "../assets/home/oat3.svg";
+import oat2 from "../assets/home/oat2.svg";
+import oat5 from "../assets/home/oat5.svg";
+import rainbow from "../assets/home/rainbow.svg";
 
 const CanvasSection10 = () => {
   return (
@@ -8,29 +16,12 @@ const CanvasSection10 = () => {
       <div className="absolute w-[64.38vh] left-[4.44vh] top-[5%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/3840x0/filters:quality(75):format(webp)"
+            src={choclate}
             alt=""
             role="presentation"
             decoding="async"
             className="w-full h-auto object-cover"
             sizes="64.38vh"
-            srcSet="
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/16x0/filters:quality(75):format(webp) 16w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/32x0/filters:quality(75):format(webp) 32w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/48x0/filters:quality(75):format(webp) 48w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/64x0/filters:quality(75):format(webp) 64w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/96x0/filters:quality(75):format(webp) 96w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/128x0/filters:quality(75):format(webp) 128w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/256x0/filters:quality(75):format(webp) 256w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/384x0/filters:quality(75):format(webp) 384w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/640x0/filters:quality(75):format(webp) 640w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/750x0/filters:quality(75):format(webp) 750w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/828x0/filters:quality(75):format(webp) 828w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/1080x0/filters:quality(75):format(webp) 1080w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/1200x0/filters:quality(75):format(webp) 1200w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/1920x0/filters:quality(75):format(webp) 1920w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/2048x0/filters:quality(75):format(webp) 2048w,
-              https://a.storyblok.com/f/107921/572x341/1246f3c0d8/large-oatly_uk_19_chocolate-deluxe-lifestyle_image_207-1.jpg/m/3840x0/filters:quality(75):format(webp) 3840w"
           />
         </div>
       </div>
@@ -39,7 +30,7 @@ const CanvasSection10 = () => {
       <div className="absolute w-[18.204vh] left-[53.28vh] top-[37%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/x/0955e5c736/24k-oats.svg"
+            src={dats}
             alt=""
             role="presentation"
             className="w-full h-auto object-cover"
@@ -48,15 +39,15 @@ const CanvasSection10 = () => {
       </div>
 
       {/* Oatfinder Link */}
-      <div className="absolute w-[28.86vh] left-[4.44vh] bottom-[28%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[28.86vh] left-[4.44vh] bottom-[28%] transition-transform hover:scale-105">
         <a
           href="https://oatfinder.oatly.com/"
           aria-label="Find coffee shops serving our Barista Edition Oat Drink."
           className="block"
         >
-          <div className="relative w-full overflow-hidden">
+          <div className="relative w-full overflow-hidden cursor-hand">
             <img
-              src="https://a.storyblok.com/f/107921/x/7157d8e383/oatfinder.svg"
+              src={finder}
               alt="Oatfinder"
               className="w-full h-auto object-cover"
             />
@@ -68,7 +59,7 @@ const CanvasSection10 = () => {
       <div className="absolute w-[24.42vh] left-[15.096vh] bottom-[2%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/x/40882c6297/rainbow.svg"
+            src={rainbow}
             alt=""
             role="presentation"
             className="w-full h-auto object-cover"
@@ -80,7 +71,7 @@ const CanvasSection10 = () => {
       <div className="absolute w-[8.436vh] left-[75.48vh] top-[12%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/x/333a0ef09f/oat2.svg"
+            src={oat2}
             alt=""
             role="presentation"
             className="w-full h-auto object-cover"
@@ -91,22 +82,14 @@ const CanvasSection10 = () => {
       {/* Oat5 Image */}
       <div className="absolute w-[5.772vh] left-[37.296vh] bottom-[41%]">
         <div className="relative w-full overflow-hidden">
-          <img
-            src="https://a.storyblok.com/f/107921/x/feedac692b/oat5.svg"
-            alt=""
-            className="w-full h-auto object-cover"
-          />
+          <img src={oat5} alt="" className="w-full h-auto object-cover" />
         </div>
       </div>
 
       {/* Oat3 Image */}
       <div className="absolute w-[8.436vh] left-0 bottom-[14%]">
         <div className="relative w-full overflow-hidden">
-          <img
-            src="https://a.storyblok.com/f/107921/x/f60ad047dd/oat3.svg"
-            alt=""
-            className="w-full h-auto object-cover"
-          />
+          <img src={oat3} alt="" className="w-full h-auto object-cover" />
         </div>
       </div>
 
@@ -114,7 +97,7 @@ const CanvasSection10 = () => {
       <div className="absolute w-[35.964vh] left-[44.4vh] bottom-[-13%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/x/9f8bc127ba/metal_monster.svg"
+            src={monster}
             alt=""
             role="presentation"
             className="w-full h-auto object-cover"
