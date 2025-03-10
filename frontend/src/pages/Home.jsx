@@ -11,6 +11,10 @@ import CanvasSection2 from "@/components/CanvasSection2";
 import CanvasSection3 from "@/components/CanvasSection3";
 import CanvasSection4 from "@/components/CanvasSection4";
 import CanvasSection5 from "@/components/CanvasSection5";
+import CanvasSection6 from "@/components/CanvasSection6";
+import CanvasSection7 from "@/components/CanvasSection7";
+import CanvasSection8 from "@/components/CanvasSection8";
+import CanvasSection9 from "@/components/CanvasSection9";
 
 const Home = () => {
   const {
@@ -51,8 +55,12 @@ const Home = () => {
         <CanvasSection1 />
         <CanvasSection2 />
         <CanvasSection3 />
-         <CanvasSection4 />
-         {/* <CanvasSection5 /> */}
+        <CanvasSection4 />
+        <CanvasSection5 />
+        <CanvasSection6 />
+        <CanvasSection7 />
+        <CanvasSection8 />
+        <CanvasSection9 />
       </div>
 
       <div className="flex min-w-max gap-8 p-8">
