@@ -125,7 +125,7 @@ const CanvasSection4 = () => {
               https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/2048x0/filters:quality(75):format(webp) 2048w,
               https://a.storyblok.com/f/107921/1920x1080/db39428076/oatlyxnespresso-shareimage.png/m/3840x0/filters:quality(75):format(webp) 3840w"
           />
-          <div className="sm:mt-2 lg:mt-4 sm:text-[10px]/3 md:text-[25px]/4 lg:text-[40px]/7 font-font1 ">Oatly x Nespresso</div>
+          <div className="sm:mt-2 lg:mt-4 sm:text-[10px]/3 md:text-[25px]/4 lg:text-[40px]/7 font-font1 lg:w-[10vh] ">Oatly x Nespresso</div>
           <div className="sm:text-[5px] md:text-[12px] lg:text-sm text-black font-font2">
             brainwashing • Jan 14, 2025
           </div>

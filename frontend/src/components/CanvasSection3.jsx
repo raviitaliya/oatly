@@ -3,7 +3,7 @@ import React from 'react';
 
 const CanvasSection3 = () => {
   return (
-    <div className="relative w-[44.844vh] left-[60vh]">
+    <div className="relative sm:w-[10vh] w-[44.844vh] left-[60vh]">
       {/* Stuff We Make Link */}
       <a
         href="/products"

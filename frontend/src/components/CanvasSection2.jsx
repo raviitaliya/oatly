@@ -3,7 +3,7 @@ import React from 'react';
 
 const CanvasSection2 = () => {
   return (
-    <div className="relative w-[42.18vh] ">
+    <div className="relative sm:w-[10vh] w-[42.18vh] ">
       <div 
         className="absolute w-[42.18vh] left-[8.88vh] top-[6%] transition-transform hover:scale-105 cursor-pointer"
       >
