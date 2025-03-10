@@ -1,4 +1,3 @@
-// src/components/CanvasSection4.jsx
 import React from 'react';
 import oatlyWho from '../assets/home/oatly-who.svg';
 import stuffwemake from '../assets/home/stuffwemake.svg';
@@ -10,7 +9,7 @@ import gooats from '../assets/home/gooats.svg';
 const CanvasSection3 = () => {
   return (
     <div className="relative sm:w-[10vh] w-[44.844vh] left-[60vh]">
-      {/* Stuff We Make Link */}
+    
       <a
         href="/products"
         aria-label="/products"
@@ -23,7 +22,7 @@ const CanvasSection3 = () => {
         />
       </a>
 
-      {/* Oat Image 1 */}
+     
       <div className="absolute w-[8.436vh] left-[-4.44vh] top-[33%]">
         <img
           src={oat3}
@@ -33,7 +32,7 @@ const CanvasSection3 = () => {
         />
       </div>
 
-      {/* 17 Facts Link */}
+     
       <a
         href="/random-answers/17-facts-about-oatly-and-nutrition"
         aria-label="17 facts about Oatly and Nutrition"
@@ -48,7 +47,7 @@ const CanvasSection3 = () => {
         />
       </a>
 
-      {/* Gooats Image */}
+      
       <div className="absolute w-[15.54vh] left-[29.304vh] top-[29%]">
         <img
           src={gooats}
@@ -58,7 +57,7 @@ const CanvasSection3 = () => {
         />
       </div>
 
-      {/* Oat Image 2 */}
+    
       <div className="absolute w-[8.436vh] left-[22.2vh] bottom-[14%]">
         <img
           src={oat1}
@@ -67,7 +66,7 @@ const CanvasSection3 = () => {
         />
       </div>
 
-      {/* Oatly Who Link */}
+     
       <a
         href="/oatly-who"
         aria-label="/oatly-who"

@@ -11,7 +11,6 @@ const CanvasSection4 = () => {
   return (
     <>
       <div className="relative sm:w-[10vh] w-[130.98vh] left-[106.5vh]">
-        {/* Pixel Dots Background */}
         <div className="absolute w-[125.964vh] left-[-15.984vh] top-[-2%]">
           <img
             src={dots}
@@ -23,11 +22,10 @@ const CanvasSection4 = () => {
           />
         </div>
 
-        {/* White Background */}
         <div className="absolute w-[66.156vh] left-[17.76vh] top-[16%]">
           <img
             src={whitebg2}
-            alt=""
+            alt="White Background"
             role="presentation"
             decoding="async"
             className="w-full h-[700px] object-cover"
@@ -35,7 +33,6 @@ const CanvasSection4 = () => {
           />
         </div>
 
-        {/* Things We Do Link */}
         <a
           href="/things-we-do"
           aria-label="What are we doing, really? Apart from oats, that is. Come and look for yourself."
@@ -50,7 +47,6 @@ const CanvasSection4 = () => {
           />
         </a>
 
-        {/* Oatly x Nespresso Article */}
         <a
           href="/things-we-do/brainwashing/nespresso"
           aria-label="Article - Oatly x Nespresso"
@@ -73,7 +69,6 @@ const CanvasSection4 = () => {
           </div>
         </a>
 
-        {/* Bring Oatly to Your Campus Article */}
         <a
           href="/things-we-do/stories/bring-oatly-to-your-campus"
           aria-label="Article - Bring Oatly to Your Campus"
@@ -96,7 +91,6 @@ const CanvasSection4 = () => {
           </div>
         </a>
 
-        {/* Dairy Deprogramming Zone Article */}
         <a
           href="/things-we-do/stories/oatly-crash-capitol-hill-ice-cream-party"
           aria-label="Article - Enter the Dairy Deprogramming Zone"

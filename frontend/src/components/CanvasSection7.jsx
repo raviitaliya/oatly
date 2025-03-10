@@ -1,19 +1,21 @@
 // src/components/CanvasSection9.jsx
 import React from "react";
-import ditch from "../assets/home/ditch-milk.png"
-import girl from "../assets/home/girl.jpg"
-import newspaper from "../assets/home/newspaper.svg"
-import amazing from "../assets/home/amazing.svg"
+import ditch from "../assets/home/ditch-milk.png";
+import girl from "../assets/home/girl.jpg";
+import newspaper from "../assets/home/newspaper.svg";
+import amazing from "../assets/home/amazing.svg";
+import oat3 from "../assets/home/oat3.svg";
+import oat2 from "../assets/home/oat2.svg";
+import oat4 from "../assets/home/oat4.svg";
 
 const CanvasSection7 = () => {
   return (
     <div className="relative sm:[1-vh] w-[20.396vh] left-[475vh]">
-      {/* Chocolate Deluxe Image */}
       <div className="absolute w-[48.396vh] left-0 top-[1%]">
         <div className="relative w-full overflow-hidden">
           <img
             src={girl}
-            alt=""
+            alt="Chocolate Deluxe Image"
             role="presentation"
             decoding="async"
             className="w-full h-auto object-cover"
@@ -22,19 +24,17 @@ const CanvasSection7 = () => {
         </div>
       </div>
 
-      {/* Newspaper Image */}
       <div className="absolute w-[29.748vh] left-[15.096vh] top-[44%]">
         <div className="relative w-full overflow-hidden">
           <img
             src={newspaper}
-            alt=""
+            alt="Newspaper Image"
             role="presentation"
             className="w-full h-auto object-cover"
           />
         </div>
       </div>
 
-      {/* Ditch Milk Link */}
       <div className="absolute w-[33.3vh] left-[10.656vh] bottom-[-5%] transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/brainwashing/ditch-milk"
@@ -42,29 +42,27 @@ const CanvasSection7 = () => {
           className="block cursor-hand"
         >
           <div className="relative w-full">
-            <img src={ditch} alt="" />
+            <img src={ditch} alt="Ditch Milk Link" />
           </div>
         </a>
       </div>
 
-      {/* Amazing Image */}
       <div className="absolute w-[18.204vh] left-[-4.44vh] bottom-[20%]">
         <div className="relative w-full overflow-hidden">
           <img
             src={amazing}
-            alt=""
+            alt="Amazing Image"
             role="presentation"
             className="w-full h-auto object-cover"
           />
         </div>
       </div>
 
-      {/* Oat Images */}
       <div className="absolute w-[8.436vh] left-0 top-[45%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/x/5087288fbc/oat4.svg"
-            alt=""
+            src={oat4}
+            alt="Oat Images 4"
             role="presentation"
             className="w-full h-auto object-cover"
           />
@@ -74,8 +72,8 @@ const CanvasSection7 = () => {
       <div className="absolute w-[7.548vh] left-[17.76vh] bottom-[27%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/x/f60ad047dd/oat3.svg"
-            alt=""
+            src={oat3}
+            alt="Oat Images 3"
             role="presentation"
             className="w-full h-auto object-cover"
           />
@@ -85,8 +83,8 @@ const CanvasSection7 = () => {
       <div className="absolute w-[8.436vh] left-[-6.216vh] bottom-[7%]">
         <div className="relative w-full overflow-hidden">
           <img
-            src="https://a.storyblok.com/f/107921/x/333a0ef09f/oat2.svg"
-            alt=""
+            src={oat2}
+            alt="Oat Images 2"
             role="presentation"
             className="w-full h-auto object-cover"
           />

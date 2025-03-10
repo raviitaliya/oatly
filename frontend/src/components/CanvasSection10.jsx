@@ -1,4 +1,3 @@
-// src/components/CanvasSection12.jsx
 import React from "react";
 import choclate from "../assets/home/Chocolate.jpg";
 import dats from "../assets/home/24k.svg";
@@ -12,7 +11,6 @@ import rainbow from "../assets/home/rainbow.svg";
 const CanvasSection10 = () => {
   return (
     <div className="relative sm:w-[10vh] w-[83.916vh] left-[675vh]">
-      {/* Chocolate Deluxe Image */}
       <div className="absolute w-[64.38vh] left-[4.44vh] top-[5%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -26,7 +24,6 @@ const CanvasSection10 = () => {
         </div>
       </div>
 
-      {/* 24k Oats Image */}
       <div className="absolute w-[18.204vh] left-[53.28vh] top-[37%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -38,7 +35,6 @@ const CanvasSection10 = () => {
         </div>
       </div>
 
-      {/* Oatfinder Link */}
       <div className="absolute w-[28.86vh] left-[4.44vh] bottom-[28%] transition-transform hover:scale-105">
         <a
           href="https://oatfinder.oatly.com/"
@@ -55,7 +51,6 @@ const CanvasSection10 = () => {
         </a>
       </div>
 
-      {/* Rainbow Image */}
       <div className="absolute w-[24.42vh] left-[15.096vh] bottom-[2%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -67,7 +62,6 @@ const CanvasSection10 = () => {
         </div>
       </div>
 
-      {/* Oat2 Image */}
       <div className="absolute w-[8.436vh] left-[75.48vh] top-[12%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -79,21 +73,18 @@ const CanvasSection10 = () => {
         </div>
       </div>
 
-      {/* Oat5 Image */}
       <div className="absolute w-[5.772vh] left-[37.296vh] bottom-[41%]">
         <div className="relative w-full overflow-hidden">
           <img src={oat5} alt="" className="w-full h-auto object-cover" />
         </div>
       </div>
 
-      {/* Oat3 Image */}
       <div className="absolute w-[8.436vh] left-0 bottom-[14%]">
         <div className="relative w-full overflow-hidden">
           <img src={oat3} alt="" className="w-full h-auto object-cover" />
         </div>
       </div>
 
-      {/* Metal Monster Image */}
       <div className="absolute w-[35.964vh] left-[44.4vh] bottom-[-13%]">
         <div className="relative w-full overflow-hidden">
           <img

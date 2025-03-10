@@ -1,4 +1,3 @@
-// src/components/CanvasSection7.jsx
 import React from "react";
 import teareportlogo from "../assets/home/teareportlogo.svg";
 import barbershopQuartet from "../assets/home/barbershop-quartet.jpg";
@@ -14,7 +13,6 @@ import tape from "../assets/home/tape.svg";
 const CanvasSection5 = () => {
   return (
     <div className="relative sm-[10vh] w-[30.74vh] left-[247vh] ">
-      {/* Tea Report Link */}
       <div className="absolute w-[51.06vh] left-[-13.32vh] top-0 transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/stories/teareport"
@@ -31,7 +29,6 @@ const CanvasSection5 = () => {
         </a>
       </div>
 
-      {/* Barbershop Quartet Image */}
       <div className="absolute w-[22.644vh] left-0 top-[42%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -45,7 +42,6 @@ const CanvasSection5 = () => {
         </div>
       </div>
 
-      {/* The Farm Link */}
       <div className="absolute w-[104.34vh] left-[35.52vh] top-[3%] transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/stories/the-farm"
@@ -64,7 +60,6 @@ const CanvasSection5 = () => {
         </a>
       </div>
 
-      {/* Wow No Cow Image */}
       <div className="absolute w-[24.42vh] left-[124.32vh] top-[8%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -76,7 +71,6 @@ const CanvasSection5 = () => {
         </div>
       </div>
 
-      {/* Oat Images */}
       <div className="absolute w-[7.548vh] left-[23.976vh] top-[32%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -99,7 +93,6 @@ const CanvasSection5 = () => {
         </div>
       </div>
 
-      {/* Farmer Seeking Farmer Link */}
       <div className="absolute w-[68.82vh] left-[75.48vh] bottom-[1%] transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/initiatives/farmer-seeking-farmer"
@@ -116,7 +109,6 @@ const CanvasSection5 = () => {
         </a>
       </div>
 
-      {/* More Oat Images */}
       <div className="absolute w-[5.772vh] left-[-8.88vh] top-[6%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -139,7 +131,6 @@ const CanvasSection5 = () => {
         </div>
       </div>
 
-      {/* Jingle Jukebox Link */}
       <div className="absolute w-[42.18vh] left-[17.76vh] bottom-[4%] transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/brainwashing/odds/jingle-jukebox"

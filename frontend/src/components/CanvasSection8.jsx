@@ -1,4 +1,3 @@
-// src/components/CanvasSection10.jsx
 import React from "react";
 import dots from "../assets/home/dots.jpg";
 import handPinch from "../assets/home/hand-pinch.svg";
@@ -12,7 +11,6 @@ import oaltyGold from "../assets/home/oaltygold.jpg";
 const CanvasSection8 = () => {
   return (
     <div className="relative sm:w-[10vh] w-[116.772vh] left-[519vh] ">
-      {/* Pixel Dots Image */}
       <div className="absolute w-[116.772vh] left-0 top-[-3%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -26,12 +24,11 @@ const CanvasSection8 = () => {
         </div>
       </div>
 
-      {/* Hand Pinching Image */}
       <div className="absolute w-[29.86vh] left-[-15.984vh] bottom-[-2.5%]">
         <div className="relative w-full overflow-hidden">
           <img
             src={handPinch}
-            alt=""
+            alt="Hand Pinching Image"
             role="presentation"
             decoding="async"
             className="w-full h-auto object-cover"
@@ -40,12 +37,11 @@ const CanvasSection8 = () => {
         </div>
       </div>
 
-      {/* White BG Image */}
       <div className="absolute w-[48.84vh] left-[31.08vh] top-[14%]">
         <div className="relative w-full overflow-hidden">
           <img
             src={whitebg2}
-            alt=""
+            alt="White BG Image"
             role="presentation"
             decoding="async"
             className="w-full h-auto object-cover"
@@ -54,7 +50,6 @@ const CanvasSection8 = () => {
         </div>
       </div>
 
-      {/* More Stories Image */}
       <div className="absolute w-[24.42vh] left-[32.856vh] top-[1%]">
         <div className="relative w-full overflow-hidden">
           <img
@@ -67,7 +62,6 @@ const CanvasSection8 = () => {
         </div>
       </div>
 
-      {/* The Giant Oatly Carton Article */}
       <div className="absolute w-[42.18vh] left-[34.632vh] top-[18%] transition-transform hover:scale-105 cursor-pointer">
         <a
           href="/things-we-do/stories/the-giant-oatly-carton"
@@ -94,7 +88,6 @@ const CanvasSection8 = () => {
         </a>
       </div>
 
-      {/* Oatly Does the Golden Spurtle Article */}
       <div className="absolute w-[42.18vh] left-[34.632vh] top-[57%] transition-transform hover:scale-105 cursor-hand">
         <a
           href="/things-we-do/stories/oatly-does-the-golden-spurtle"
@@ -121,7 +114,6 @@ const CanvasSection8 = () => {
         </a>
       </div>
 
-      {/* Oat Images */}
       <div className="absolute w-[7.548vh] left-[97.68vh] bottom-[38%]">
         <div className="relative w-full overflow-hidden">
           <img

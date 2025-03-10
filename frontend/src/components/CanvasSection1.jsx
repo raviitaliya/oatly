@@ -9,7 +9,6 @@ import oat5 from "../assets/home/oat5.svg";
 import feet from "../assets/home/feet.svg";
 import milkmyths from "../assets/home/milkmyths.svg";
 
-
 const CanvasSection1 = () => {
   return (
     <div
@@ -19,7 +18,6 @@ const CanvasSection1 = () => {
         backgroundPosition: "center",
       }}
     >
-      {/* Feet Image */}
       <div className="relative w-[86.58vh] left-[4.44vh] -top-[3%]">
         <div className="w-full h-full">
           <img
@@ -31,7 +29,6 @@ const CanvasSection1 = () => {
         </div>
       </div>
 
-      {/* Hey Food Industry Link */}
       <div className="relative w-[18vh] left-[4%] top-[-45%] hover:scale-105 transition-transform">
         <a
           href="/things-we-do/initiatives/hey-food-industry"
@@ -51,7 +48,6 @@ const CanvasSection1 = () => {
         </a>
       </div>
 
-      {/* Milk Myths Link */}
       <div className="relative w-[33.3vh] left-[44.4vh] top-[-18%] hover:scale-105 transition-transform">
         <a
           href="/things-we-do/brainwashing/milk-myths"
@@ -59,16 +55,11 @@ const CanvasSection1 = () => {
           className="block w-full h-full"
         >
           <div className="w-full h-full cursor-hand">
-            <img
-              src={milkmyths}
-              alt="Milk Myths"
-              className="w-full h-auto"
-            />
+            <img src={milkmyths} alt="Milk Myths" className="w-full h-auto" />
           </div>
         </a>
       </div>
 
-      {/* Resurrecting Oats Link */}
       <div className="relative w-[44.18vh] left-[57.72vh] bottom-[10%] hover:scale-105 transition-transform">
         <a
           href="/things-we-do"
@@ -76,12 +67,11 @@ const CanvasSection1 = () => {
           className="block w-full h-full cursor-hand"
         >
           <div className="relative pb-[61.9565%]">
-          <img src={truck} alt="truck"  />
+            <img src={truck} alt="truck" />
           </div>
         </a>
       </div>
 
-      {/* Oat Images */}
       <div className="relative w-[7.548vh] left-[4.44vh] top-[55%]">
         <img
           src={oat1}
@@ -101,19 +91,11 @@ const CanvasSection1 = () => {
       </div>
 
       <div className="relative w-[5.772vh] left-[97.68vh] bottom-[100%]">
-        <img
-          src={oat5}
-          alt="Oat Images"
-          className="w-full h-auto"
-        />
+        <img src={oat5} alt="Oat Images" className="w-full h-auto" />
       </div>
 
       <div className="relative w-[8.436vh] left-[44.4vh] bottom-[80%]">
-        <img
-          src={oat3}
-          alt="Oat Images"
-          className="w-full h-auto"
-        />
+        <img src={oat3} alt="Oat Images" className="w-full h-auto" />
       </div>
 
       <div className="relative w-[8.436vh] left-[44.4vh] top-[-145%]">
@@ -125,7 +107,6 @@ const CanvasSection1 = () => {
         />
       </div>
 
-      {/* Barbershop Quartet Image */}
       <div className="relative w-[33.3vh] left-[6vh] bottom-[120%]">
         <img
           src={section2}

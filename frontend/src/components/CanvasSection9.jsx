@@ -1,9 +1,9 @@
 import React from "react";
+import wisLogo from "../assets/home/wis-logo.svg";
 
 const CanvasSection9 = () => {
   return (
     <div className="relative sm:w-[10vh] w-[40.404vh] left-[650vh]">
-      {/* Will It Swap Logo */}
       <div className="absolute w-[33.3vh] left-[-45.08vh] top-[10%] transition-transform hover:scale-105 ">
         <a
           href="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
@@ -12,7 +12,7 @@ const CanvasSection9 = () => {
         >
           <div className="relative w-full overflow-hidden">
             <img
-              src="https://a.storyblok.com/f/107921/375x251/224c788363/wis-logo.svg"
+              src={wisLogo}
               alt="Will it swap"
               decoding="async"
               className="w-full h-auto object-cover"
@@ -22,7 +22,6 @@ const CanvasSection9 = () => {
         </a>
       </div>
 
-      {/* Vimeo Video Trailer */}
       <div className="absolute w-[51.06vh] left-[-25.656vh] top-[6%] transition-transform hover:scale-105 cursor-hand">
         <a
           href="/things-we-do"
@@ -37,7 +36,7 @@ const CanvasSection9 = () => {
               A Trailer for the Will it swap series
             </span>
             <iframe
-              src="https://player.vimeo.com/video/897003838?keyboard=0&muted=1&loop=1"
+              src="https://player.vimeo.com/video/897003838?keyboard=0&muted=1&loop=1&dnt=0"
               width="240"
               height="426"
               allow="autoplay; fullscreen; muted;"
