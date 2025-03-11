@@ -8,6 +8,28 @@ const API = "http://localhost:8000/api";
 
 const socket = io("http://localhost:8000"); // Updated to port 8000
 
+socket.on("orderUpdate", (data) => {
+  console.log("Received orderUpdate:", data);
+  useProductStore.setState((state) => {
+    if (state.trackingOrderId === data.orderId) {
+      const updatedOrders = state.orders.map((order) =>
+        order.orderId === data.orderId
+          ? { ...order, status: data.status, location: data.coordinates }
+          : order
+      );
+      return {
+        orders: updatedOrders,
+        location: data.status === "Delivered" ? null : data.coordinates,
+        trackingOrderId:
+          data.status === "Delivered" ? null : state.trackingOrderId,
+      };
+    }
+    return state;
+  });
+  if (data.status === "Delivered") {
+    console.log("Tracking stopped for Order:", data.orderId);
+  }
+});
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token"); // Adjust key as per your storage
@@ -52,6 +74,9 @@ export const useProductStore = create((set, get) => ({
   assignedOrders: [],
   currentOrder: null,
   location: null,
+  analytics: null,
+  inventory: [],
+  feedback: [],
 
   oneProduct: null,
   selectedProduct: null,
@@ -526,26 +551,26 @@ export const useProductStore = create((set, get) => ({
       return { cart: [] };
     }),
 
-  getDeliveryBoyProfile: async () => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.get("/delivery_boy/profile");
-      if (response.data.success) {
+    getDeliveryBoyProfile: async () => {
+      set({ loading: true, error: null });
+      try {
+        const response = await api.get("/delivery_boy/profile");
+        if (response.data.success) {
+          set({
+            profile: response.data.profile,
+            loading: false,
+            isAvailable: response.data.profile.isAvailable,
+          });
+        }
+      } catch (error) {
         set({
-          profile: response.data.profile,
           loading: false,
-          isAvailable: response.data.profile.isAvailable,
+          error: error.response?.data?.message || "Failed to fetch profile",
         });
-      } else {
-        set({ loading: false, error: response.data.message });
       }
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to fetch profile",
-      });
-    }
-  },
+    },
+  
+  
 
   createDeliveryBoyProfile: async (userId, profileData) => {
     set({ loading: true, error: null });
@@ -554,11 +579,8 @@ export const useProductStore = create((set, get) => ({
         `/delivery_boy/create/${userId}`,
         profileData
       );
-      if (response.data.success) {
+      if (response.data.success)
         set({ profile: response.data.profile, loading: false });
-      } else {
-        set({ loading: false, error: response.data.message });
-      }
     } catch (error) {
       set({
         loading: false,
@@ -577,8 +599,6 @@ export const useProductStore = create((set, get) => ({
           loading: false,
           isAvailable: response.data.profile.isAvailable,
         });
-      } else {
-        set({ loading: false, error: response.data.message });
       }
     } catch (error) {
       set({
@@ -592,73 +612,25 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/delivery_boy/orders");
-      if (response.data.success) {
-        set({ assignedOrders: response.data.orders, loading: false });
-      } else {
-        set({ loading: false, error: response.data.message });
-      }
+      console.log("Fetched Assigned Orders:", response.data.orders);
+      if (response.data.success) set({ assignedOrders: response.data.orders, loading: false });
     } catch (error) {
-      set({
-        loading: false,
-        error:
-          error.response?.data?.message || "Failed to fetch assigned orders",
-      });
+      set({ loading: false, error: error.response?.data?.message || "Failed to fetch assigned orders" });
     }
   },
 
   acceptOrder: async (orderId) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post("/delivery_boy/accepts-order", {
+      const response = await api.post("/delivery_boy/accept-order", {
         orderId,
       });
-      if (response.data.success) {
-        console.log(`Accepted order ${orderId}`);
-        get().fetchAssignedOrders(); 
-        
-        socket.on("locationUpdate", (data) => {
-          if (data.orderId === orderId) {
-            console.log("Received location update in store:", data.coordinates);
-            set({ location: data.coordinates });
-          }
-        });
-      } else {
-        set({ loading: false, error: response.data.message });
-      }
+      console.log("Accept Order Response:", response.data);
+      if (response.data.success) get().fetchAssignedOrders();
     } catch (error) {
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to accept order",
-      });
-    }
-  },
-
-  startDummyTracking: async (orderId) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.post("/delivery_boy/start-dummy-tracking", {
-        orderId,
-      });
-      if (response.data.success) {
-        console.log(`Started dummy tracking for ${orderId}`);
-        get().fetchAssignedOrders();
-        socket.on("locationUpdate", (data) => {
-          if (data.orderId === orderId) {
-            console.log(
-              "Received dummy location update in store:",
-              data.coordinates
-            );
-            set({ location: data.coordinates });
-          }
-        });
-      } else {
-        set({ loading: false, error: response.data.message });
-      }
-    } catch (error) {
-      set({
-        loading: false,
-        error:
-          error.response?.data?.message || "Failed to start dummy tracking",
       });
     }
   },
@@ -671,17 +643,9 @@ export const useProductStore = create((set, get) => ({
         status,
         coordinates,
       });
+      console.log("Update Order Status Response:", response.data);
       if (response.data.success) {
-        console.log(`Updated order ${orderId} status to ${status}`);
         get().fetchAssignedOrders();
-        if (status === "Delivered") {
-          socket.off("locationUpdate");
-          set({ location: null });
-        } else if (coordinates) {
-          set({ location: coordinates });
-        }
-      } else {
-        set({ loading: false, error: response.data.message });
       }
     } catch (error) {
       set({
@@ -695,11 +659,8 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/delivery_boy/earnings");
-      if (response.data.success) {
+      if (response.data.success)
         set({ earnings: response.data.data, loading: false });
-      } else {
-        set({ loading: false, error: response.data.message });
-      }
     } catch (error) {
       set({
         loading: false,
@@ -712,11 +673,8 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.post("/delivery_boy/toggle-availability");
-      if (response.data.success) {
+      if (response.data.success)
         set({ isAvailable: response.data.isAvailable, loading: false });
-      } else {
-        set({ loading: false, error: response.data.message });
-      }
     } catch (error) {
       set({
         loading: false,
@@ -724,9 +682,8 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
-
   placeOrder: async () => {
-    set({ error: null });
+    set({ loading: true, error: null });
     const { cart } = get();
     if (!cart.length) {
       set({ loading: false, error: "Cart is empty" });
@@ -734,59 +691,46 @@ export const useProductStore = create((set, get) => ({
     }
 
     try {
-      // Get user's current location
       const getCurrentLocation = () =>
         new Promise((resolve, reject) => {
-          if (!navigator.geolocation) {
-            reject(new Error("Geolocation is not supported by this browser"));
-          }
+          if (!navigator.geolocation)
+            reject(new Error("Geolocation not supported"));
           navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const { latitude, longitude } = position.coords;
-              resolve({ latitude, longitude });
-            },
-            (error) => {
-              reject(new Error(`Failed to get location: ${error.message}`));
-            }
+            (position) =>
+              resolve({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              }),
+            (error) => reject(new Error(`Location error: ${error.message}`))
           );
         });
 
-      let location;
-      try {
-        location = await getCurrentLocation();
-        console.log("User Location:", location);
-      } catch (locationError) {
-        set({ loading: false, error: locationError.message });
-        return;
-      }
+      const location = await getCurrentLocation();
+      const totalAmount = cart.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
 
-      const totalAmount = cart.reduce((sum, item) => {
-        const itemTotal = parseFloat(item.price) * item.quantity;
-        console.log(
-          `Item ${item.name}: price=${item.price}, qty=${item.quantity}, total=${itemTotal}`
-        );
-        return sum + itemTotal;
-      }, 0);
-      console.log("Calculated totalAmount (rupees):", totalAmount);
-      console.log("Cart:", cart);
-
-      const response = await api.post("/orders/create", {
+      const orderData = {
         items: cart.map((item) => ({
-          productImage: item.image,
-          productName: item.name || item.productName,
+          productName: item.name,
           quantity: item.quantity,
-          price: parseFloat(item.price),
+          price: item.price,
+          productImage: item.image,
         })),
         totalAmount,
         location: {
           type: "Point",
           coordinates: [location.longitude, location.latitude],
         },
-      });
+      };
+
+      console.log("Sending to /orders/create:", orderData);
+
+      const response = await api.post("/orders/create", orderData);
 
       if (response.data.success) {
         const { order, pendingOrder } = response.data;
-
         const script = document.createElement("script");
         script.src = "https://checkout.razorpay.com/v1/checkout.js";
         script.onload = () => {
@@ -794,9 +738,9 @@ export const useProductStore = create((set, get) => ({
             key: order.key,
             amount: order.amount * 100,
             currency: order.currency,
-            name: "Oatly",
-            description: "Order Payment",
             order_id: order.orderId,
+            name: "Milk Store",
+            description: "Order Payment",
             handler: async (paymentResponse) => {
               const verifyData = {
                 razorpay_order_id: paymentResponse.razorpay_order_id,
@@ -807,6 +751,7 @@ export const useProductStore = create((set, get) => ({
                 deliveryAddress: pendingOrder.deliveryAddress,
                 location: pendingOrder.location,
               };
+              console.log("Sending to /orders/verify-payment:", verifyData);
               const verifyResponse = await api.post(
                 "/orders/verify-payment",
                 verifyData
@@ -829,19 +774,16 @@ export const useProductStore = create((set, get) => ({
           const rzp = new window.Razorpay(options);
           rzp.open();
         };
-        script.onerror = () => {
+        script.onerror = () =>
           set({ loading: false, error: "Failed to load Razorpay script" });
-        };
         document.body.appendChild(script);
-      } else {
-        set({ loading: false, error: response.data.message });
       }
     } catch (error) {
+      console.error("Error in placeOrder:", error);
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to place order",
       });
-      console.error("Place Order Error:", error);
     }
   },
 
@@ -849,9 +791,7 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/orders/my-orders");
-      // console.log("Orders with images:", response.data.orders);
-      // console.log("Orders:", response.data.orders);
-
+      console.log("Fetched Orders:", response.data.orders);
       if (response.data.success) {
         set({ orders: response.data.orders, loading: false });
       } else {
@@ -862,7 +802,6 @@ export const useProductStore = create((set, get) => ({
         loading: false,
         error: error.response?.data?.message || "Failed to fetch orders",
       });
-      console.error("Fetch Orders Error:", error);
     }
   },
 
@@ -879,30 +818,93 @@ export const useProductStore = create((set, get) => ({
           ),
           loading: false,
         }));
-      } else {
-        set({ loading: false, error: response.data.message });
       }
     } catch (error) {
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to cancel order",
       });
-      console.error("Cancel Order Error:", error);
     }
   },
 
-  // Live Tracking
-  startTracking: (orderId) => {
-    socket.emit("trackOrder", orderId);
-    socket.on("locationUpdate", (data) => {
-      if (data.orderId === orderId) {
-        set({ location: data.coordinates });
-      }
-    });
+  submitFeedback: async (orderId, rating, comment) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/orders/feedback", {
+        orderId,
+        rating,
+        comment,
+      });
+      if (response.data.success) set({ loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to submit feedback",
+      });
+    }
   },
 
-  stopTracking: () => {
-    socket.off("locationUpdate");
-    set({ location: null });
+  fetchAnalytics: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/analytics");
+      if (response.data.success)
+        set({ analytics: response.data.analytics, loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch analytics",
+      });
+    }
+  },
+
+  manageInventory: async (productData) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/admin/inventory", productData);
+      if (response.data.success)
+        set({
+          inventory: [...get().inventory, response.data.product],
+          loading: false,
+        });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to manage inventory",
+      });
+    }
+  },
+
+  fetchFeedback: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/feedback");
+      if (response.data.success)
+        set({ feedback: response.data.feedback, loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch feedback",
+      });
+    }
+  },
+
+  generateReport: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/report", { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "sales_report.pdf");
+      document.body.appendChild(link);
+      link.click();
+      set({ loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to generate report",
+      });
+    }
   },
 }));

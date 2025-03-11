@@ -1,5 +1,8 @@
 import { Product } from "../models/addProduct.model.js";
+import { Feedback } from "../models/feedback.model.js";
+import { Order } from "../models/order.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import PDFDocument from "pdfkit";
 
 export const LoginAdmin = async (req, res) => {
   const { username, password } = req.body;
@@ -216,6 +219,7 @@ export const Spread = async (req, res) => {
     });
   }
 };
+
 export const Oatgurt = async (req, res) => {
   try {
     const products = await Product.find({ category: "Oatgurt" });
@@ -336,5 +340,89 @@ export const randomProducts = async (req, res) => {
       message: "An error occurred while fetching products",
       error: error.message,
     });
+  }
+};
+
+export const getAnalytics = async (req, res) => {
+  try {
+    const totalSales = await Order.aggregate([
+      { $match: { status: "Delivered" } },
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } },
+    ]);
+
+    const popularProducts = await Order.aggregate([
+      { $unwind: "$items" },
+      { $group: { _id: "$items.name", totalQty: { $sum: "$items.qty" } } },
+      { $sort: { totalQty: -1 } },
+      { $limit: 5 },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      analytics: { totalSales: totalSales[0]?.total || 0, popularProducts },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const manageInventory = async (req, res) => {
+  const { name, stock, price, image } = req.body;
+
+  try {
+    let product = await Product.findOne({ name });
+    if (product) {
+      product.stock = stock !== undefined ? stock : product.stock;
+      product.price = price || product.price;
+      product.image = image || product.image;
+    } else {
+      product = new Product({ name, stock, price, image });
+    }
+    await product.save();
+
+    if (product.stock < 10) {
+      // TODO: Send email alert (use Nodemailer)
+      console.log(`Low stock alert: ${product.name} - ${product.stock} left`);
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Inventory updated", product });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getFeedback = async (req, res) => {
+  try {
+    const feedback = await Feedback.find().populate("orderId userId");
+    res.status(200).json({ success: true, feedback });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const generateReport = async (req, res) => {
+  try {
+    const orders = await Order.find({ status: "Delivered" }).populate(
+      "userId deliveryBoyId"
+    );
+    const doc = new PDFDocument();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=sales_report.pdf"
+    );
+
+    doc.pipe(res);
+    doc.fontSize(20).text("Sales Report", { align: "center" });
+    orders.forEach((order) => {
+      doc.text(
+        `Order #${order._id}: $${order.totalAmount} - ${order.userId.name}`
+      );
+    });
+    doc.end();
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

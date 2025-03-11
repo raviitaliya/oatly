@@ -17,11 +17,21 @@ dotenv.config({ path: "./env" });
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "http://localhost:5173", methods: ["GET", "POST"], credentials: true },
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
 const PORT = process.env.PORT || 8000;
 
-app.use(cors({ origin: "http://localhost:5173", methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], credentials: true }));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
@@ -30,12 +40,17 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/delivery_boy", deliveryBoyRoutes);
 app.use("/api/orders", orderRoutes);
 
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 // Socket.io Setup
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
   socket.on("trackOrder", (orderId) => {
-    socket.join(orderId);
-    console.log(`Client ${socket.id} tracking order ${orderId}`);
+    console.log("Tracking Order:", orderId);
+    socket.join(orderId); // Optional: Use rooms for specific order updates
   });
   socket.on("disconnect", () => console.log("Client disconnected:", socket.id));
 });
@@ -45,7 +60,9 @@ export { io }; // Export io for use in controllers
 const startServer = async () => {
   try {
     await connectDB();
-    server.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
+    server.listen(PORT, () =>
+      console.log(`Server is running on port: ${PORT}`)
+    );
   } catch (error) {
     console.error("Failed to start server:", error);
     process.exit(1);
