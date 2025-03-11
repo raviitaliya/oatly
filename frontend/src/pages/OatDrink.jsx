@@ -21,7 +21,7 @@ const Oatdrink = () => {
   if (error) return <div>Error: {error}</div>;
   return (
     <div>
-    <div className='flex flex-wrap gap-7 items-center justify-center'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7 px-4 md:px-8 lg:px-24'>
       {oatDrinkProducts.map((product) => (
           <Link key={product._id} to={`/our-products/${product.category.replace(/\s+/g, '-').toLowerCase()}/${product._id}`}>
 
