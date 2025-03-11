@@ -33,6 +33,8 @@ import MyOrders from "./pages/MyOrders";
 import DeliveryBoyDashbord from "./pages/DeliveryBoyDashbord";
 import Formal from "./pages/Formal";
 import Milkfacts from "./pages/Milkfacts";
+import Oatpilot from "./pages/Oatpilot";
+import Farmain from "./pages/farm/Farmain";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -76,7 +78,7 @@ function App() {
           <Route path="accessibility" element={<Accessibility/>} />
           <Route path="career" element={<Careers/>} />
           <Route path="sustainability" element={<Formal/>} />
-          <Route path="milkfacts" element={<Milkfacts/>} />
+          <Route path="farmain" element={<Farmain/>} />
         </Route>
       </Routes>
     </BrowserRouter>
