@@ -685,20 +685,26 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
-  
+
   placeOrder: async () => {
     set({ loading: true, error: null });
-    const { cart } = get();
+    const { cart, user } = get();
+
     if (!cart.length) {
       set({ loading: false, error: "Cart is empty" });
+      return;
+    }
+    if (!user) {
+      set({ loading: false, error: "Please sign in to place an order" });
       return;
     }
 
     try {
       const getCurrentLocation = () =>
         new Promise((resolve, reject) => {
-          if (!navigator.geolocation)
+          if (!navigator.geolocation) {
             reject(new Error("Geolocation not supported"));
+          }
           navigator.geolocation.getCurrentPosition(
             (position) =>
               resolve({
@@ -729,65 +735,74 @@ export const useProductStore = create((set, get) => ({
         },
       };
 
-      console.log("Sending to /orders/create:", orderData);
-
       const response = await api.post("/orders/create", orderData);
 
       if (response.data.success) {
         const { order, pendingOrder } = response.data;
-        const script = document.createElement("script");
-        script.src = "https://checkout.razorpay.com/v1/checkout.js";
-        script.onload = () => {
-          const options = {
-            key: order.key,
-            amount: order.amount * 100,
-            currency: order.currency,
-            order_id: order.orderId,
-            name: "Milk Store",
-            description: "Order Payment",
-            handler: async (paymentResponse) => {
-              const verifyData = {
-                razorpay_order_id: paymentResponse.razorpay_order_id,
-                razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                razorpay_signature: paymentResponse.razorpay_signature,
-                items: pendingOrder.items,
-                totalAmount: pendingOrder.totalAmount,
-                deliveryAddress: pendingOrder.deliveryAddress,
-                location: pendingOrder.location,
-              };
-              console.log("Sending to /orders/verify-payment:", verifyData);
-              const verifyResponse = await api.post(
-                "/orders/verify-payment",
-                verifyData
-              );
-              if (verifyResponse.data.success) {
-                set({
-                  currentOrder: verifyResponse.data.order,
-                  cart: [],
-                  loading: false,
-                });
-                localStorage.removeItem("cart");
-              }
-            },
-            prefill: {
-              name: order.user.name,
-              email: order.user.email,
-              contact: order.user.mobile,
-            },
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.onload = () => {
+            const options = {
+              key: order.key,
+              amount: order.amount * 100,
+              currency: order.currency,
+              order_id: order.orderId,
+              name: "Milk Store",
+              description: "Order Payment",
+              handler: async (paymentResponse) => {
+                const verifyData = {
+                  razorpay_order_id: paymentResponse.razorpay_order_id,
+                  razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                  razorpay_signature: paymentResponse.razorpay_signature,
+                  items: pendingOrder.items,
+                  totalAmount: pendingOrder.totalAmount,
+                  deliveryAddress: pendingOrder.deliveryAddress,
+                  location: pendingOrder.location,
+                };
+                const verifyResponse = await api.post(
+                  "/orders/verify-payment",
+                  verifyData
+                );
+                if (verifyResponse.data.success) {
+                  set({
+                    currentOrder: verifyResponse.data.order,
+                    cart: [],
+                    loading: false,
+                  });
+                  localStorage.removeItem("cart");
+                  resolve(true); // Payment successful
+                }
+              },
+              modal: {
+                ondismiss: () => {
+                  // User closed the modal without paying
+                  set({ loading: false, error: "Payment was cancelled" });
+                  reject(new Error("Payment cancelled by user"));
+                },
+              },
+              prefill: {
+                name: user.name,
+                email: user.email,
+                contact: user.mobile,
+              },
+            };
+            const rzp = new window.Razorpay(options);
+            rzp.open();
           };
-          const rzp = new window.Razorpay(options);
-          rzp.open();
-        };
-        script.onerror = () =>
-          set({ loading: false, error: "Failed to load Razorpay script" });
-        document.body.appendChild(script);
+          script.onerror = () => {
+            set({ loading: false, error: "Failed to load Razorpay script" });
+            reject(new Error("Razorpay script failed to load"));
+          };
+          document.body.appendChild(script);
+        });
       }
     } catch (error) {
-      console.error("Error in placeOrder:", error);
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to place order",
       });
+      throw error;
     }
   },
 

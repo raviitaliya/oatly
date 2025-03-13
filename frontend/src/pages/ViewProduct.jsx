@@ -37,7 +37,6 @@ function ViewProduct() {
     addToCart,
     increaseQuantity,
     decreaseQuantity,
-    placeOrder,
   } = useProductStore();
 
   const product = cart.find((item) => item.id === id);
@@ -69,6 +68,10 @@ function ViewProduct() {
       openAddToCart();
     }
   };
+
+  const handleCheckout = () => {
+    navigate("/checkout");
+  }
 
   useEffect(() => {
     if (oneProduct && oneProduct._id === id) return;
@@ -206,7 +209,7 @@ function ViewProduct() {
               />
               <PaymentBtn
                 amount={totalPrice}
-                onClick={placeOrder}
+                onClick={handleCheckout}
                 disabled={loading}
               />
             </div>
