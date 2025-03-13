@@ -124,7 +124,7 @@ function ViewProduct() {
   //   console.log(window);
   // };
 
-  if (loading) return <div>Loading...</div>;
+  // if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!oneProduct) return <div>No product found</div>;
 

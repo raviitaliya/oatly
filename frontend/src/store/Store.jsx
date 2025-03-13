@@ -551,26 +551,24 @@ export const useProductStore = create((set, get) => ({
       return { cart: [] };
     }),
 
-    getDeliveryBoyProfile: async () => {
-      set({ loading: true, error: null });
-      try {
-        const response = await api.get("/delivery_boy/profile");
-        if (response.data.success) {
-          set({
-            profile: response.data.profile,
-            loading: false,
-            isAvailable: response.data.profile.isAvailable,
-          });
-        }
-      } catch (error) {
+  getDeliveryBoyProfile: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/delivery_boy/profile");
+      if (response.data.success) {
         set({
+          profile: response.data.profile,
           loading: false,
-          error: error.response?.data?.message || "Failed to fetch profile",
+          isAvailable: response.data.profile.isAvailable,
         });
       }
-    },
-  
-  
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to fetch profile",
+      });
+    }
+  },
 
   createDeliveryBoyProfile: async (userId, profileData) => {
     set({ loading: true, error: null });
@@ -613,9 +611,14 @@ export const useProductStore = create((set, get) => ({
     try {
       const response = await api.get("/delivery_boy/orders");
       console.log("Fetched Assigned Orders:", response.data.orders);
-      if (response.data.success) set({ assignedOrders: response.data.orders, loading: false });
+      if (response.data.success)
+        set({ assignedOrders: response.data.orders, loading: false });
     } catch (error) {
-      set({ loading: false, error: error.response?.data?.message || "Failed to fetch assigned orders" });
+      set({
+        loading: false,
+        error:
+          error.response?.data?.message || "Failed to fetch assigned orders",
+      });
     }
   },
 
@@ -682,6 +685,7 @@ export const useProductStore = create((set, get) => ({
       });
     }
   },
+  
   placeOrder: async () => {
     set({ loading: true, error: null });
     const { cart } = get();

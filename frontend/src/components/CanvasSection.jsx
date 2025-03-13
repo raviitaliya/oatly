@@ -3,7 +3,7 @@ import React from "react";
 const CanvasSection = () => {
   return (
     <div
-      className="relative bg-black "
+      className="relative bg-black"
       style={{
         backgroundImage: `url(https://a.storyblok.com/f/107921/1738x1200/df94971a12/black-bg2.gif)`,
         backgroundSize: "cover",

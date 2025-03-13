@@ -25,7 +25,6 @@ const CanvasSection9 = () => {
       <div className="absolute w-[51.06vh] left-[-25.656vh] top-[6%] transition-transform hover:scale-105 duration-300 cursor-hand">
         <a
           href="/things-we-do"
-          aria-label="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
           className="block cursor-hand"
         >
           <div
