@@ -14,7 +14,7 @@ const CanvasSection = () => {
         <a
           href="/oatly-who"
           aria-label="The Oatly Sustainability report update 2022"
-          className="absolute block transition-transform hover:scale-105"
+          className="absolute block transition-transform hover:scale-105 duration-300"
           style={{ width: "59.94vh", left: "11.544vh", top: "5%" }}
         >
           <img

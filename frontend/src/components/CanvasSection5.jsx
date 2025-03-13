@@ -13,9 +13,9 @@ import tape from "../assets/home/tape.svg";
 const CanvasSection5 = () => {
   return (
     <div className="relative sm-[10vh] w-[30.74vh] left-[247vh] ">
-      <div className="absolute w-[51.06vh] left-[-13.32vh] top-0 transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[51.06vh] left-[-13.32vh] top-0 transition-transform hover:scale-105 duration-300 cursor-pointer">
         <a
-          href="/things-we-do/stories/teareport"
+          href="/things-we-do/"
           aria-label="We heard that OATLY might taste like Satans diarrhea in tea. So we went to investigate this further by asking the tea experts themselves- the British public"
           className="block cursor-hand"
         >
@@ -42,9 +42,9 @@ const CanvasSection5 = () => {
         </div>
       </div>
 
-      <div className="absolute w-[104.34vh] left-[35.52vh] top-[3%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[104.34vh] left-[35.52vh] top-[3%] transition-transform hover:scale-105 duration-300 cursor-pointer">
         <a
-          href="/things-we-do/stories/the-farm"
+          href="/things-we-do/"
           aria-label="/things-we-do/stories/the-farm"
           className="block cursor-hand"
         >
@@ -93,9 +93,9 @@ const CanvasSection5 = () => {
         </div>
       </div>
 
-      <div className="absolute w-[68.82vh] left-[75.48vh] bottom-[1%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[68.82vh] left-[75.48vh] bottom-[1%] transition-transform hover:scale-105 duration-300 cursor-pointer">
         <a
-          href="/things-we-do/initiatives/farmer-seeking-farmer"
+          href="/things-we-do"
           aria-label="How can we feed more people using the same earth? Farmer Adam Arnesson and his colleagues decided to answer the question."
           className="block cursor-hand"
         >
@@ -131,7 +131,7 @@ const CanvasSection5 = () => {
         </div>
       </div>
 
-      <div className="absolute w-[42.18vh] left-[17.76vh] bottom-[4%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[42.18vh] left-[17.76vh] bottom-[4%] transition-transform hover:scale-105 duration-300 cursor-pointer">
         <a
           href="/things-we-do/brainwashing/odds/jingle-jukebox"
           aria-label="We made you a fully stocked Jingle Jukebox with a whole collection of jingles cued up and ready for whenever you feel like."

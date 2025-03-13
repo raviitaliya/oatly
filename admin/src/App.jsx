@@ -1,5 +1,4 @@
 import Layout from './components/Layout'
-import { FiHome, FiPlus, FiBox, FiDollarSign, FiUsers } from 'react-icons/fi';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Home from './pages/Home';
 import AddProduct from './pages/AddProduct';

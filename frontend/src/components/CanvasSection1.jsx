@@ -29,10 +29,9 @@ const CanvasSection1 = () => {
         </div>
       </div>
 
-      <div className="relative w-[18vh] left-[4%] top-[-45%] hover:scale-105 transition-transform">
+      <div className="relative w-[18vh] left-[4%] top-[-45%] hover:scale-105 duration-300 transition-transform">
         <a
-          href="/things-we-do/initiatives/hey-food-industry"
-          aria-label="/things-we-do/initiatives/hey-food-industry"
+          href="/things-we-do/"
           className="block w-full h-full cursor-hand"
         >
           <div className="relative">
@@ -48,10 +47,9 @@ const CanvasSection1 = () => {
         </a>
       </div>
 
-      <div className="relative w-[33.3vh] left-[44.4vh] top-[-18%] hover:scale-105 transition-transform">
+      <div className="relative w-[33.3vh] left-[44.4vh] top-[-18%] hover:scale-105 duration-300 transition-transform">
         <a
-          href="/things-we-do/brainwashing/milk-myths"
-          aria-label="Is everything you have learnt about cow's milk true? We decided to find out."
+          href="/things-we-do/"
           className="block w-full h-full"
         >
           <div className="w-full h-full cursor-hand">
@@ -60,10 +58,9 @@ const CanvasSection1 = () => {
         </a>
       </div>
 
-      <div className="relative w-[44.18vh] left-[57.72vh] bottom-[10%] hover:scale-105 transition-transform">
+      <div className="relative w-[44.18vh] left-[57.72vh] bottom-[10%] hover:scale-105 duration-300 transition-transform">
         <a
           href="/things-we-do"
-          aria-label="When we heard that some US farmers were putting oats back into their rotations to achieve a more sustainable agricultural system, we were pretty excited."
           className="block w-full h-full cursor-hand"
         >
           <div className="relative pb-[61.9565%]">

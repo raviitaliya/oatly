@@ -62,7 +62,7 @@ const CanvasSection8 = () => {
         </div>
       </div>
 
-      <div className="absolute w-[42.18vh] left-[34.632vh] top-[18%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[42.18vh] left-[34.632vh] top-[18%] transition-transform hover:scale-105 duration-300 cursor-pointer">
         <a
           href="/things-we-do/stories/the-giant-oatly-carton"
           aria-label="Article - The Giant Oatly Carton"
@@ -88,7 +88,7 @@ const CanvasSection8 = () => {
         </a>
       </div>
 
-      <div className="absolute w-[42.18vh] left-[34.632vh] top-[57%] transition-transform hover:scale-105 cursor-hand">
+      <div className="absolute w-[42.18vh] left-[34.632vh] top-[57%] transition-transform hover:scale-105 duration-300 cursor-hand">
         <a
           href="/things-we-do/stories/oatly-does-the-golden-spurtle"
           aria-label="Article - Oatly Does the Golden Spurtle"

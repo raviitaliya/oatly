@@ -35,7 +35,7 @@ const CanvasSection7 = () => {
         </div>
       </div>
 
-      <div className="absolute w-[33.3vh] left-[10.656vh] bottom-[-5%] transition-transform hover:scale-105 cursor-pointer">
+      <div className="absolute w-[33.3vh] left-[10.656vh] bottom-[-5%] transition-transform hover:scale-105 duration-300 cursor-pointer">
         <a
           href="/things-we-do/brainwashing/ditch-milk"
           aria-label="Most people know that eating lots of meat isn’t cool for the planet, but not as many are aware that dairy products have a massive impact on the climate, too."

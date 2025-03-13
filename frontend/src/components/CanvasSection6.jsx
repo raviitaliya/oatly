@@ -17,10 +17,10 @@ const CanvasSection6 = () => {
         </div>
       </div>
 
-      <div className="absolute w-[48.84vh] left-0 top-[3%] transition-transform hover:scale-105 ">
+      <div className="absolute w-[48.84vh] left-0 top-[3%] transition-transform hover:scale-105 duration-300 ">
         <a
-          href="/products/oat-drink/oat-drink-semi-1-5-1l"
-          aria-label="/products/oat-drink/oat-drink-semi-1-5-1l"
+          href="/our-products/oat-drink/676cfb7a00be0a4c614c01e7"
+          aria-label="/our-products/oat-drink/676cfb7a00be0a4c614c01e7"
           className="block cursor-hand"
         >
           <div className="relative w-full overflow-hidden">
@@ -35,10 +35,10 @@ const CanvasSection6 = () => {
         </a>
       </div>
 
-      <div className="absolute w-[48.84vh] left-[44.4vh] top-[3%] transition-transform hover:scale-105">
+      <div className="absolute w-[48.84vh] left-[44.4vh] top-[3%] transition-transform hover:scale-105 duration-300">
         <a
-          href="/products/oat-drink/oat-drink-chocolate-1l"
-          aria-label="/products/oat-drink/oat-drink-chocolate-1l"
+          href="/our-products/oat-drink/676d64745987460b4d1627ef"
+          aria-label="/our-products/oat-drink/676d64745987460b4d1627ef"
           className="block cursor-hand"
         >
           <div className="relative w-full overflow-hidden">
