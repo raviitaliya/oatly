@@ -6,9 +6,11 @@ import {
   autoAssignOrder,
   cancelOrder,
   createOrder,
+  getAllOrders,
   getOrderDetails,
   getUserOrders,
   submitFeedback,
+  updateOrderStatus,
   verifyPayment,
 } from "../controllers/order.controllers.js";
 
@@ -28,7 +30,9 @@ router.get(
 );
 
 // Admin routes
-router.post("/assign", verifyToken, authorize("admin"), assignOrder);
+router.post("/:orderId/assign-delivery-boy", assignOrder);
 router.post("/auto-assign", verifyToken, authorize("admin"), autoAssignOrder);
+router.get("/", getAllOrders);
+router.patch("/:orderId/status", updateOrderStatus);
 
 export default router;

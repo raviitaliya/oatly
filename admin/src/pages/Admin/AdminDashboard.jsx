@@ -1,3 +1,4 @@
+// src/pages/admin/AdminDashboard.jsx
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +31,11 @@ import {
   Trash2,
   Lock,
   Unlock,
+  ShoppingCart,
+  Clock,
+  Truck as TruckIcon,
+  CheckCircle,
+  MapPin,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -74,6 +80,10 @@ function AdminDashboard() {
     deliveryBoys,
     deleteDeliveryBoy,
     toggleBlockDeliveryBoy,
+    fetchOrders,
+    orders,
+    updateOrderStatus,
+    assignDeliveryBoy,
     loading,
     error,
   } = useAdminStore();
@@ -85,7 +95,8 @@ function AdminDashboard() {
   useEffect(() => {
     if (activeSection === "users") fetchUsers();
     if (activeSection === "delivery-boys") fetchDeliveryBoys();
-  }, [activeSection, fetchUsers, fetchDeliveryBoys]);
+    if (activeSection === "orders") fetchOrders();
+  }, [activeSection, fetchUsers, fetchDeliveryBoys, fetchOrders]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -117,11 +128,16 @@ function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-
-    toast({ title: "Success", description: "Logged out successfully" });
-  };
+  const pendingOrders = orders.filter(
+    (order) => order.status === "Pending Payment"
+  );
+  const activeOrders = orders.filter((order) => order.status === "Active");
+  const outForDeliveryOrders = orders.filter(
+    (order) => order.status === "Out for Delivery"
+  );
+  const deliveredOrders = orders.filter(
+    (order) => order.status === "Delivered"
+  );
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -174,6 +190,14 @@ function AdminDashboard() {
               <Truck className="mr-2 h-4 w-4" />
               Delivery Boys
             </Button>
+            <Button
+              variant={activeSection === "orders" ? "default" : "ghost"}
+              className="w-full justify-start"
+              onClick={() => setActiveSection("orders")}
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Orders
+            </Button>
             <Separator className="my-2" />
             <Button variant="ghost" className="w-full justify-start">
               <Settings className="mr-2 h-4 w-4" />
@@ -183,14 +207,7 @@ function AdminDashboard() {
               <Bell className="mr-2 h-4 w-4" />
               Notifications
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
-              onClick={handleLogout}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
+            
           </div>
         </ScrollArea>
       </div>
@@ -204,6 +221,7 @@ function AdminDashboard() {
             {activeSection === "add-product" && "Add New Product"}
             {activeSection === "users" && "Manage Users"}
             {activeSection === "delivery-boys" && "Manage Delivery Boys"}
+            {activeSection === "orders" && "Manage Orders"}
           </h1>
 
           {loading && (
@@ -232,8 +250,8 @@ function AdminDashboard() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Manage products, users, delivery boys, and more from this
-                    dashboard.
+                    Manage products, users, delivery boys, and orders
+                    efficiently from this dashboard.
                   </p>
                 </CardContent>
               </Card>
@@ -529,10 +547,12 @@ function AdminDashboard() {
                       {users.map((user) => (
                         <div
                           key={user._id}
-                          className="flex items-center justify-between p-4 border rounded-lg"
+                          className="flex items-center justify-between p-4 border rounded-lg bg-white"
                         >
                           <div>
-                            <p className="font-medium">{user.name}</p>
+                            <p className="font-medium text-gray-800">
+                              {user.name}
+                            </p>
                             <p className="text-sm text-gray-600">
                               {user.email}
                             </p>
@@ -596,10 +616,12 @@ function AdminDashboard() {
                       {deliveryBoys.map((db) => (
                         <div
                           key={db.userId._id}
-                          className="flex items-center justify-between p-4 border rounded-lg"
+                          className="flex items-center justify-between p-4 border rounded-lg bg-white"
                         >
                           <div>
-                            <p className="font-medium">{db.userId.name}</p>
+                            <p className="font-medium text-gray-800">
+                              {db.userId.name}
+                            </p>
                             <p className="text-sm text-gray-600">
                               {db.userId.email}
                             </p>
@@ -641,6 +663,250 @@ function AdminDashboard() {
                       ))}
                     </div>
                   )}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {/* Orders Section */}
+          {activeSection === "orders" && !loading && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-2xl">Manage Orders</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  {/* Pending Orders */}
+                  <div className="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 className="text-xl font-semibold mb-4 flex items-center text-yellow-600">
+                      <Clock className="mr-2 h-6 w-6" /> Pending Orders
+                      <Badge className="ml-2 bg-yellow-100 text-yellow-800">
+                        {pendingOrders.length}
+                      </Badge>
+                    </h3>
+                    {pendingOrders.length === 0 ? (
+                      <p className="text-gray-500 italic">
+                        No pending orders at the moment.
+                      </p>
+                    ) : (
+                      <ScrollArea className="h-[200px] pr-4">
+                        {pendingOrders.map((order) => (
+                          <div
+                            key={order._id}
+                            className="mb-4 p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium text-gray-800">
+                                  Order #{order.razorpayOrderId}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  User: {order.userId.name}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Total: ₹{order.totalAmount.toLocaleString()}
+                                </p>
+                                <p className="text-sm text-gray-500 flex items-center">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  {order.deliveryAddress.city},{" "}
+                                  {order.deliveryAddress.state}
+                                </p>
+                              </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="mt-2 bg-yellow-50 hover:bg-yellow-100 text-yellow-700"
+                                onClick={() =>
+                                  updateOrderStatus(order._id, "Active")
+                                }
+                                disabled={loading}
+                              >
+                                <CheckCircle className="h-4 w-4 mr-2" />
+                                Mark as Active
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </ScrollArea>
+                    )}
+                  </div>
+
+                  {/* Active Orders */}
+                  <div className="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 className="text-xl font-semibold mb-4 flex items-center text-blue-600">
+                      <ShoppingCart className="mr-2 h-6 w-6" /> Active Orders
+                      <Badge className="ml-2 bg-blue-100 text-blue-800">
+                        {activeOrders.length}
+                      </Badge>
+                    </h3>
+                    {activeOrders.length === 0 ? (
+                      <p className="text-gray-500 italic">
+                        No active orders at the moment.
+                      </p>
+                    ) : (
+                      <ScrollArea className="h-[200px] pr-4">
+                        {activeOrders.map((order) => (
+                          <div
+                            key={order._id}
+                            className="mb-4 p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium text-gray-800">
+                                  Order #{order.razorpayOrderId}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  User: {order.userId.name}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Total: ₹{order.totalAmount.toLocaleString()}
+                                </p>
+                                <p className="text-sm text-gray-500 flex items-center">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  {order.deliveryAddress.city},{" "}
+                                  {order.deliveryAddress.state}
+                                </p>
+                              </div>
+                              <Select
+                                onValueChange={(value) =>
+                                  assignDeliveryBoy(order._id, value)
+                                }
+                                disabled={loading}
+                              >
+                                <SelectTrigger className="w-[180px] mt-2 bg-blue-50 hover:bg-blue-100 text-blue-700">
+                                  <SelectValue placeholder="Assign Delivery" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {deliveryBoys.map((db) => (
+                                    <SelectItem key={db._id} value={db._id}>
+                                      {db.userId.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        ))}
+                      </ScrollArea>
+                    )}
+                  </div>
+
+                  {/* Out for Delivery Orders */}
+                  <div className="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 className="text-xl font-semibold mb-4 flex items-center text-orange-600">
+                      <TruckIcon className="mr-2 h-6 w-6" /> Out for Delivery
+                      <Badge className="ml-2 bg-orange-100 text-orange-800">
+                        {outForDeliveryOrders.length}
+                      </Badge>
+                    </h3>
+                    {outForDeliveryOrders.length === 0 ? (
+                      <p className="text-gray-500 italic">
+                        No orders out for delivery.
+                      </p>
+                    ) : (
+                      <ScrollArea className="h-[200px] pr-4">
+                        {outForDeliveryOrders.map((order) => (
+                          <div
+                            key={order._id}
+                            className="mb-4 p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium text-gray-800">
+                                  Order #{order.razorpayOrderId}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  User: {order.userId.name}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Delivery:{" "}
+                                  {order.deliveryBoyId
+                                    ? order.deliveryBoyId.fullName
+                                    : "Not Assigned"}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Total: ₹{order.totalAmount.toLocaleString()}
+                                </p>
+                                <p className="text-sm text-gray-500 flex items-center">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  {order.deliveryAddress.city},{" "}
+                                  {order.deliveryAddress.state}
+                                </p>
+                              </div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="mt-2 bg-orange-50 hover:bg-orange-100 text-orange-700"
+                                onClick={() =>
+                                  updateOrderStatus(order._id, "Delivered")
+                                }
+                                disabled={loading}
+                              >
+                                <CheckCircle className="h-4 w-4 mr-2" />
+                                Mark as Delivered
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </ScrollArea>
+                    )}
+                  </div>
+
+                  {/* Delivered Orders */}
+                  <div className="bg-white p-6 rounded-lg shadow-sm border">
+                    <h3 className="text-xl font-semibold mb-4 flex items-center text-green-600">
+                      <CheckCircle className="mr-2 h-6 w-6" /> Delivered Orders
+                      <Badge className="ml-2 bg-green-100 text-green-800">
+                        {deliveredOrders.length}
+                      </Badge>
+                    </h3>
+                    {deliveredOrders.length === 0 ? (
+                      <p className="text-gray-500 italic">
+                        No delivered orders yet.
+                      </p>
+                    ) : (
+                      <ScrollArea className="h-[200px] pr-4">
+                        {deliveredOrders.map((order) => (
+                          <div
+                            key={order._id}
+                            className="mb-4 p-4 bg-gray-50 rounded-lg border hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium text-gray-800">
+                                  Order #{order.razorpayOrderId}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  User: {order.userId.name}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Delivery:{" "}
+                                  {order.deliveryBoyId
+                                    ? order.deliveryBoyId.fullName
+                                    : "Not Assigned"}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Total: ₹{order.totalAmount.toLocaleString()}
+                                </p>
+                                <p className="text-sm text-gray-500 flex items-center">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  {order.deliveryAddress.city},{" "}
+                                  {order.deliveryAddress.state}
+                                </p>
+                              </div>
+                              <Badge className="mt-2 bg-green-50 text-green-700">
+                                Completed
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </ScrollArea>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>

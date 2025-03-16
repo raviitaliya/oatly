@@ -10,6 +10,7 @@ const socket = io("http://localhost:8000");
 export const useAdminStore = create((set) => ({
   products: [],
   users: [],
+  orders: [],
   deliveryBoys: [],
   loading: false,
   error: null,
@@ -63,7 +64,6 @@ export const useAdminStore = create((set) => ({
       const response = await api.get("/auth/users");
       set({ users: response.data.users, loading: false });
       console.log(response);
-      
     } catch (error) {
       set({
         error: error.response?.data?.message || "Failed to fetch users",
@@ -199,6 +199,81 @@ export const useAdminStore = create((set) => ({
         description:
           error.response?.data?.message ||
           "Failed to update delivery boy status",
+        variant: "destructive",
+      });
+    }
+  },
+
+  fetchOrders: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/orders/");
+      // console.log("Responser",response);
+      
+      set({ orders: response.data.orders, loading: false });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to fetch orders",
+        loading: false,
+      });
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to fetch orders",
+        variant: "destructive",
+      });
+    }
+  },
+
+  updateOrderStatus: async (orderId, status) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.patch(`/orders/${orderId}/status`, { status });
+      set((state) => ({
+        orders: state.orders.map((order) =>
+          order._id === orderId ? { ...order, status } : order
+        ),
+        loading: false,
+      }));
+      toast({ title: "Success", description: "Order status updated" });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to update order status",
+        loading: false,
+      });
+      toast({
+        title: "Error",
+        description:
+          error.response?.data?.message || "Failed to update order status",
+        variant: "destructive",
+      });
+    }
+  },
+
+  assignDeliveryBoy: async (orderId, deliveryBoyId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.patch(
+        `/orders/${orderId}/assign-delivery-boy`,
+        { deliveryBoyId }
+      );
+      set((state) => ({
+        orders: state.orders.map((order) =>
+          order._id === orderId
+            ? { ...order, deliveryBoyId, status: "Out for Delivery" }
+            : order
+        ),
+        loading: false,
+      }));
+      toast({ title: "Success", description: "Delivery boy assigned" });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to assign delivery boy",
+        loading: false,
+      });
+      toast({
+        title: "Error",
+        description:
+          error.response?.data?.message || "Failed to assign delivery boy",
         variant: "destructive",
       });
     }

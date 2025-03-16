@@ -3,7 +3,6 @@ import { User } from "../models/user.model.js";
 import { Order } from "../models/order.model.js";
 import { DeliveryBoy } from "../models/deliveryProfile.model.js";
 import Razorpay from "razorpay";
-import { Product } from "../models/addProduct.model.js";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_API_KEY,
@@ -140,48 +139,26 @@ export const verifyPayment = async (req, res) => {
 
 // Assign Order to Delivery Boy (Admin or Automated)
 export const assignOrder = async (req, res) => {
-  const { orderId, deliveryBoyId } = req.body;
+  const { orderId } = req.params;
+  const { deliveryBoyId } = req.body;
 
   try {
     const order = await Order.findById(orderId);
-    if (!order || order.status !== "Pending") {
-      return res.status(400).json({
-        success: false,
-        message: "Order not found or already assigned",
-      });
-    }
+    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
 
     const deliveryBoy = await DeliveryBoy.findById(deliveryBoyId);
-    if (
-      !deliveryBoy ||
-      !deliveryBoy.isAvailable ||
-      deliveryBoy.status !== "active"
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Delivery boy unavailable" });
-    }
+    if (!deliveryBoy) return res.status(404).json({ success: false, message: "Delivery boy not found" });
 
     order.deliveryBoyId = deliveryBoyId;
-    order.status = "Assigned";
-    order.assignedAt = new Date();
-    deliveryBoy.isAvailable = false;
+    order.status = "Out for Delivery";
     await order.save();
-    await deliveryBoy.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Order assigned successfully",
-      order: {
-        orderId: order._id,
-        deliveryBoyId: order.deliveryBoyId,
-        status: order.status,
-      },
-    });
+    res.status(200).json({ success: true, message: "Delivery boy assigned", order });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 // Get Order Details (User or Admin)
 export const getOrderDetails = async (req, res) => {
   const { orderId } = req.params;
@@ -353,6 +330,51 @@ export const autoAssignOrder = async (req, res) => {
         status: order.status,
       },
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("userId", "name email")
+      .populate("deliveryBoyId", "fullName mobile");
+    res.status(200).json({ success: true, orders });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  try {
+    const validStatuses = [
+      "Pending Payment",
+      "Active",
+      "Out for Delivery",
+      "Delivered",
+    ];
+    if (!validStatuses.includes(status)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid status" });
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order)
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+
+    order.status = status;
+    await order.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Order status updated", order });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
