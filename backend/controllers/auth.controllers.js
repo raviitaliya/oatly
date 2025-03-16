@@ -326,3 +326,52 @@ export const checkAuth = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const fetchAllUser = async (req, res) => {
+  try {
+    const users = await User.find({ role: "user" }).select(
+      "name email role isBlocked"
+    );
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findOneAndDelete({ _id: userId, role: "user" });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Block/Unblock a user
+export const blockToggleUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findOne({ _id: userId, role: "user" });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    user.isBlocked = !user.isBlocked;
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: `User ${user.isBlocked ? "blocked" : "unblocked"} successfully`,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

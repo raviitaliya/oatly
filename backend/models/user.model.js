@@ -65,6 +65,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     verificationToken: String,
@@ -73,6 +77,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.index({ location: "2dsphere" }); 
+userSchema.index({ location: "2dsphere" });
 
 export const User = mongoose.model("User", userSchema);

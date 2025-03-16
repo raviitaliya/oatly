@@ -1,5 +1,6 @@
 // utils/jwt.js
 import Jwt from "jsonwebtoken";
+import { User } from "../models/user.model.js";
 
 export const verifyToken = (req, res, next) => {
   const token =
@@ -34,4 +35,16 @@ export const authorize = (...roles) => {
     }
     next();
   };
+};
+
+export const blockUserMiddleware = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id); 
+    if (user && user.isBlocked) {
+      return res.status(403).json({ success: false, message: "Your account is blocked" });
+    }
+    next();
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };

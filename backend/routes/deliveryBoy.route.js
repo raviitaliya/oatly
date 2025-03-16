@@ -1,10 +1,11 @@
 // routes/deliveryBoy.routes.js
 import express from "express";
 
-import { authorize, verifyToken } from "../middleware/verifyToken.js";
+import { authorize, blockUserMiddleware, verifyToken } from "../middleware/verifyToken.js";
 import {
   acceptOrder,
   createDeliveryBoyProfile,
+  fetchAllDeliveryBoy,
   getAssignedOrders,
   getDeliveryBoyProfile,
   getEarnings,
@@ -12,8 +13,10 @@ import {
   updateDeliveryBoyProfile,
   updateOrderStatus,
 } from "../controllers/delivery.controllers.js";
+import { blockToggleUser } from "../controllers/auth.controllers.js";
 
 const router = express.Router();
+
 
 router.get(
   "/profile",
@@ -21,6 +24,17 @@ router.get(
   authorize("delivery_boy"),
   getDeliveryBoyProfile
 );
+
+router.get(
+  "/delivery-boys",
+  fetchAllDeliveryBoy
+); // admin
+
+router.patch(
+  "/:userId/block",
+  blockToggleUser 
+); //admin
+
 router.post(
   "/create/:userId",
   verifyToken,

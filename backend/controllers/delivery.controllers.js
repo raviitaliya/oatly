@@ -1,9 +1,7 @@
-// controllers/deliveryBoy.controller.js
 import { DeliveryBoy } from "../models/deliveryProfile.model.js";
 import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import { io } from "../index.js";
-
 
 // Get Delivery Boy Profile
 export const getDeliveryBoyProfile = async (req, res) => {
@@ -167,13 +165,23 @@ export const acceptOrder = async (req, res) => {
     console.log("Order Found:", order); // Debug log
 
     if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
     }
     if (order.status !== "Pending") {
-      return res.status(400).json({ success: false, message: "Order is not available to accept" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Order is not available to accept" });
     }
-    if (order.deliveryBoyId && order.deliveryBoyId.toString() !== deliveryBoyId.toString()) {
-      return res.status(403).json({ success: false, message: "Order already assigned to another delivery boy" });
+    if (
+      order.deliveryBoyId &&
+      order.deliveryBoyId.toString() !== deliveryBoyId.toString()
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "Order already assigned to another delivery boy",
+      });
     }
 
     order.deliveryBoyId = deliveryBoyId;
@@ -198,12 +206,19 @@ export const updateOrderStatus = async (req, res) => {
     const order = await Order.findById(orderId);
     console.log("Order Before Update:", order);
 
-    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
+    if (!order)
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
     if (order.deliveryBoyId.toString() !== deliveryBoyId.toString()) {
-      return res.status(403).json({ success: false, message: "Order not assigned to you" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Order not assigned to you" });
     }
     if (!["Assigned", "Out for Delivery", "Delivered"].includes(status)) {
-      return res.status(400).json({ success: false, message: "Invalid status" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid status" });
     }
 
     order.status = status;
@@ -216,7 +231,11 @@ export const updateOrderStatus = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Order status updated",
-      order: { orderId: order._id, status: order.status, coordinates: order.location.coordinates },
+      order: {
+        orderId: order._id,
+        status: order.status,
+        coordinates: order.location.coordinates,
+      },
     });
   } catch (error) {
     console.error("Error in updateOrderStatus:", error);
@@ -231,12 +250,17 @@ export const getEarnings = async (req, res) => {
   try {
     const deliveryBoy = await DeliveryBoy.findOne({ userId });
     if (!deliveryBoy) {
-      return res.status(404).json({ success: false, message: "Delivery boy not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Delivery boy not found" });
     }
 
     res.status(200).json({
       success: true,
-      data: { totalEarnings: deliveryBoy.earnings, totalDeliveries: deliveryBoy.totalDeliveries },
+      data: {
+        totalEarnings: deliveryBoy.earnings,
+        totalDeliveries: deliveryBoy.totalDeliveries,
+      },
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -264,6 +288,38 @@ export const toggleAvailability = async (req, res) => {
         deliveryBoy.isAvailable ? "online" : "offline"
       }`,
       isAvailable: deliveryBoy.isAvailable,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// fetch All Delivery Boys
+export const fetchAllDeliveryBoy = async (req, res) => {
+  try {
+    const deliveryBoys = await DeliveryBoy.find().populate(
+      "userId",
+      "name email"
+    );
+    res.status(200).json({ success: true, deliveryBoys });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const bolckToggleDeliveryBoy = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const deliveryBoy = await DeliveryBoy.findOne({ userId }).populate("userId");
+    if (!deliveryBoy || !deliveryBoy.userId) {
+      return res.status(404).json({ success: false, message: "Delivery boy not found" });
+    }
+    const user = deliveryBoy.userId;
+    user.isBlocked = !user.isBlocked; // Toggle block status
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: `Delivery boy ${user.isBlocked ? "blocked" : "unblocked"} successfully`,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

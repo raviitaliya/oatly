@@ -46,7 +46,6 @@ router.get("/ice-cream", IceCream);
 router.get("/soft-serve", SoftServe);
 router.get("/random-products", randomProducts);
 
-
 router.get("/analytics", verifyToken, authorize("admin"), getAnalytics);
 router.post("/inventory", verifyToken, authorize("admin"), manageInventory);
 router.get("/feedback", verifyToken, authorize("admin"), getFeedback);

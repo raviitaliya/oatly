@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-// Updated form validation schema
 const formSchema = z.object({
   productname: z.string().min(2, "Product name is required"),
   desription: z.string().min(10, "Description must be at least 10 characters"),
