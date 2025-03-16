@@ -33,6 +33,9 @@ const Checkout = () => {
     user,
   } = useProductStore();
 
+  console.log(user);
+  
+
   const totalAmount = cart
     .reduce((sum, item) => sum + item.totalPrice, 0)
     .toFixed(2);
@@ -43,7 +46,7 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     try {
-      const paymentSuccess = await placeOrder(); // Assuming placeOrder returns a Promise
+      const paymentSuccess = await placeOrder(); 
       if (paymentSuccess) {
         toast.success("Order placed successfully!", {
           duration: 3000,
@@ -58,7 +61,7 @@ const Checkout = () => {
     }
   };
 
-  // Fetch random products when the component mounts if random is empty
+  
   useEffect(() => {
     if (user && random.length === 0) {
       randomProduct();

@@ -1,7 +1,6 @@
 import { DeliveryBoy } from "../models/deliveryProfile.model.js";
 import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
-import { io } from "../index.js";
 
 // Get Delivery Boy Profile
 export const getDeliveryBoyProfile = async (req, res) => {
