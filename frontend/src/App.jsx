@@ -35,6 +35,10 @@ import Formal from "./pages/Formal";
 import Milkfacts from "./pages/Milkfacts";
 import Oatpilot from "./pages/Oatpilot";
 import Farmain from "./pages/farm/Farmain";
+import FarmerShakingFarmers from "./pages/FarmerShakingFarmers";
+import Dairyfacts from "./pages/Dairyfacts";
+import WisconsinSupperClubSwapsDairy from "./pages/WisconsinSupperClubSwapsDairy";
+import Petition from "./pages/Petition";
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -78,7 +82,7 @@ function App() {
           <Route path="accessibility" element={<Accessibility/>} />
           <Route path="career" element={<Careers/>} />
           <Route path="sustainability" element={<Formal/>} />
-          <Route path="farmain" element={<Farmain/>} />
+          <Route path="farmain" element={<Petition/>} />
         </Route>
       </Routes>
     </BrowserRouter>
