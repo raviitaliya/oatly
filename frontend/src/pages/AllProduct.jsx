@@ -16,13 +16,13 @@ const AllProduct = () => {
   }, []);
   console.log(products);
 
-  if (loading) return <div>Loading...</div>;
+  // if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <div className="flex flex-wrap gap-7 items-center justify-center">
-        <img src={MainImage} className="w-[700px] max-md:w-full" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7 px-4 md:px-8 lg:px-24">
+        <img src={MainImage} className="w-full max-w-[700px] md:col-span-2 lg:col-span-2 object-cover" />
 
         {products.map((product) => (
           <Link

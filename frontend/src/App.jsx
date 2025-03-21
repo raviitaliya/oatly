@@ -67,7 +67,7 @@ function App() {
           <Route path="/checkout" element={<Chackout />} />
           <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/delivery-boy" element={<DeliveryBoyDashbord />} />
-          <Route path="/404-error" element={<Error />} />
+          {/* <Route path="/404-error" element={<Error />} /> */}
           <Route path="oatly-who" element={<OatlyWho />} />
           <Route path="things-we-do" element={<ThingsWeDo/>}/>
           <Route path="addToCard" element={<AddToCard />} />

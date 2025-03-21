@@ -3,7 +3,7 @@ import React from "react";
 const CanvasSection = () => {
   return (
     <div
-      className="relative bg-black "
+      className="relative bg-black"
       style={{
         backgroundImage: `url(https://a.storyblok.com/f/107921/1738x1200/df94971a12/black-bg2.gif)`,
         backgroundSize: "cover",
@@ -14,7 +14,7 @@ const CanvasSection = () => {
         <a
           href="/oatly-who"
           aria-label="The Oatly Sustainability report update 2022"
-          className="absolute block transition-transform hover:scale-105"
+          className="absolute block transition-transform hover:scale-105 duration-300"
           style={{ width: "59.94vh", left: "11.544vh", top: "5%" }}
         >
           <img

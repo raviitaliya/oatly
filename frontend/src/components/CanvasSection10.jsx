@@ -35,7 +35,7 @@ const CanvasSection10 = () => {
         </div>
       </div>
 
-      <div className="absolute w-[28.86vh] left-[4.44vh] bottom-[28%] transition-transform hover:scale-105">
+      <div className="absolute w-[28.86vh] left-[4.44vh] bottom-[28%] transition-transform hover:scale-105 duration-300">
         <a
           href="https://oatfinder.oatly.com/"
           aria-label="Find coffee shops serving our Barista Edition Oat Drink."

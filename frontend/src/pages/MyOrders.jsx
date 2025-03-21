@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useProductStore } from "@/store/Store";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Form,
   FormControl,
@@ -31,6 +44,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useForm } from "react-hook-form";
+import Error from "./Error";
 
 function MyOrders() {
   const {
@@ -42,9 +56,10 @@ function MyOrders() {
     updateUser,
     loading,
     error,
-    logOut, 
+    logOut,
   } = useProductStore();
 
+  
   const [activeSection, setActiveSection] = useState("profile");
   const [showProfileForm, setShowProfileForm] = useState(false);
 
@@ -56,8 +71,12 @@ function MyOrders() {
   const currentOrders = orders.filter((order) =>
     ["Pending", "Assigned", "Out for Delivery"].includes(order.status)
   );
-  const deliveredOrders = orders.filter((order) => order.status === "Delivered");
-  const cancelledOrders = orders.filter((order) => order.status === "Cancelled");
+  const deliveredOrders = orders.filter(
+    (order) => order.status === "Delivered"
+  );
+  const cancelledOrders = orders.filter(
+    (order) => order.status === "Cancelled"
+  );
 
   const form = useForm({
     defaultValues: {
@@ -104,11 +123,15 @@ function MyOrders() {
 
   const statusVariants = {
     initial: { scale: 0.8, opacity: 0 },
-    animate: { scale: 1, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
+    animate: {
+      scale: 1,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
     exit: { scale: 0.8, opacity: 0, transition: { duration: 0.3 } },
   };
 
-  return (
+  return user?.role === "user" ? (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-lg flex flex-col">
@@ -183,7 +206,9 @@ function MyOrders() {
               <AvatarFallback>{user?.name?.charAt(0) || "A"}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium">{user?.name || "Admin User"}</p>
+              <p className="text-sm font-medium">
+                {user?.name || "Admin User"}
+              </p>
               <p className="text-xs text-gray-500">Administrator</p>
             </div>
           </div>
@@ -193,7 +218,6 @@ function MyOrders() {
       {/* Main Content */}
       <div className="flex-1 overflow-auto bg-gray-100">
         <div className="p-6">
-
           {error && (
             <Card className="mb-6 border-red-200 bg-red-50">
               <CardContent className="p-4">
@@ -214,19 +238,29 @@ function MyOrders() {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Profile Information</CardTitle>
-                    <Sheet open={showProfileForm} onOpenChange={setShowProfileForm}>
+                    <Sheet
+                      open={showProfileForm}
+                      onOpenChange={setShowProfileForm}
+                    >
                       <SheetTrigger asChild>
                         <Button>Edit Profile</Button>
                       </SheetTrigger>
-                      <SheetContent className="w-full sm:max-w-lg overflow-auto" side="right">
+                      <SheetContent
+                        className="w-full sm:max-w-lg overflow-auto"
+                        side="right"
+                      >
                         <SheetHeader>
                           <SheetTitle>Edit Profile</SheetTitle>
                           <SheetDescription>
-                            Update your personal information and delivery address
+                            Update your personal information and delivery
+                            address
                           </SheetDescription>
                         </SheetHeader>
                         <Form {...form}>
-                          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+                          <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-4 mt-4"
+                          >
                             <FormField
                               control={form.control}
                               name="name"
@@ -247,14 +281,19 @@ function MyOrders() {
                                 <FormItem>
                                   <FormLabel>Mobile</FormLabel>
                                   <FormControl>
-                                    <Input {...field} placeholder="Your Mobile" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Your Mobile"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
                             <Separator className="my-4" />
-                            <h3 className="text-md font-medium">Delivery Address</h3>
+                            <h3 className="text-md font-medium">
+                              Delivery Address
+                            </h3>
                             <FormField
                               control={form.control}
                               name="address1"
@@ -262,7 +301,10 @@ function MyOrders() {
                                 <FormItem>
                                   <FormLabel>Address Line 1</FormLabel>
                                   <FormControl>
-                                    <Input {...field} placeholder="Address Line 1" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Address Line 1"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -275,7 +317,10 @@ function MyOrders() {
                                 <FormItem>
                                   <FormLabel>Address Line 2</FormLabel>
                                   <FormControl>
-                                    <Input {...field} placeholder="Address Line 2" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Address Line 2"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -323,7 +368,10 @@ function MyOrders() {
                               />
                             </div>
                             <div className="flex justify-end gap-2 mt-6">
-                              <Button variant="outline" onClick={() => setShowProfileForm(false)}>
+                              <Button
+                                variant="outline"
+                                onClick={() => setShowProfileForm(false)}
+                              >
                                 Cancel
                               </Button>
                               <Button type="submit">Update Profile</Button>
@@ -337,27 +385,37 @@ function MyOrders() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="text-lg font-semibold mb-4">Personal Details</h3>
+                      <h3 className="text-lg font-semibold mb-4">
+                        Personal Details
+                      </h3>
                       <div className="space-y-2">
                         <div className="flex items-center">
                           <User className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Name:</span>
-                          <span className="ml-2">{user?.name || "Not specified"}</span>
+                          <span className="ml-2">
+                            {user?.name || "Not specified"}
+                          </span>
                         </div>
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Mobile:</span>
-                          <span className="ml-2">{user?.mobile || "Not specified"}</span>
+                          <span className="ml-2">
+                            {user?.mobile || "Not specified"}
+                          </span>
                         </div>
                         <div className="flex items-center">
                           <Mail className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Email:</span>
-                          <span className="ml-2">{user?.email || "Not specified"}</span>
+                          <span className="ml-2">
+                            {user?.email || "Not specified"}
+                          </span>
                         </div>
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold mb-4">Delivery Address</h3>
+                      <h3 className="text-lg font-semibold mb-4">
+                        Delivery Address
+                      </h3>
                       <div className="space-y-2">
                         <div className="flex items-start">
                           <Home className="h-4 w-4 mr-2 mt-1 text-gray-500" />
@@ -365,8 +423,7 @@ function MyOrders() {
                             <p>{user?.address1 || "No address specified"},</p>
                             {user?.city && (
                               <p>
-                                {user.city}, {user.state}{" "}
-                                {user.zipcode}
+                                {user.city}, {user.state} {user.zipcode}
                               </p>
                             )}
                           </div>
@@ -387,8 +444,12 @@ function MyOrders() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="text-sm text-gray-500">Active Orders</p>
-                            <p className="text-3xl font-bold">{currentOrders.length}</p>
+                            <p className="text-sm text-gray-500">
+                              Active Orders
+                            </p>
+                            <p className="text-3xl font-bold">
+                              {currentOrders.length}
+                            </p>
                           </div>
                           <Package className="h-8 w-8 text-blue-500" />
                         </div>
@@ -398,8 +459,12 @@ function MyOrders() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="text-sm text-gray-500">Delivered Orders</p>
-                            <p className="text-3xl font-bold">{deliveredOrders.length}</p>
+                            <p className="text-sm text-gray-500">
+                              Delivered Orders
+                            </p>
+                            <p className="text-3xl font-bold">
+                              {deliveredOrders.length}
+                            </p>
                           </div>
                           <CheckCircle className="h-8 w-8 text-green-500" />
                         </div>
@@ -409,8 +474,12 @@ function MyOrders() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="text-sm text-gray-500">Cancelled Orders</p>
-                            <p className="text-3xl font-bold">{cancelledOrders.length}</p>
+                            <p className="text-sm text-gray-500">
+                              Cancelled Orders
+                            </p>
+                            <p className="text-3xl font-bold">
+                              {cancelledOrders.length}
+                            </p>
                           </div>
                           <XCircle className="h-8 w-8 text-red-500" />
                         </div>
@@ -440,8 +509,12 @@ function MyOrders() {
                 <Card className="shadow-md">
                   <CardContent className="p-8 flex flex-col items-center justify-center">
                     <Package className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">No Current Orders</h3>
-                    <p className="text-gray-500 mt-2">All orders have been delivered or cancelled</p>
+                    <h3 className="text-xl font-medium text-gray-700">
+                      No Current Orders
+                    </h3>
+                    <p className="text-gray-500 mt-2">
+                      All orders have been delivered or cancelled
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
@@ -459,7 +532,9 @@ function MyOrders() {
                         <Card className="shadow-lg hover:shadow-xl transition-shadow border-l-4 border-blue-500">
                           <CardHeader className="pb-2">
                             <div className="flex justify-between items-center">
-                              <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
+                              <CardTitle className="text-lg">
+                                Order #{order.orderId}
+                              </CardTitle>
                               <motion.div
                                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                                   order.status === "Pending"
@@ -475,18 +550,26 @@ function MyOrders() {
                               </motion.div>
                             </div>
                             <CardDescription>
-                              Created on: {new Date(order.createdAt).toLocaleString()}
+                              Created on:{" "}
+                              {new Date(order.createdAt).toLocaleString()}
                             </CardDescription>
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-start space-x-4">
-                              {order.items && order.items.length > 0 && order.items[0].productImage ? (
+                              {order.items &&
+                              order.items.length > 0 &&
+                              order.items[0].productImage ? (
                                 <img
                                   src={order.items[0].productImage}
-                                  alt={order.items[0].productName || "Product Image"}
+                                  alt={
+                                    order.items[0].productName ||
+                                    "Product Image"
+                                  }
                                   className="w-24 h-24 object-cover rounded"
                                   onError={(e) => {
-                                    console.log(`Image failed to load for Order #${order.orderId}`);
+                                    console.log(
+                                      `Image failed to load for Order #${order.orderId}`
+                                    );
                                     e.target.src = "/fallback-image.png";
                                   }}
                                 />
@@ -498,16 +581,21 @@ function MyOrders() {
                               <div className="flex-1">
                                 <div className="flex justify-between">
                                   <p className="font-medium">Total Amount:</p>
-                                  <p className="font-bold">₹{order.totalAmount}</p>
+                                  <p className="font-bold">
+                                    ₹{order.totalAmount}
+                                  </p>
                                 </div>
                                 <div className="flex justify-between mt-1">
                                   <p className="font-medium">Items:</p>
                                   <p>{order.items.length}</p>
                                 </div>
                                 <div className="mt-2">
-                                  <p className="font-medium mb-1">Delivery Address:</p>
+                                  <p className="font-medium mb-1">
+                                    Delivery Address:
+                                  </p>
                                   <p className="text-sm text-gray-600">
-                                    {order.deliveryAddress?.address1}, {order.deliveryAddress?.city}
+                                    {order.deliveryAddress?.address1},{" "}
+                                    {order.deliveryAddress?.city}
                                   </p>
                                 </div>
                                 {order.status === "Pending" && (
@@ -527,8 +615,13 @@ function MyOrders() {
                               <p className="font-medium mb-2">Order Items:</p>
                               <div className="space-y-2">
                                 {order.items.map((item, index) => (
-                                  <div key={index} className="flex justify-between items-center">
-                                    <span className="text-sm">{item.productName}</span>
+                                  <div
+                                    key={index}
+                                    className="flex justify-between items-center"
+                                  >
+                                    <span className="text-sm">
+                                      {item.productName}
+                                    </span>
                                     <span className="text-sm font-medium">
                                       ₹{item.price} x {item.quantity}
                                     </span>
@@ -555,7 +648,10 @@ function MyOrders() {
             >
               <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Delivered Orders</h1>
-                <Badge variant="outline" className="px-3 py-1 text-sm bg-green-50">
+                <Badge
+                  variant="outline"
+                  className="px-3 py-1 text-sm bg-green-50"
+                >
                   {deliveredOrders.length} delivered
                 </Badge>
               </div>
@@ -564,8 +660,12 @@ function MyOrders() {
                 <Card className="shadow-md">
                   <CardContent className="p-8 flex flex-col items-center justify-center">
                     <CheckCircle className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">No Delivered Orders</h3>
-                    <p className="text-gray-500 mt-2">Your delivered orders will appear here</p>
+                    <h3 className="text-xl font-medium text-gray-700">
+                      No Delivered Orders
+                    </h3>
+                    <p className="text-gray-500 mt-2">
+                      Your delivered orders will appear here
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
@@ -577,24 +677,38 @@ function MyOrders() {
                     >
                       <CardHeader className="pb-2">
                         <div className="flex justify-between items-center">
-                          <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
-                          <Badge variant="success" className="bg-green-100 text-green-800">
+                          <CardTitle className="text-lg">
+                            Order #{order.orderId}
+                          </CardTitle>
+                          <Badge
+                            variant="success"
+                            className="bg-green-100 text-green-800"
+                          >
                             Delivered
                           </Badge>
                         </div>
                         <CardDescription>
-                          Delivered on: {new Date(order.deliveredAt || order.createdAt).toLocaleString()}
+                          Delivered on:{" "}
+                          {new Date(
+                            order.deliveredAt || order.createdAt
+                          ).toLocaleString()}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="flex items-start space-x-4">
-                          {order.items && order.items.length > 0 && order.items[0].productImage ? (
+                          {order.items &&
+                          order.items.length > 0 &&
+                          order.items[0].productImage ? (
                             <img
                               src={order.items[0].productImage}
-                              alt={order.items[0].productName || "Product Image"}
+                              alt={
+                                order.items[0].productName || "Product Image"
+                              }
                               className="w-24 h-24 object-cover rounded"
                               onError={(e) => {
-                                console.log(`Image failed to load for Order #${order.orderId}`);
+                                console.log(
+                                  `Image failed to load for Order #${order.orderId}`
+                                );
                                 e.target.src = "/fallback-image.png";
                               }}
                             />
@@ -613,9 +727,12 @@ function MyOrders() {
                               <p>{order.items.length}</p>
                             </div>
                             <div className="mt-2">
-                              <p className="font-medium mb-1">Delivery Address:</p>
+                              <p className="font-medium mb-1">
+                                Delivery Address:
+                              </p>
                               <p className="text-sm text-gray-600">
-                                {order.deliveryAddress?.address1}, {order.deliveryAddress?.city}
+                                {order.deliveryAddress?.address1},{" "}
+                                {order.deliveryAddress?.city}
                               </p>
                             </div>
                           </div>
@@ -625,8 +742,13 @@ function MyOrders() {
                           <p className="font-medium mb-2">Order Items:</p>
                           <div className="space-y-2">
                             {order.items.map((item, index) => (
-                              <div key={index} className="flex justify-between items-center">
-                                <span className="text-sm">{item.productName}</span>
+                              <div
+                                key={index}
+                                className="flex justify-between items-center"
+                              >
+                                <span className="text-sm">
+                                  {item.productName}
+                                </span>
                                 <span className="text-sm Sparrow font-medium">
                                   ₹{item.price} x {item.quantity}
                                 </span>
@@ -651,7 +773,10 @@ function MyOrders() {
             >
               <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Cancelled Orders</h1>
-                <Badge variant="outline" className="px-3 py-1 text-sm bg-red-50">
+                <Badge
+                  variant="outline"
+                  className="px-3 py-1 text-sm bg-red-50"
+                >
                   {cancelledOrders.length} cancelled
                 </Badge>
               </div>
@@ -660,8 +785,12 @@ function MyOrders() {
                 <Card className="shadow-md">
                   <CardContent className="p-8 flex flex-col items-center justify-center">
                     <XCircle className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">No Cancelled Orders</h3>
-                    <p className="text-gray-500 mt-2">Your cancelled orders will appear here</p>
+                    <h3 className="text-xl font-medium text-gray-700">
+                      No Cancelled Orders
+                    </h3>
+                    <p className="text-gray-500 mt-2">
+                      Your cancelled orders will appear here
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
@@ -673,24 +802,36 @@ function MyOrders() {
                     >
                       <CardHeader className="pb-2">
                         <div className="flex justify-between items-center">
-                          <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
-                          <Badge variant="destructive" className="bg-red-100 text-red-800">
+                          <CardTitle className="text-lg">
+                            Order #{order.orderId}
+                          </CardTitle>
+                          <Badge
+                            variant="destructive"
+                            className="bg-red-100 text-red-800"
+                          >
                             Cancelled
                           </Badge>
                         </div>
                         <CardDescription>
-                          Cancelled on: {new Date(order.createdAt).toLocaleString()}
+                          Cancelled on:{" "}
+                          {new Date(order.createdAt).toLocaleString()}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="flex items-start space-x-4">
-                          {order.items && order.items.length > 0 && order.items[0].productImage ? (
+                          {order.items &&
+                          order.items.length > 0 &&
+                          order.items[0].productImage ? (
                             <img
                               src={order.items[0].productImage}
-                              alt={order.items[0].productName || "Product Image"}
+                              alt={
+                                order.items[0].productName || "Product Image"
+                              }
                               className="w-24 h-24 object-cover rounded"
                               onError={(e) => {
-                                console.log(`Image failed to load for Order #${order.orderId}`);
+                                console.log(
+                                  `Image failed to load for Order #${order.orderId}`
+                                );
                                 e.target.src = "/fallback-image.png";
                               }}
                             />
@@ -709,9 +850,12 @@ function MyOrders() {
                               <p>{order.items.length}</p>
                             </div>
                             <div className="mt-2">
-                              <p className="font-medium mb-1">Delivery Address:</p>
+                              <p className="font-medium mb-1">
+                                Delivery Address:
+                              </p>
                               <p className="text-sm text-gray-600">
-                                {order.deliveryAddress?.address1}, {order.deliveryAddress?.city}
+                                {order.deliveryAddress?.address1},{" "}
+                                {order.deliveryAddress?.city}
                               </p>
                             </div>
                           </div>
@@ -721,8 +865,13 @@ function MyOrders() {
                           <p className="font-medium mb-2">Order Items:</p>
                           <div className="space-y-2">
                             {order.items.map((item, index) => (
-                              <div key={index} className="flex justify-between items-center">
-                                <span className="text-sm">{item.productName}</span>
+                              <div
+                                key={index}
+                                className="flex justify-between items-center"
+                              >
+                                <span className="text-sm">
+                                  {item.productName}
+                                </span>
                                 <span className="text-sm font-medium">
                                   ₹{item.price} x {item.quantity}
                                 </span>
@@ -740,6 +889,8 @@ function MyOrders() {
         </div>
       </div>
     </div>
+  ) : (
+    <Error msg="Only Logged In And Customer Can Access The Page..." />
   );
 }
 

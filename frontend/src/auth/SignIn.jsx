@@ -55,7 +55,7 @@ const SignIn = () => {
     // console.log("Token:", token);
     if (response && !error) {
       closeSignIn();
-      navigate("/home");
+      // navigate("/home");
     } else {
       toast.error("An unexpected error occurred", {
         duration: 3000,

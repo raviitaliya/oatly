@@ -1,17 +1,14 @@
-// controllers/order.controller.js
 import crypto from "crypto";
 import { User } from "../models/user.model.js";
 import { Order } from "../models/order.model.js";
 import { DeliveryBoy } from "../models/deliveryProfile.model.js";
 import Razorpay from "razorpay";
-import { Product } from "../models/addProduct.model.js";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_API_KEY,
   key_secret: process.env.RAZORPAY_API_SECRET,
 });
 
-// Create a New Order with Razorpay Payment ✔
 export const createOrder = async (req, res) => {
   const { items, totalAmount, location } = req.body;
   const userId = req.userId;
@@ -19,7 +16,9 @@ export const createOrder = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user || user.role !== "user") {
-      return res.status(403).json({ success: false, message: "Only users can place orders" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Only users can place orders" });
     }
 
     const amountInPaise = Math.round(totalAmount * 100);
@@ -32,7 +31,7 @@ export const createOrder = async (req, res) => {
 
     const pendingOrder = {
       userId,
-      items, // Pass all fields as received
+      items,
       totalAmount,
       deliveryAddress: {
         address1: user.address1,
@@ -64,40 +63,48 @@ export const createOrder = async (req, res) => {
   }
 };
 
-// Verify Payment and Confirm Order ✔
 export const verifyPayment = async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, items, totalAmount, deliveryAddress, location } = req.body;
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    items,
+    totalAmount,
+    deliveryAddress,
+    location,
+  } = req.body;
   const userId = req.userId;
 
   console.log("Received in verifyPayment:", req.body);
 
   try {
-    // Verify Razorpay signature
     const generatedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_API_SECRET)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
 
     if (generatedSignature !== razorpay_signature) {
-      return res.status(400).json({ success: false, message: "Invalid payment signature" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid payment signature" });
     }
 
-    // Verify payment status
     const payment = await razorpay.payments.fetch(razorpay_payment_id);
     if (payment.status !== "captured") {
-      return res.status(400).json({ success: false, message: "Payment not captured" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Payment not captured" });
     }
 
-    // Create new order with all item fields
     const orderData = {
       userId,
-      items: items.map(item => ({
+      items: items.map((item) => ({
         productName: item.productName,
-        quantity: Number(item.quantity), // Ensure quantity is a number
-        price: Number(item.price), // Ensure price is a number
+        quantity: Number(item.quantity),
+        price: Number(item.price),
         productImage: item.productImage,
       })),
-      totalAmount: Number(totalAmount), // Ensure totalAmount is a number
+      totalAmount: Number(totalAmount),
       deliveryAddress,
       razorpayOrderId: razorpay_order_id,
       razorpayPaymentId: razorpay_payment_id,
@@ -105,12 +112,12 @@ export const verifyPayment = async (req, res) => {
       location: location || { type: "Point", coordinates: [72.8311, 21.1702] },
     };
 
-    console.log("Order Data to Save:", orderData); // Debug before saving
+    // console.log("Order Data to Save:", orderData);
 
     const order = new Order(orderData);
     await order.save();
 
-    console.log("Saved Order:", order);
+    // console.log("Saved Order:", order);
 
     res.status(201).json({
       success: true,
@@ -132,50 +139,26 @@ export const verifyPayment = async (req, res) => {
 
 // Assign Order to Delivery Boy (Admin or Automated)
 export const assignOrder = async (req, res) => {
-  const { orderId, deliveryBoyId } = req.body;
+  const { orderId } = req.params;
+  const { deliveryBoyId } = req.body;
 
   try {
     const order = await Order.findById(orderId);
-    if (!order || order.status !== "Pending") {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Order not found or already assigned",
-        });
-    }
+    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
 
     const deliveryBoy = await DeliveryBoy.findById(deliveryBoyId);
-    if (
-      !deliveryBoy ||
-      !deliveryBoy.isAvailable ||
-      deliveryBoy.status !== "active"
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Delivery boy unavailable" });
-    }
+    if (!deliveryBoy) return res.status(404).json({ success: false, message: "Delivery boy not found" });
 
     order.deliveryBoyId = deliveryBoyId;
-    order.status = "Assigned";
-    order.assignedAt = new Date();
-    deliveryBoy.isAvailable = false;
+    order.status = "Out for Delivery";
     await order.save();
-    await deliveryBoy.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Order assigned successfully",
-      order: {
-        orderId: order._id,
-        deliveryBoyId: order.deliveryBoyId,
-        status: order.status,
-      },
-    });
+    res.status(200).json({ success: true, message: "Delivery boy assigned", order });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 // Get Order Details (User or Admin)
 export const getOrderDetails = async (req, res) => {
   const { orderId } = req.params;
@@ -223,12 +206,15 @@ export const getUserOrders = async (req, res) => {
   const userId = req.userId;
 
   try {
-    const orders = await Order.find({ userId }).populate("deliveryBoyId", "fullName mobile");
+    const orders = await Order.find({ userId }).populate(
+      "deliveryBoyId",
+      "fullName mobile"
+    );
     res.status(200).json({
       success: true,
       orders: orders.map((order) => ({
         orderId: order._id,
-        items: order.items.map(item => ({
+        items: order.items.map((item) => ({
           productName: item.productName,
           quantity: item.quantity,
           price: item.price,
@@ -310,12 +296,10 @@ export const autoAssignOrder = async (req, res) => {
   try {
     const order = await Order.findById(orderId);
     if (!order || order.status !== "Pending") {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Order not found or already assigned",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Order not found or already assigned",
+      });
     }
 
     const deliveryBoys = await DeliveryBoy.find({
@@ -346,6 +330,51 @@ export const autoAssignOrder = async (req, res) => {
         status: order.status,
       },
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("userId", "name email")
+      .populate("deliveryBoyId", "fullName mobile");
+    res.status(200).json({ success: true, orders });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  try {
+    const validStatuses = [
+      "Pending Payment",
+      "Active",
+      "Out for Delivery",
+      "Delivered",
+    ];
+    if (!validStatuses.includes(status)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid status" });
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order)
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+
+    order.status = status;
+    await order.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Order status updated", order });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

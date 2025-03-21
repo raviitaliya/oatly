@@ -36,7 +36,7 @@ const CanvasSection4 = () => {
         <a
           href="/things-we-do"
           aria-label="What are we doing, really? Apart from oats, that is. Come and look for yourself."
-          className="absolute w-[42.18vh] left-[17.76vh] top-[8%] block transition-transform hover:scale-105 cursor-hand"
+          className="absolute w-[42.18vh] left-[17.76vh] top-[8%] block transition-transform hover:scale-105 duration-300 cursor-hand"
         >
           <img
             src={things}
@@ -48,9 +48,8 @@ const CanvasSection4 = () => {
         </a>
 
         <a
-          href="/things-we-do/brainwashing/nespresso"
-          aria-label="Article - Oatly x Nespresso"
-          className="absolute w-[60.828vh] left-[20.424vh] top-[18%] block transition-transform hover:scale-105 cursor-hand"
+          href="/things-we-do"
+          className="absolute w-[60.828vh] left-[20.424vh] top-[18%] block transition-transform hover:scale-105 duration-300 cursor-hand"
         >
           <div className="flex flex-col">
             <img
@@ -70,9 +69,8 @@ const CanvasSection4 = () => {
         </a>
 
         <a
-          href="/things-we-do/stories/bring-oatly-to-your-campus"
-          aria-label="Article - Bring Oatly to Your Campus"
-          className="absolute w-[28.86vh] left-[19.98vh] top-[62%] block transition-transform hover:scale-105 cursor-hand"
+          href="/things-we-do"
+          className="absolute w-[28.86vh] left-[19.98vh] top-[62%] block transition-transform hover:scale-105 duration-300 cursor-hand"
         >
           <div className="flex flex-col cursor-hand">
             <img
@@ -92,9 +90,8 @@ const CanvasSection4 = () => {
         </a>
 
         <a
-          href="/things-we-do/stories/oatly-crash-capitol-hill-ice-cream-party"
-          aria-label="Article - Enter the Dairy Deprogramming Zone"
-          className="absolute w-[28.86vh] left-[53.28vh] top-[62%] block transition-transform hover:scale-105 cursor-pointer"
+          href="/things-we-do"
+          className="absolute w-[28.86vh] left-[53.28vh] top-[62%] block transition-transform hover:scale-105 duration-300 cursor-pointer"
         >
           <div className="flex flex-col cursor-hand">
             <img
@@ -116,7 +113,7 @@ const CanvasSection4 = () => {
         <a
           href="https://hey-barista.com/"
           aria-label="https://hey-barista.com/"
-          className="absolute w-[43.956vh] left-[92.52vh] top-[-3%] block transition-transform hover:scale-105 cursor-pointer"
+          className="absolute w-[43.956vh] left-[92.52vh] top-[-3%] block transition-transform hover:scale-105 duration-300 cursor-pointer"
         >
           <img
             src={mobile}

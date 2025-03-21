@@ -37,7 +37,6 @@ function ViewProduct() {
     addToCart,
     increaseQuantity,
     decreaseQuantity,
-    placeOrder,
   } = useProductStore();
 
   const product = cart.find((item) => item.id === id);
@@ -69,6 +68,10 @@ function ViewProduct() {
       openAddToCart();
     }
   };
+
+  const handleCheckout = () => {
+    navigate("/checkout");
+  }
 
   useEffect(() => {
     if (oneProduct && oneProduct._id === id) return;
@@ -124,7 +127,7 @@ function ViewProduct() {
   //   console.log(window);
   // };
 
-  if (loading) return <div>Loading...</div>;
+  // if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!oneProduct) return <div>No product found</div>;
 
@@ -206,7 +209,7 @@ function ViewProduct() {
               />
               <PaymentBtn
                 amount={totalPrice}
-                onClick={placeOrder}
+                onClick={handleCheckout}
                 disabled={loading}
               />
             </div>

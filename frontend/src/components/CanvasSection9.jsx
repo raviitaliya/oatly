@@ -4,7 +4,7 @@ import wisLogo from "../assets/home/wis-logo.svg";
 const CanvasSection9 = () => {
   return (
     <div className="relative sm:w-[10vh] w-[40.404vh] left-[650vh]">
-      <div className="absolute w-[33.3vh] left-[-45.08vh] top-[10%] transition-transform hover:scale-105 ">
+      <div className="absolute w-[33.3vh] left-[-45.08vh] top-[10%] transition-transform hover:scale-105 duration-300 ">
         <a
           href="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
           aria-label="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
@@ -22,10 +22,9 @@ const CanvasSection9 = () => {
         </a>
       </div>
 
-      <div className="absolute w-[51.06vh] left-[-25.656vh] top-[6%] transition-transform hover:scale-105 cursor-hand">
+      <div className="absolute w-[51.06vh] left-[-25.656vh] top-[6%] transition-transform hover:scale-105 duration-300 cursor-hand">
         <a
           href="/things-we-do"
-          aria-label="/things-we-do/brainwashing/will-it-swap/wisconsin-supper-club-swaps-dairy-with-oatly"
           className="block cursor-hand"
         >
           <div
