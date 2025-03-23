@@ -35,27 +35,34 @@ const SignIn = () => {
     });
   };
 
+  // console.log(user);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await signInUser(formData);
-    if (response.status === 200) {
-      toast.success("Login successful! ", {
-        duration: 3000,
-        style: {
-          background: "#4CAF50",
-          color: "white",
-        },
-      });
-      closeSignIn();
-    } else {
-      toast.error("An unexpected error occurred", {
-        duration: 3000,
-      });
-    }
-    Cookies.get("token");
-  };
+    try {
+      const response = await signInUser(formData);
 
+      if (response) {
+        toast.success("Login successful!", {
+          duration: 3000,
+          style: {
+            background: "#4CAF50",
+            color: "white",
+          },
+        });
+        closeSignIn();
+        // navigate("/home");
+      } else {
+        throw new Error(response?.message || "Login failed");
+      }
+    } catch (error) {
+      toast.error(error.message || "An unexpected error occurred", {
+        duration: 3000,
+      });
+      console.error("Login failed:", error.message);
+    }
+  };
   return (
     isSignInOpen && (
       <div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center p-4">
