@@ -35,13 +35,11 @@ const SignIn = () => {
     });
   };
 
-  // console.log(user);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Form Data:", formData);
+
     const response = await signInUser(formData);
-    if (response && !error) {
+    if (response.status === 200) {
       toast.success("Login successful! ", {
         duration: 3000,
         style: {
@@ -49,20 +47,15 @@ const SignIn = () => {
           color: "white",
         },
       });
-    }
-
-    Cookies.get("token");
-    // console.log("Token:", token);
-    if (response && !error) {
       closeSignIn();
-      // navigate("/home");
     } else {
       toast.error("An unexpected error occurred", {
         duration: 3000,
       });
-      console.error("Signup failed:", response?.message || "Unknown error");
     }
+    Cookies.get("token");
   };
+
   return (
     isSignInOpen && (
       <div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center p-4">
