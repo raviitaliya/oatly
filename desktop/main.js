@@ -1,44 +1,48 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const isDev = process.env.NODE_ENV === 'development';
 
-// Add this before creating the window
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
+let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
-    }
+    },
+    // Show loading state
+    show: false
   });
 
   // Load the app
-  if (isDev) {
-    console.log('Loading development server...');
-    mainWindow.loadURL('http://localhost:5173');
-    mainWindow.webContents.openDevTools();
-  } else {
-    console.log('Loading production build...');
-    mainWindow.loadFile(path.join(__dirname, '../frontend/dist/index.html'));
-  }
+  const startUrl = 'http://localhost:5173';
+  
+  mainWindow.loadURL(startUrl)
+    .then(() => {
+      console.log('URL loaded successfully');
+      mainWindow.show();
+    })
+    .catch((err) => {
+      console.error('Failed to load URL:', err);
+      // Try loading a local HTML file as fallback
+      mainWindow.loadFile(path.join(__dirname, 'loading.html'));
+    });
 
-  // Handle window state
-  mainWindow.on('maximize', () => {
-    mainWindow.webContents.send('window-maximized');
-  });
+  // Open DevTools for debugging
+  mainWindow.webContents.openDevTools();
 
-  mainWindow.on('unmaximize', () => {
-    mainWindow.webContents.send('window-unmaximized');
+  // Log any errors
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error('Failed to load:', errorCode, errorDescription);
   });
 }
 
 // This method will be called when Electron has finished initialization
 app.whenReady().then(() => {
+  console.log('App is ready, creating window...');
   createWindow();
 
   app.on('activate', function () {
@@ -67,4 +71,9 @@ ipcMain.on('app-minimize', () => {
 
 ipcMain.on('app-quit', () => {
   app.quit();
+});
+
+// Handle any uncaught errors
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
 });
