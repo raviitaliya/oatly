@@ -333,7 +333,7 @@ function DeliveryBoyDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Card className="shadow-lg mb-6">
+              <Card className="shadow-lg mb-6 ">
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Profile Information</CardTitle>

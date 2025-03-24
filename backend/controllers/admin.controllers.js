@@ -3,6 +3,8 @@ import { Feedback } from "../models/feedback.model.js";
 import { Order } from "../models/order.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import PDFDocument from "pdfkit";
+import { DeliveryBoy } from "../models/deliveryProfile.model.js";
+import { User } from "../models/user.model.js";
 
 export const LoginAdmin = async (req, res) => {
   const { username, password } = req.body;
@@ -16,7 +18,13 @@ export const LoginAdmin = async (req, res) => {
     } else {
       return res.status(200).json(200, "User Logged in Failed");
     }
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Error while logging in",
+      error: error.message,
+    });
+  }
 };
 
 export const AddProudct = async (req, res) => {
@@ -186,7 +194,7 @@ export const Cooking = async (req, res) => {
       status: 200,
       products,
       message: "Oat Drinks fetched successfully",
-    });
+    });   
   } catch (error) {
     return res.status(500).json({
       status: 500,
@@ -424,5 +432,314 @@ export const generateReport = async (req, res) => {
     doc.end();
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const getDashboardStats = async (req, res) => {
+  try {
+    // Get date ranges
+    const today = new Date();
+    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    // Get overview statistics
+    const [
+      totalRevenue,
+      monthlyRevenue,
+      activeDeliveryBoys,
+      totalUsers,
+      newUsers,
+      activeOrders,
+      productStats
+    ] = await Promise.all([
+      // Total revenue
+      Order.aggregate([
+        { $match: { status: "Delivered" } },
+        { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+      ]),
+
+      // Monthly revenue trend
+      Order.aggregate([
+        {
+          $match: {
+            status: "Delivered",
+            createdAt: { $gte: lastMonth }
+          }
+        },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+            revenue: { $sum: "$totalAmount" }
+          }
+        },
+        { $sort: { "_id": 1 } }
+      ]),
+
+      // Active delivery boys
+      DeliveryBoy.countDocuments({ 
+        isAvailable: true,
+        status: "active"
+      }),
+
+      // Total users
+      User.countDocuments({ role: "user" }),
+
+      // New users this month
+      User.countDocuments({
+        role: "user",
+        createdAt: { $gte: lastMonth }
+      }),
+
+      // Active orders
+      Order.countDocuments({
+        status: { $in: ["Pending", "Assigned", "Out for Delivery"] }
+      }),
+
+      // Product category statistics
+      Product.aggregate([
+        {
+          $group: {
+            _id: "$category",
+            count: { $sum: 1 },
+            avgPrice: { $avg: { $toDouble: "$price" } }
+          }
+        }
+      ])
+    ]);
+
+    // Get delivery analytics
+    const deliveryAnalytics = await Order.aggregate([
+      {
+        $match: {
+          status: "Delivered",
+          deliveredAt: { $gte: lastWeek }
+        }
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$deliveredAt" } },
+          deliveries: { $sum: 1 },
+          totalEarnings: { $sum: "$totalAmount" }
+        }
+      },
+      { $sort: { "_id": 1 } }
+    ]);
+
+    // Get top performing delivery partners
+    const topDeliveryPartners = await DeliveryBoy.aggregate([
+      {
+        $match: { status: "active" }
+      },
+      {
+        $sort: { totalDeliveries: -1, earnings: -1 }
+      },
+      {
+        $limit: 5
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails"
+        }
+      },
+      {
+        $unwind: "$userDetails"
+      }
+    ]);
+
+    // Get recent orders with populated data
+    const recentOrders = await Order.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .populate('userId', 'name email')
+      .populate('deliveryBoyId', 'fullName');
+
+    // Get category-wise sales
+    const categorySales = await Order.aggregate([
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: "$items.productName",
+          totalQuantity: { $sum: "$items.quantity" },
+          totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } }
+        }
+      },
+      { $sort: { totalRevenue: -1 } },
+      { $limit: 5 }
+    ]);
+
+    // Calculate revenue growth
+    const previousMonthRevenue = await Order.aggregate([
+      {
+        $match: {
+          status: "Delivered",
+          createdAt: {
+            $gte: new Date(today.getFullYear(), today.getMonth() - 2, today.getDate()),
+            $lt: lastMonth
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$totalAmount" }
+        }
+      }
+    ]);
+
+    const currentMonthRevenue = monthlyRevenue.reduce((acc, curr) => acc + curr.revenue, 0);
+    const previousMonthTotal = previousMonthRevenue[0]?.total || 0;
+    const revenueGrowth = previousMonthTotal === 0 ? 100 : 
+      ((currentMonthRevenue - previousMonthTotal) / previousMonthTotal) * 100;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        overview: {
+          totalRevenue: totalRevenue[0]?.total || 0,
+          activeDeliveryPartners: activeDeliveryBoys,
+          activeOrders,
+          totalUsers,
+          newUsers,
+          revenueGrowth: parseFloat(revenueGrowth.toFixed(2))
+        },
+        charts: {
+          monthlyRevenue,
+          deliveryAnalytics,
+          categorySales,
+          productStats
+        },
+        recentActivity: {
+          orders: recentOrders,
+          topDeliveryPartners
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error("Dashboard Stats Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching dashboard statistics",
+      error: error.message
+    });
+  }
+};
+
+// Add real-time analytics endpoint
+export const getRealtimeStats = async (req, res) => {
+  try {
+    const currentHour = new Date();
+    currentHour.setMinutes(0, 0, 0);
+
+    const [orderStats, deliveryStats] = await Promise.all([
+      // Order statistics for current hour
+      Order.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: currentHour }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            newOrders: { 
+              $sum: { $cond: [{ $eq: ["$status", "Pending"] }, 1, 0] }
+            },
+            processingOrders: { 
+              $sum: { $cond: [{ $eq: ["$status", "Assigned"] }, 1, 0] }
+            },
+            deliveredOrders: { 
+              $sum: { $cond: [{ $eq: ["$status", "Delivered"] }, 1, 0] }
+            },
+            totalRevenue: { 
+              $sum: { $cond: [{ $eq: ["$status", "Delivered"] }, "$totalAmount", 0] }
+            }
+          }
+        }
+      ]),
+
+      // Active delivery partners
+      DeliveryBoy.countDocuments({
+        isAvailable: true,
+        status: "active"
+      })
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        orders: orderStats[0] || {
+          newOrders: 0,
+          processingOrders: 0,
+          deliveredOrders: 0,
+          totalRevenue: 0
+        },
+        activeDeliveryPartners: deliveryStats
+      }
+    });
+
+  } catch (error) {
+    console.error("Realtime Stats Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching realtime statistics",
+      error: error.message
+    });
+  }
+};
+
+// Add inventory analytics endpoint
+export const getInventoryAnalytics = async (req, res) => {
+  try {
+    const [lowStock, categoryDistribution, productPerformance] = await Promise.all([
+      // Low stock products
+      Product.find({ stock: { $lt: 10 }})
+        .select('productname stock category price'),
+
+      // Category-wise product distribution
+      Product.aggregate([
+        {
+          $group: {
+            _id: "$category",
+            count: { $sum: 1 },
+            totalValue: { $sum: { $multiply: [{ $toDouble: "$price" }, "$stock"] } }
+          }
+        }
+      ]),
+
+      // Product performance (based on orders)
+      Order.aggregate([
+        { $unwind: "$items" },
+        {
+          $group: {
+            _id: "$items.productName",
+            totalOrdered: { $sum: "$items.quantity" },
+            revenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } }
+          }
+        },
+        { $sort: { totalOrdered: -1 } },
+        { $limit: 10 }
+      ])
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        lowStock,
+        categoryDistribution,
+        productPerformance
+      }
+    });
+
+  } catch (error) {
+    console.error("Inventory Analytics Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error fetching inventory analytics",
+      error: error.message
+    });
   }
 };

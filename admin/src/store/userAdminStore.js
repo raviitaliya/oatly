@@ -14,6 +14,52 @@ export const useAdminStore = create((set) => ({
   deliveryBoys: [],
   loading: false,
   error: null,
+  dashboardStats: {
+    totalRevenue: 0,
+    activeDeliveryPartners: 0,
+    activeOrders: 0,
+    totalUsers: 0,
+    newUsers: 0,
+    revenueGrowth: 0
+  },
+  salesData: {
+    labels: [],
+    datasets: [{
+      label: 'Monthly Revenue',
+      data: [],
+      backgroundColor: 'rgba(29, 78, 216, 0.5)',
+      borderColor: 'rgb(29, 78, 216)',
+      borderWidth: 1
+    }]
+  },
+  deliveryData: {
+    labels: [],
+    datasets: [{
+      label: 'Deliveries',
+      data: [],
+      fill: false,
+      borderColor: 'rgb(75, 192, 192)',
+      tension: 0.1
+    }]
+  },
+  recentActivity: {
+    orders: [],
+    topDeliveryPartners: []
+  },
+  inventoryStats: {
+    lowStock: [],
+    categoryDistribution: [],
+    productPerformance: []
+  },
+  realtimeStats: {
+    orders: {
+      newOrders: 0,
+      processingOrders: 0,
+      deliveredOrders: 0,
+      totalRevenue: 0
+    },
+    activeDeliveryPartners: 0
+  },
 
   // Add Product Action
   addProduct: async (productData, image) => {
@@ -278,4 +324,158 @@ export const useAdminStore = create((set) => ({
       });
     }
   },
+
+  fetchDashboardStats: async () => {
+    set({ loading: true, error: null });
+    try {
+      const [statsRes, inventoryRes] = await Promise.all([
+        api.get('/admin/dashboard/stats'),
+        api.get('/admin/dashboard/inventory')
+      ]);
+
+      if (statsRes.data.success) {
+        const { overview, charts, recentActivity } = statsRes.data.data;
+
+        // Initialize with empty arrays if data is undefined
+        const safeRecentActivity = {
+          orders: recentActivity?.orders || [],
+          topDeliveryPartners: recentActivity?.topDeliveryPartners || []
+        };
+
+        set({
+          dashboardStats: {
+            totalRevenue: overview?.totalRevenue || 0,
+            activeDeliveryPartners: overview?.activeDeliveryPartners || 0,
+            activeOrders: overview?.activeOrders || 0,
+            totalUsers: overview?.totalUsers || 0,
+            newUsers: overview?.newUsers || 0,
+            revenueGrowth: overview?.revenueGrowth || 0
+          },
+          salesData: {
+            labels: charts?.monthlyRevenue?.map(item => item._id) || [],
+            datasets: [{
+              label: 'Monthly Revenue',
+              data: charts?.monthlyRevenue?.map(item => item.revenue) || [],
+              backgroundColor: 'rgba(29, 78, 216, 0.5)',
+              borderColor: 'rgb(29, 78, 216)',
+              borderWidth: 1
+            }]
+          },
+          deliveryData: {
+            labels: charts?.deliveryAnalytics?.map(item => item._id) || [],
+            datasets: [{
+              label: 'Deliveries',
+              data: charts?.deliveryAnalytics?.map(item => item.deliveries) || [],
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+            }]
+          },
+          recentActivity: safeRecentActivity
+        });
+      }
+
+      if (inventoryRes.data.success) {
+        set({
+          inventoryStats: inventoryRes.data.data || {}
+        });
+      }
+
+      set({ loading: false });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to fetch dashboard data",
+        loading: false
+      });
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to fetch dashboard data",
+        variant: "destructive"
+      });
+    }
+  },
+
+  fetchRealtimeStats: async () => {
+    try {
+      const response = await api.get('/admin/dashboard/realtime');
+      
+      if (response.data.success) {
+        set({
+          realtimeStats: response.data.data
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching realtime stats:', error);
+      // Don't show toast for realtime errors to avoid spam
+    }
+  },
+
+  startRealtimeUpdates: () => {
+    // Setup WebSocket listeners for real-time updates
+    socket.on('orderStatusUpdate', (data) => {
+      set((state) => ({
+        realtimeStats: {
+          ...state.realtimeStats,
+          orders: {
+            ...state.realtimeStats.orders,
+            ...data
+          }
+        }
+      }));
+    });
+
+    socket.on('deliveryPartnerUpdate', (data) => {
+      set((state) => ({
+        realtimeStats: {
+          ...state.realtimeStats,
+          activeDeliveryPartners: data.activeCount
+        }
+      }));
+    });
+
+    // Start polling for realtime updates as backup
+    const interval = setInterval(() => {
+      useAdminStore.getState().fetchRealtimeStats();
+    }, 30000);
+
+    return () => {
+      clearInterval(interval);
+      socket.off('orderStatusUpdate');
+      socket.off('deliveryPartnerUpdate');
+    };
+  },
+
+  // Add export functionality
+  exportAnalytics: async (type) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get(`/admin/analytics/export/${type}`, {
+        responseType: 'blob'
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${type}_report.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      toast({
+        title: "Success",
+        description: "Report exported successfully"
+      });
+      set({ loading: false });
+    } catch (error) {
+      set({
+        error: "Failed to export report",
+        loading: false
+      });
+      toast({
+        title: "Error",
+        description: "Failed to export report",
+        variant: "destructive"
+      });
+    }
+  }
 }));
