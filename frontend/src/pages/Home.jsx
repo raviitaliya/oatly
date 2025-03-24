@@ -52,7 +52,7 @@ const Home = () => {
       onWheel={handleWheel}
     >
       <div className="w-full h-screen flex">
-        <CanvasSection />
+        {/* <CanvasSection />
         <CanvasSection1 />
         <CanvasSection2 />
         <CanvasSection3 />
@@ -62,7 +62,7 @@ const Home = () => {
         <CanvasSection7 />
         <CanvasSection8 />
         <CanvasSection9 />
-        <CanvasSection10 />
+        <CanvasSection10 /> */}
       </div>
 
       <div className="flex min-w-max gap-8 p-8">

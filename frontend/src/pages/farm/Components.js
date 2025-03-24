@@ -23,9 +23,14 @@ import Component22  from "./Farm22.jsx";
 import Component25  from "./Farm25.jsx";
 import Component26  from "./Farm26.jsx";
 import Component27  from "./Farm27.jsx";
+import Component28  from "./Farm28.jsx";
+import Component29  from "./Farm29.jsx";
+import Component30  from "./Farm30.jsx";
+import Component31  from "./Farm31.jsx";
+import Component32  from "./Farm32.jsx";
+import Component33  from "./Farm33.jsx";
+import Component34  from "./Farm34.jsx";
+import Component35  from "./Farm35.jsx";
 
 
-
-
-
-export const components = [ Component1, Component2, Component3, Component4, Component5, Component6, Component7, Component9, Component10, Component11,Component12, Component13,Component14,Component15, Component16, Component17, Component18 , Component19, Component20, Component21, Component22,Component25,Component26,Component27];
+export const components = [ Component1, Component2, Component3, Component4, Component5, Component6, Component7, Component9, Component10, Component11,Component12, Component13,Component14,Component15, Component16, Component17, Component18 , Component19, Component20, Component21, Component22,Component25,Component26,Component27,Component28,Component29,Component30,Component31,Component32,Component33,Component34,Component35];

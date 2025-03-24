@@ -20,6 +20,12 @@ import {
 } from "../controllers/admin.controllers.js";
 import { authorize, verifyToken } from "../middleware/verifyToken.js";
 
+import {
+  getDashboardStats,
+  getRealtimeStats,
+  getInventoryAnalytics
+} from '../controllers/admin.controllers.js';
+
 const router = express.Router();
 
 router.post("/login", LoginAdmin);
@@ -52,5 +58,10 @@ router.get("/feedback", verifyToken, authorize("admin"), getFeedback);
 router.get("/report", verifyToken, authorize("admin"), generateReport);
 
 router.get("/:id", getOneProduct);
+
+
+router.get('/dashboard/stats', getDashboardStats);
+router.get('/dashboard/realtime', getRealtimeStats);
+router.get('/dashboard/inventory', getInventoryAnalytics);
 
 export default router;

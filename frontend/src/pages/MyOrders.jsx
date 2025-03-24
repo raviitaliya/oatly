@@ -132,13 +132,10 @@ function MyOrders() {
   };
 
   return user?.role === "user" ? (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen pt-16 bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-lg flex flex-col">
-        <div className="p-4">
-          <h2 className="text-2xl font-bold text-gray-800">User Dashbord</h2>
-          <p className="text-sm text-gray-600">Manage Your Order</p>
-        </div>
+        
         <Separator />
         <ScrollArea className="flex-1">
           <div className="space-y-1 p-2">
@@ -209,7 +206,7 @@ function MyOrders() {
               <p className="text-sm font-medium">
                 {user?.name || "Admin User"}
               </p>
-              <p className="text-xs text-gray-500">Administrator</p>
+              <p className="text-xs text-gray-500">User</p>
             </div>
           </div>
         </div>
@@ -234,7 +231,7 @@ function MyOrders() {
               transition={{ duration: 0.5 }}
             >
               <h1 className="text-3xl font-bold mb-6">User Profile</h1>
-              <Card className="shadow-lg mb-6">
+              <Card className="shadow-lg mb-6 ">
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Profile Information</CardTitle>

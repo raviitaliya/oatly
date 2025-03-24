@@ -39,28 +39,28 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("Form Data:", formData);
-    const response = await signInUser(formData);
-    if (response && !error) {
-      toast.success("Login successful! ", {
-        duration: 3000,
-        style: {
-          background: "#4CAF50",
-          color: "white",
-        },
-      });
-    }
 
-    Cookies.get("token");
-    // console.log("Token:", token);
-    if (response && !error) {
-      closeSignIn();
-      // navigate("/home");
-    } else {
-      toast.error("An unexpected error occurred", {
+    try {
+      const response = await signInUser(formData);
+
+      if (response) {
+        toast.success("Login successful!", {
+          duration: 3000,
+          style: {
+            background: "#4CAF50",
+            color: "white",
+          },
+        });
+        closeSignIn();
+        // navigate("/home");
+      } else {
+        throw new Error(response?.message || "Login failed");
+      }
+    } catch (error) {
+      toast.error(error.message || "An unexpected error occurred", {
         duration: 3000,
       });
-      console.error("Signup failed:", response?.message || "Unknown error");
+      console.error("Login failed:", error.message);
     }
   };
   return (

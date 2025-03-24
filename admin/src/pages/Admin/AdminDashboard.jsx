@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
+=======
+import  { useState, useEffect } from "react";
+>>>>>>> 5115b47d60bf0db40c36d0ef6cabb8a3464df1ef
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,7 +30,6 @@ import {
   Truck,
   Settings,
   Bell,
-  LogOut,
   Trash2,
   Lock,
   Unlock,
@@ -50,6 +53,31 @@ import {
 } from "@/components/ui/select";
 import { useAdminStore } from "@/store/userAdminStore";
 import { useToast } from "@/hooks/use-toast";
+import { Bar, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const formSchema = z.object({
   productname: z.string().min(2, "Product name is required"),
@@ -85,11 +113,32 @@ function AdminDashboard() {
     assignDeliveryBoy,
     loading,
     error,
+    fetchDashboardStats,
+    startRealtimeUpdates,
+    dashboardStats,
+    salesData,
+    deliveryData,
+    recentActivity,
+    inventoryStats,
+    realtimeStats,
   } = useAdminStore();
   const [activeSection, setActiveSection] = useState("dashboard");
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [image, setImage] = useState(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Fetch initial dashboard data
+    fetchDashboardStats();
+
+    // Start realtime updates
+    const cleanup = startRealtimeUpdates();
+
+    // Cleanup on unmount
+    return () => {
+      cleanup();
+    };
+  }, []);
 
   useEffect(() => {
     if (activeSection === "users") fetchUsers();
@@ -136,6 +185,232 @@ function AdminDashboard() {
   );
   const deliveredOrders = orders.filter(
     (order) => order.status === "Delivered"
+  );
+
+  const renderDashboard = () => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-6 p-6"
+            >
+              {/* Overview Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-muted-foreground"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                </CardHeader>
+                <CardContent>
+            <div className="text-2xl font-bold">
+              ₹{dashboardStats.totalRevenue.toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +20.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Delivery Partners</CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 text-muted-foreground"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+              />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {dashboardStats.activeDeliveryPartners}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Currently active
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Orders</CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 text-muted-foreground"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {dashboardStats.activeOrders}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +180.1% from last hour
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 text-muted-foreground"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {dashboardStats.totalUsers}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              +19% from last month
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Sales Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Bar data={salesData} options={{
+              responsive: true,
+              plugins: {
+                legend: { position: 'top' },
+                title: {
+                  display: true,
+                  text: 'Monthly Sales Data'
+                }
+              }
+            }} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Delivery Analytics</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Line data={deliveryData} options={{
+              responsive: true,
+              plugins: {
+                legend: { position: 'top' },
+                title: {
+                  display: true,
+                  text: 'Weekly Delivery Trends'
+                }
+              }
+            }} />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Activity Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="orders" className="w-full">
+            <TabsList>
+              <TabsTrigger value="orders">Recent Orders</TabsTrigger>
+              <TabsTrigger value="delivery">Top Delivery Partners</TabsTrigger>
+            </TabsList>
+            <TabsContent value="orders">
+              <div className="space-y-4">
+                {recentActivity.orders.map(order => (
+                  <div key={order._id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium">Order #{order.razorpayOrderId}</p>
+                      <p className="text-sm text-gray-500">
+                        {order.items.length} items • ₹{order.totalAmount.toLocaleString()}
+                      </p>
+                    </div>
+                    <Badge className={
+                      order.status === "Delivered" ? "bg-green-100 text-green-800" :
+                      order.status === "Processing" ? "bg-blue-100 text-blue-800" :
+                      "bg-yellow-100 text-yellow-800"
+                    }>
+                      {order.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="delivery">
+              <div className="space-y-4">
+                {loading ? (
+                  <div className="flex justify-center p-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                  </div>
+                ) : recentActivity.topDeliveryPartners?.length === 0 ? (
+                  <p className="text-gray-500 text-center p-4">No top performers found</p>
+                ) : (
+                  recentActivity.topDeliveryPartners?.map(partner => (
+                    <div key={partner._id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium">
+                          {partner?.deliveryBoy?.fullName || partner?.name || 'Unknown Partner'}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {partner?.totalDeliveries || 0} deliveries • ₹{(partner?.totalEarnings || 0).toLocaleString()} earned
+                        </p>
+                      </div>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        Top Performer
+                      </Badge>
+                    </div>
+                  ))
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 
   return (
@@ -206,7 +481,6 @@ function AdminDashboard() {
               <Bell className="mr-2 h-4 w-4" />
               Notifications
             </Button>
-            
           </div>
         </ScrollArea>
       </div>
@@ -236,28 +510,8 @@ function AdminDashboard() {
             </Card>
           )}
 
-          {/* Dashboard Section */}
-          {activeSection === "dashboard" && !loading && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <CardTitle>Welcome to Admin Dashboard</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Manage products, users, delivery boys, and orders
-                    efficiently from this dashboard.
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
+          {activeSection === "dashboard" && !loading && renderDashboard()}
 
-          {/* Products Section */}
           {activeSection === "products" && !loading && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
