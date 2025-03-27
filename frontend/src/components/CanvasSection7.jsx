@@ -7,6 +7,7 @@ import amazing from "../assets/home/amazing.svg";
 import oat3 from "../assets/home/oat3.svg";
 import oat2 from "../assets/home/oat2.svg";
 import oat4 from "../assets/home/oat4.svg";
+import { Link } from "react-router-dom";
 
 const CanvasSection7 = () => {
   return (
@@ -36,7 +37,8 @@ const CanvasSection7 = () => {
       </div>
 
       <div className="absolute w-[33.3vh] left-[10.656vh] bottom-[-5%] transition-transform hover:scale-105 duration-300 cursor-pointer">
-        <a
+        <Link
+          to={"ditch-milk"}
           href="/things-we-do/"
           aria-label="Most people know that eating lots of meat isn’t cool for the planet, but not as many are aware that dairy products have a massive impact on the climate, too."
           className="block cursor-hand"
@@ -44,7 +46,7 @@ const CanvasSection7 = () => {
           <div className="relative w-full">
             <img src={ditch} alt="Ditch Milk Link" />
           </div>
-        </a>
+        </Link>
       </div>
 
       <div className="absolute w-[18.204vh] left-[-4.44vh] bottom-[20%]">

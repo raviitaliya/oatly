@@ -1,5 +1,6 @@
 import React from "react";
 import wisLogo from "../assets/home/wis-logo.svg";
+import { Link } from "react-router-dom";
 
 const CanvasSection9 = () => {
   return (
@@ -34,6 +35,7 @@ const CanvasSection9 = () => {
             <span className="sr-only">
               A Trailer for the Will it swap series
             </span>
+          
             <iframe
               src="https://player.vimeo.com/video/897003838?keyboard=0&muted=1&loop=1&dnt=0"
               width="240"
@@ -43,6 +45,7 @@ const CanvasSection9 = () => {
               className="absolute inset-0 w-full h-full cursor-hand"
               aria-hidden="true"
             />
+           
           </div>
         </a>
       </div>

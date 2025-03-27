@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react";
-=======
 import  { useState, useEffect } from "react";
->>>>>>> 5115b47d60bf0db40c36d0ef6cabb8a3464df1ef
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
