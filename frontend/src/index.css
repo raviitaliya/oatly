@@ -118,3 +118,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add padding to account for title bar */
+.app-content {
+  padding-top: 32px;
+  flex: 1;
+  overflow-y: auto;
+}

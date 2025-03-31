@@ -3,6 +3,7 @@ import api from "../api/api";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { io } from "socket.io-client";
+import { toast } from "react-hot-toast";
 
 const API = "http://localhost:8000/api";
 
@@ -90,6 +91,8 @@ export const useProductStore = create((set, get) => ({
   isOtpOpen: false,
   isResetOpen: false,
   isAddToCartOpen: false,
+
+  deliveryProfile: null,
 
   setProducts: (products) => set({ products }),
   setoatDrinkProducts: (oatDrinkProducts) => set({ oatDrinkProducts }),
@@ -295,6 +298,24 @@ export const useProductStore = create((set, get) => ({
       const response = await api.post("/auth/signup", formData);
 
       if (response.status === 200) {
+        if (formData.userType === 'deliveryBoy' && response.data.user) {
+          const profileData = {
+            fullName: formData.fullName,
+            mobile: formData.mobile,
+            vehicleDetails: formData.vehicleDetails,
+            isAvailable: formData.isAvailable,
+            latitude: formData.location.coordinates[1],
+            longitude: formData.location.coordinates[0]
+          };
+
+          try {
+            await api.post(`/delivery_boy/create/${response.data.user._id}`, profileData);
+          } catch (error) {
+            toast.error("Failed to create delivery profile");
+            console.error("Error creating delivery profile:", error);
+          }
+        }
+
         set({
           user: response.data.user,
           otp: response.data.user.verificatonToken,
@@ -304,12 +325,12 @@ export const useProductStore = create((set, get) => ({
         });
         return response;
       } else {
-        set({ User: null, loading: false, error: response.data.message });
+        set({ user: null, loading: false, error: response.data.message });
         return response;
       }
     } catch (error) {
       set({
-        User: null,
+        user: null,
         loading: false,
         error: error.response?.data?.message || "Failed to sign up",
       });
@@ -557,9 +578,8 @@ export const useProductStore = create((set, get) => ({
       const response = await api.get("/delivery_boy/profile");
       if (response.data.success) {
         set({
-          profile: response.data.profile,
+          deliveryProfile: response.data.profile,
           loading: false,
-          isAvailable: response.data.profile.isAvailable,
         });
       }
     } catch (error) {
@@ -570,38 +590,41 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-  createDeliveryBoyProfile: async (userId, profileData) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.post(
-        `/delivery_boy/create/${userId}`,
-        profileData
-      );
-      if (response.data.success)
-        set({ profile: response.data.profile, loading: false });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to create profile",
-      });
-    }
-  },
-
   updateDeliveryBoyProfile: async (profileData) => {
     set({ loading: true, error: null });
     try {
       const response = await api.put("/delivery_boy/profile", profileData);
       if (response.data.success) {
         set({
-          profile: response.data.profile,
+          deliveryProfile: response.data.profile,
           loading: false,
-          isAvailable: response.data.profile.isAvailable,
         });
       }
     } catch (error) {
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to update profile",
+      });
+    }
+  },
+
+  toggleDeliveryBoyAvailability: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/delivery_boy/toggle-availability");
+      if (response.data.success) {
+        set((state) => ({
+          deliveryProfile: {
+            ...state.deliveryProfile,
+            isAvailable: response.data.isAvailable
+          },
+          loading: false,
+        }));
+      }
+    } catch (error) {
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to toggle availability",
       });
     }
   },
@@ -669,20 +692,7 @@ export const useProductStore = create((set, get) => ({
         loading: false,
         error: error.response?.data?.message || "Failed to fetch earnings",
       });
-    }
-  },
-
-  toggleAvailability: async () => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.post("/delivery_boy/toggle-availability");
-      if (response.data.success)
-        set({ isAvailable: response.data.isAvailable, loading: false });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to toggle availability",
-      });
+      throw error;
     }
   },
 
@@ -810,119 +820,10 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/orders/my-orders");
-      console.log("Fetched Orders:", response.data.orders);
-      if (response.data.success) {
-        set({ orders: response.data.orders, loading: false });
-      } else {
-        set({ loading: false, error: response.data.message });
-      }
     } catch (error) {
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to fetch orders",
-      });
-    }
-  },
-
-  cancelOrder: async (orderId) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.post("/orders/cancel", { orderId });
-      if (response.data.success) {
-        set((state) => ({
-          orders: state.orders.map((order) =>
-            order.orderId === orderId
-              ? { ...order, status: "Cancelled" }
-              : order
-          ),
-          loading: false,
-        }));
-      }
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to cancel order",
-      });
-    }
-  },
-
-  submitFeedback: async (orderId, rating, comment) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.post("/orders/feedback", {
-        orderId,
-        rating,
-        comment,
-      });
-      if (response.data.success) set({ loading: false });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to submit feedback",
-      });
-    }
-  },
-
-  fetchAnalytics: async () => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.get("/admin/analytics");
-      if (response.data.success)
-        set({ analytics: response.data.analytics, loading: false });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to fetch analytics",
-      });
-    }
-  },
-
-  manageInventory: async (productData) => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.post("/admin/inventory", productData);
-      if (response.data.success)
-        set({
-          inventory: [...get().inventory, response.data.product],
-          loading: false,
-        });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to manage inventory",
-      });
-    }
-  },
-
-  fetchFeedback: async () => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.get("/admin/feedback");
-      if (response.data.success)
-        set({ feedback: response.data.feedback, loading: false });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to fetch feedback",
-      });
-    }
-  },
-
-  generateReport: async () => {
-    set({ loading: true, error: null });
-    try {
-      const response = await api.get("/admin/report", { responseType: "blob" });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "sales_report.pdf");
-      document.body.appendChild(link);
-      link.click();
-      set({ loading: false });
-    } catch (error) {
-      set({
-        loading: false,
-        error: error.response?.data?.message || "Failed to generate report",
       });
     }
   },

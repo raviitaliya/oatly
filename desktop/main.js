@@ -13,8 +13,11 @@ function createWindow() {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     },
-    // Show loading state
-    show: false
+    // Add custom title bar settings
+    frame: false, // Remove default window frame
+    titleBarStyle: 'hidden',
+    icon: path.join(__dirname, 'public', 'logo.png'), // Add window icon
+    backgroundColor: '#ffffff'
   });
 
   // Load the app
