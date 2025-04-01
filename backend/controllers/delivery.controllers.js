@@ -45,6 +45,7 @@ export const createDeliveryBoyProfile = async (req, res) => {
 
   try {
     const user = await User.findById(userId);
+    // Check if the user is a delivery boy
     if (!user || user.role !== "delivery_boy") {
       return res
         .status(400)
@@ -75,7 +76,6 @@ export const createDeliveryBoyProfile = async (req, res) => {
     }
 
     const deliveryBoy = new DeliveryBoy(deliveryBoyData);
-
     await deliveryBoy.save();
 
     res.status(201).json({

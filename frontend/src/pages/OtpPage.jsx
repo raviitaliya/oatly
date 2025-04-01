@@ -8,37 +8,131 @@ import { useProductStore } from "../store/Store";
 import close from "../assets/logo/close.svg";
 import cross from "../assets/logo/cross.svg";
 import { motion } from "framer-motion";
-
+import { toast } from "sonner";
 
 const OtpPage = () => {
   const isOtpOpen = useProductStore((state) => state.isOtpOpen);
   const closeOtp = useProductStore((state) => state.closeOtp);
   const verifyEmail = useProductStore((state) => state.verifyEmail);
   const loading = useProductStore((state) => state.loading);
-  const error = useProductStore((state) => state.error);
-
   const [otp, setOtp] = useState("");
-
-  isOtpOpen && console.log("OTP Page is open");
+  const [otpError, setOtpError] = useState("OTP is required");
 
   if (!isOtpOpen) return null;
 
   const handleOtpChange = (value) => {
-    console.log("OTP Entered:", value);
     setOtp(value);
+    if (!value) {
+      setOtpError("OTP is required");
+    } else if (value.length !== 6) {
+      setOtpError("OTP must be 6 digits");
+    } else if (!/^\d+$/.test(value)) {
+      setOtpError("OTP must contain only numbers");
+    } else {
+      setOtpError("");
+    }
+  };
+
+  const validateOTP = (otp) => {
+    if (!otp) {
+      setOtpError("OTP is required");
+      return false;
+    }
+    if (otp.length !== 6) {
+      setOtpError("OTP must be 6 digits");
+      return false;
+    }
+    if (!/^\d+$/.test(otp)) {
+      setOtpError("OTP must contain only numbers");
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting OTP:", otp);
+    
+    if (!validateOTP(otp)) {
+      toast.error(otpError, {
+        duration: 3000,
+        style: {
+          background: "#EF4444",
+          color: "white",
+          border: "none",
+        },
+        icon: "❌"
+      });
+      return;
+    }
 
-    const response = await verifyEmail(otp);
-    console.log("Response:", response);
+    try {
+      const response = await verifyEmail(otp);
 
-    if (response.success) {
-      closeOtp();
-    } else {
-      console.error("OTP verification failed:", response.message || "Unknown error");
+      if (response.success) {
+        toast.success("Email verified successfully!", {
+          duration: 3000,
+          style: {
+            background: "#10B981",
+            color: "white",
+            border: "none",
+          },
+          icon: "✅"
+        });
+        closeOtp();
+      } else {
+        toast.error(response.message || "Verification failed", {
+          duration: 3000,
+          style: {
+            background: "#EF4444",
+            color: "white",
+            border: "none",
+          },
+          icon: "❌"
+        });
+      }
+    } catch (err) {
+      if (err.response?.status === 400) {
+        toast.error("Invalid or expired verification code", {
+          duration: 3000,
+          style: {
+            background: "#F59E0B",
+            color: "white",
+            border: "none",
+          },
+          icon: "⚠️"
+        });
+      } else if (err.response?.status === 404) {
+        toast.error("OTP not found. Please request a new one", {
+          duration: 3000,
+          style: {
+            background: "#F59E0B",
+            color: "white",
+            border: "none",
+          },
+          icon: "⚠️"
+        });
+      } else if (err.response?.status === 429) {
+        toast.error("Too many attempts. Please try again later", {
+          duration: 3000,
+          style: {
+            background: "#F59E0B",
+            color: "white",
+            border: "none",
+          },
+          icon: "⚠️"
+        });
+      } else {
+        toast.error("An error occurred during verification", {
+          duration: 3000,
+          style: {
+            background: "#DC2626",
+            color: "white",
+            border: "none",
+          },
+          icon: "❌"
+        });
+      }
+      console.error("OTP verification error:", err);
     }
   };
 
@@ -69,7 +163,12 @@ const OtpPage = () => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label className="block text-2xl font-font2 mb-1 mr-5">Enter OTP</label>
-              <InputOTP maxLength={6} value={otp} onChange={handleOtpChange}>
+              <InputOTP 
+                maxLength={6} 
+                value={otp} 
+                onChange={handleOtpChange}
+                className={otpError ? "border-red-500" : ""}
+              >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -81,18 +180,20 @@ const OtpPage = () => {
                   <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
+              {otpError && (
+                <p className="text-red-500 text-sm mt-1">{otpError}</p>
+              )}
             </div>
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="w-40 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors"
+                className="w-40 bg-black text-white py-3 rounded font-bold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading}
               >
                 {loading ? "Verifying..." : "Submit"}
               </button>
             </div>
           </form>
-          
         </div>
       </div>
     </div>

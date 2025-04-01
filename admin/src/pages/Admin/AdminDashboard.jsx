@@ -1130,7 +1130,7 @@ function AdminDashboard() {
                                   Order #{order.razorpayOrderId}
                                 </p>
                                 <p className="text-sm text-gray-600">
-                                  User: {order.userId.name}
+                                  {/* User: {order.userId.name} */}
                                 </p>
                                 <p className="text-sm text-gray-600">
                                   Delivery:{" "}

@@ -298,24 +298,6 @@ export const useProductStore = create((set, get) => ({
       const response = await api.post("/auth/signup", formData);
 
       if (response.status === 200) {
-        if (formData.userType === 'deliveryBoy' && response.data.user) {
-          const profileData = {
-            fullName: formData.fullName,
-            mobile: formData.mobile,
-            vehicleDetails: formData.vehicleDetails,
-            isAvailable: formData.isAvailable,
-            latitude: formData.location.coordinates[1],
-            longitude: formData.location.coordinates[0]
-          };
-
-          try {
-            await api.post(`/delivery_boy/create/${response.data.user._id}`, profileData);
-          } catch (error) {
-            toast.error("Failed to create delivery profile");
-            console.error("Error creating delivery profile:", error);
-          }
-        }
-
         set({
           user: response.data.user,
           otp: response.data.user.verificatonToken,
@@ -392,7 +374,7 @@ export const useProductStore = create((set, get) => ({
         console.log("Login successful:", response.data);
         return response;
       } else {
-        set({ user: null, loading: false, error: response.data.message });
+        set({ user: null, loading: false, errorf: response.data.message });
       }
     } catch (error) {
       set({

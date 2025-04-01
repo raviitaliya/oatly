@@ -18,7 +18,7 @@ const SignUp = () => {
     mobile: "",
     password: "",
     confpassword: "",
-    
+
     // Regular user fields
     primaryMobile: "",
     address1: "",
@@ -29,8 +29,6 @@ const SignUp = () => {
     zipcode: "",
 
     // Delivery boy specific fields
-    fullName: "",
-    vehicleDetails: "",
     isAvailable: true,
     status: "active",
     location: {
@@ -57,7 +55,7 @@ const SignUp = () => {
             <h3 className="text-xl text-gray-500 text-center font-font2 mb-8">
               Choose how you want to be part of our community
             </h3>
-            
+
             <div className="flex gap-6 justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -76,7 +74,7 @@ const SignUp = () => {
                 Delivery Partner
               </motion.button>
             </div>
-            
+
             <button
               onClick={closeSignUp}
               className="absolute top-[-10px] right-4 text-gray-600 hover:text-black"
@@ -95,13 +93,14 @@ const SignUp = () => {
     );
   }
 
-  // Modify validation functions for delivery boy
+
+
   const validateStep1 = () => {
     const stepErrors = {};
     if (userType === 'deliveryBoy') {
       if (!formData.name.trim()) {
-        stepErrors.name = "Username is required";
-        toast.error("Username is required");
+        stepErrors.name = "Name is required";
+        toast.error("Name is required");
       }
       if (!formData.email.trim()) {
         stepErrors.email = "Email is required";
@@ -109,10 +108,6 @@ const SignUp = () => {
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
         stepErrors.email = "Please enter a valid email";
         toast.error("Please enter a valid email");
-      }
-      if (!formData.fullName.trim()) {
-        stepErrors.fullName = "Full name is required";
-        toast.error("Full name is required");
       }
       if (!formData.mobile.trim()) {
         stepErrors.mobile = "Mobile number is required";
@@ -153,10 +148,6 @@ const SignUp = () => {
   const validateStep2 = () => {
     const stepErrors = {};
     if (userType === 'deliveryBoy') {
-      if (!formData.vehicleDetails?.trim()) {
-        stepErrors.vehicleDetails = "Vehicle details are required";
-        toast.error("Vehicle details are required");
-      }
       if (!formData.password) {
         stepErrors.password = "Password is required";
         toast.error("Password is required");
@@ -199,7 +190,7 @@ const SignUp = () => {
 
   const validateStep3 = () => {
     const stepErrors = {};
-    
+
     // Address validation
     if (!formData.address1?.trim()) {
       stepErrors.address1 = "Building name and number is required";
@@ -225,7 +216,7 @@ const SignUp = () => {
       stepErrors.zipcode = "Zipcode is required";
       toast.error("Zipcode is required");
     }
-    
+
     if (!formData.primaryMobile?.trim()) {
       stepErrors.primaryMobile = "Primary mobile number is required";
       toast.error("Primary mobile number is required");
@@ -233,35 +224,10 @@ const SignUp = () => {
       stepErrors.primaryMobile = "Please enter a valid 10-digit mobile number";
       toast.error("Please enter a valid 10-digit mobile number");
     }
-    
+
     setErrors(stepErrors);
     return Object.keys(stepErrors).length === 0;
   };
-
-  // Modify the form rendering based on user type
-  const renderDeliveryBoyFields = () => (
-    <motion.div className="space-y-6">
-      {renderInput("fullName", "Full Name", "text", "Enter your full name as per documents")}
-      {renderInput("mobile", "Mobile Number", "tel", "Enter your contact number")}
-      {renderInput("vehicleDetails", "Vehicle Details", "text", "Enter vehicle model and registration number")}
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="isAvailable"
-          name="isAvailable"
-          checked={formData.isAvailable}
-          onChange={(e) => setFormData({
-            ...formData,
-            isAvailable: e.target.checked
-          })}
-          className="w-4 h-4"
-        />
-        <label htmlFor="isAvailable" className="text-xl font-font2">
-          Available for deliveries
-        </label>
-      </div>
-    </motion.div>
-  );
 
   // Modify the step content rendering
   const renderStepContent = () => {
@@ -278,9 +244,8 @@ const SignUp = () => {
               className="h-[450px]"
             >
               <motion.div className="space-y-6">
-                {renderInput("name", "Username", "text", "Choose a username")}
+                {renderInput("name", "Name", "text", "Enter your full name")}
                 {renderInput("email", "Email", "email", "Enter your email")}
-                {renderInput("fullName", "Full Name", "text", "Enter your full name")}
                 {renderInput("mobile", "Mobile", "tel", "Enter your mobile number")}
               </motion.div>
             </motion.div>
@@ -296,7 +261,6 @@ const SignUp = () => {
               className="h-[450px]"
             >
               <motion.div className="space-y-6">
-                {renderInput("vehicleDetails", "Vehicle Details", "text", "Enter vehicle model and registration")}
                 {renderInput("password", "Password", "password", "Create a strong password")}
                 {renderInput("confpassword", "Confirm Password", "password", "Confirm your password")}
                 <div className="flex items-center space-x-2">
@@ -318,6 +282,26 @@ const SignUp = () => {
               </motion.div>
             </motion.div>
           );
+        case 3:
+          return (
+            <motion.div
+              key="step3"
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -300, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="h-[450px]"
+            >
+              <div className="space-y-6 px-1 py-1 space-x-1 overflow-y-auto max-h-[430px]">
+                {renderInput("address1", "Building Name & Number", "text", "Enter building name and number")}
+                {renderInput("address2", "Street Address", "text", "Enter street name, area, landmark etc.")}
+                {renderInput("city", "City", "text", "Enter your city")}
+                {renderInput("state", "State", "text", "Enter your state")}
+                {renderInput("country", "Country", "text", "Enter your country")}
+                {renderInput("zipcode", "Zipcode", "text", "Enter your zipcode")}
+              </div>
+            </motion.div>
+          );
       }
     } else {
       // Original user registration steps remain the same
@@ -325,73 +309,86 @@ const SignUp = () => {
     }
   };
 
+  console.log(formData.name);
+
   // Modify handleSubmit for delivery boy
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
 
-    if (userType === 'deliveryBoy') {
-      const isValid = validateStep2();
-      if (!isValid) return;
-
-      try {
-        if (!navigator.geolocation) {
-          toast.error("Geolocation is not supported by your browser");
-          return;
-        }
-
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, (error) => {
-            toast.error("Please enable location services to continue");
-            console.error("Location error:", error);
-            reject(error);
-          });
-        });
-
-        const submitData = {
-          ...formData,
-          userType,
-          location: {
-            type: "Point",
-            coordinates: [position.coords.longitude, position.coords.latitude]
-          }
-        };
-
-        // Remove any undefined or null values
-        Object.keys(submitData).forEach(key => {
-          if (submitData[key] === undefined || submitData[key] === null) {
-            delete submitData[key];
-          }
-        });
-
-        await submitSignupData(submitData);
-      } catch (err) {
-        toast.error("Location access is required for delivery partners");
-      }
-    } else {
-      // Regular user submission logicYY
-      if (step !== 3) return;
-      const isValid = validateStep3();
-      if (!isValid) return;
-      await submitSignupData({ ...formData, userType });
+    // Validate the current step
+    let isValid = false;
+    switch (step) {
+      case 1:
+        isValid = validateStep1();
+        break;
+      case 2:
+        isValid = validateStep2();
+        break;
+      case 3:
+        isValid = validateStep3();
+        break;
     }
-  };
 
-  const submitSignupData = async (data) => {
+    if (!isValid) return;
+
+    // Prepare signup data
+    const signupData = {
+      ...formData,
+      role: userType === 'deliveryBoy' ? 'delivery_boy' : 'user'
+    };
+
     try {
-      const response = await signUpUser(data);
+      const response = await signUpUser(signupData);
 
-      if (response.status === 200 && !error) {
-        toast.success("Registration successful. Please verify your OTP.", {
+      if (response.status === 200) {
+        // Success toast with green background
+        toast.success("Registration successful! Please verify your OTP.", {
           duration: 3000,
-          style: { background: "#4CAF50", color: "white" },
+
+          icon: "✅"
         });
         closeSignUp();
         openOtp();
       } else {
-        toast.error(response?.data?.message || "Something went wrong during signup");
+        toast.error(response?.data?.message || "Registration failed. Please try again.", {
+          duration: 3000,
+        });
       }
     } catch (err) {
-      toast.error("An unexpected error occurred");
+      if (err.response?.status >= 400) {
+        toast.error("This email or username is already registered.", {
+          duration: 3000,
+          style: {
+            color: "white",
+            border: "none",
+          },
+          icon: "⚠️"
+        });
+      } else if (err.response?.status === 400) {
+        toast.error(err.response?.data?.message || "Please check your information and try again.", {
+          duration: 3000,
+          style: {
+            background: "#EF4444", // Red background
+            color: "white",
+            border: "none",
+          },
+          icon: "❌"
+        });
+      } else {
+        // Generic error
+        toast.error("An unexpected error occurred. Please try again later.", {
+          duration: 3000,
+          style: {
+            background: "#DC2626", // Dark red background
+            color: "white",
+            border: "none",
+          },
+          icon: "❌"
+        });
+      }
+
+      // Log error for debugging
+      console.error("Signup Error:", err);
     }
   };
 
@@ -404,10 +401,10 @@ const SignUp = () => {
 
   const handleNext = () => {
     let isValid = false;
-    
+
     console.log("Current step:", step);
     console.log("User type:", userType);
-    
+
     switch (step) {
       case 1:
         isValid = validateStep1();
@@ -416,25 +413,21 @@ const SignUp = () => {
           setErrors({});
         }
         break;
-        
+
       case 2:
-        if (userType === 'deliveryBoy') {
-          isValid = validateStep2();
+        isValid = validateStep2();
+        if (isValid) {
+          setStep(3);
+          setErrors({});
+        }
+        break;
+
+      case 3:
+        if (userType === 'deliveryBoy' || userType === 'user') {
+          isValid = validateStep3();
           if (isValid) {
             handleSubmit();
           }
-        } else {
-          isValid = validateStep2();
-          if (isValid) {
-            setStep(3);
-            setErrors({});
-          }
-        }
-        break;
-        
-      case 3:
-        if (userType === 'user') {
-          handleSubmit();
         }
         break;
     }
@@ -452,9 +445,8 @@ const SignUp = () => {
         name={name}
         value={formData[name]}
         onChange={handleChange}
-        className={`w-full px-3 py-[6px] border ${
-          errors[name] ? "border-red-500" : "border-gray-300"
-        } rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl`}
+        className={`w-full px-3 py-[6px] border ${errors[name] ? "border-red-500" : "border-gray-300"
+          } rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl`}
         placeholder={placeholder}
       />
       {errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>}
@@ -495,115 +487,59 @@ const SignUp = () => {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <AnimatePresence mode="wait">
-              {userType === 'deliveryBoy' ? (
-                // Delivery Boy Steps
-                <>
-                  {step === 1 && (
-                    <motion.div
-                      key="step1"
-                      initial={{ x: 300, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -300, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
-                      className="h-[450px]"
-                    >
-                      <motion.div className="space-y-6">
-                        {renderInput("name", "Username", "text", "Choose a username")}
-                        {renderInput("email", "Email", "email", "Enter your email")}
-                        {renderInput("fullName", "Full Name", "text", "Enter your full name")}
-                        {renderInput("mobile", "Mobile", "tel", "Enter your mobile number")}
-                      </motion.div>
-                    </motion.div>
-                  )}
-                  {step === 2 && (
-                    <motion.div
-                      key="step2"
-                      initial={{ x: 300, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -300, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
-                      className="h-[450px]"
-                    >
-                      <motion.div className="space-y-6">
-                        {renderInput("vehicleDetails", "Vehicle Details", "text", "Enter vehicle model and registration")}
-                        {renderInput("password", "Password", "password", "Create a strong password")}
-                        {renderInput("confpassword", "Confirm Password", "password", "Confirm your password")}
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            id="isAvailable"
-                            name="isAvailable"
-                            checked={formData.isAvailable}
-                            onChange={(e) => setFormData({
-                              ...formData,
-                              isAvailable: e.target.checked
-                            })}
-                            className="w-4 h-4"
-                          />
-                          <label htmlFor="isAvailable" className="text-xl font-font2">
-                            Available for deliveries
-                          </label>
-                        </div>
-                      </motion.div>
-                    </motion.div>
-                  )}
-                </>
-              ) : (
-                // Regular User Steps (keep existing code for steps 1, 2, and 3)
-                <>
-                  {step === 1 && (
-                    <motion.div
-                      key="step1"
-                      initial={{ x: 300, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -300, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
-                      className="h-[450px]"
-                    >
-                      <motion.div className="space-y-6">
-                        {renderInput("name", "Name", "text", "Enter your name")}
-                        {renderInput("username", "Username", "text", "Enter your username")}
-                        {renderInput("email", "Email", "email", "Enter your email")}
-                        {renderInput("mobile", "Mobile", "text", "Enter your mobile number")}
-                      </motion.div>
-                    </motion.div>
-                  )}
-                  {step === 2 && (
-                    <motion.div
-                      key="step2"
-                      initial={{ x: 300, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -300, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
-                      className="h-[450px]"
-                    >
-                      <motion.div className="space-y-6">
-                        {renderInput("primaryMobile", "Primary Mobile", "text", "Enter your primary mobile number")}
-                        {renderInput("password", "Password", "password", "Enter your password")}
-                        {renderInput("confpassword", "Confirm Password", "password", "Confirm your password")}
-                      </motion.div>
-                    </motion.div>
-                  )}
-                  {step === 3 && (
-                    <motion.div
-                      key="step3"
-                      initial={{ x: 300, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: -300, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
-                      className="h-[450px]"
-                    >
-                      <div className="space-y-6 px-1 py-1 space-x-1 overflow-y-auto max-h-[430px]">
-                        {renderInput("address1", "Building Name & Number", "text", "Enter building name and number")}
-                        {renderInput("address2", "Street Address", "text", "Enter street name, area, landmark etc.")}
-                        {renderInput("city", "City", "text", "Enter your city")}
-                        {renderInput("state", "State", "text", "Enter your state")}
-                        {renderInput("country", "Country", "text", "Enter your country")}
-                        {renderInput("zipcode", "Zipcode", "text", "Enter your zipcode")}
-                      </div>
-                    </motion.div>
-                  )}
-                </>
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
+                  className="h-[450px]"
+                >
+                  <motion.div className="space-y-6">
+                    {renderInput("name", "Name", "text", "Enter your name")}
+                    {renderInput("username", "Username", "text", "Enter your username")}
+                    {renderInput("email", "Email", "email", "Enter your email")}
+                    {renderInput("mobile", "Mobile", "text", "Enter your mobile number")}
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
+                  className="h-[450px]"
+                >
+                  <motion.div className="space-y-6">
+                    {renderInput("primaryMobile", "Primary Mobile", "text", "Enter your primary mobile number")}
+                    {renderInput("password", "Password", "password", "Enter your password")}
+                    {renderInput("confpassword", "Confirm Password", "password", "Confirm your password")}
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ x: 300, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -300, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
+                  className="h-[450px]"
+                >
+                  <div className="space-y-6 px-1 py-1 space-x-1 overflow-y-auto max-h-[430px]">
+                    {renderInput("address1", "Building Name & Number", "text", "Enter building name and number")}
+                    {renderInput("address2", "Street Address", "text", "Enter street name, area, landmark etc.")}
+                    {renderInput("city", "City", "text", "Enter your city")}
+                    {renderInput("state", "State", "text", "Enter your state")}
+                    {renderInput("country", "Country", "text", "Enter your country")}
+                    {renderInput("zipcode", "Zipcode", "text", "Enter your zipcode")}
+                  </div>
+                </motion.div>
               )}
             </AnimatePresence>
             <div className="flex justify-between">
@@ -627,7 +563,7 @@ const SignUp = () => {
               >
                 {loading ? (
                   <Loader2 className="h-5 w-5 animate-spin mx-auto" />
-                ) : (userType === 'deliveryBoy' && step === 2) || (userType === 'user' && step === 3) ? (
+                ) : step === 3 ? (
                   "Submit"
                 ) : (
                   "Next"
