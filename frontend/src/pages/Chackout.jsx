@@ -34,7 +34,6 @@ const Checkout = () => {
   } = useProductStore();
 
   console.log(user);
-  
 
   const totalAmount = cart
     .reduce((sum, item) => sum + item.totalPrice, 0)
@@ -46,7 +45,7 @@ const Checkout = () => {
 
   const handlePlaceOrder = async () => {
     try {
-      const paymentSuccess = await placeOrder(); 
+      const paymentSuccess = await placeOrder();
       if (paymentSuccess) {
         toast.success("Order placed successfully!", {
           duration: 3000,
@@ -61,7 +60,6 @@ const Checkout = () => {
     }
   };
 
-  
   useEffect(() => {
     if (user && random.length === 0) {
       randomProduct();
@@ -92,7 +90,7 @@ const Checkout = () => {
   }
 
   return user ? (
-    <>
+    <div className="bg-gray-100">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -239,13 +237,12 @@ const Checkout = () => {
               </div>
             </div>
           </div>
-
-          <section className="mt-8">
-            <img src={animation} alt="Animation" className="w-full" />
-          </section>
         </div>
       </motion.div>
-      <section className="mt-16">
+      <section className="mt-8 bg-gray-100">
+        <img src={animation} alt="Animation" className="w-full" />
+      </section>
+      <section className="mt-16 bg-gray-100">
         <h1 className="text-[32px] sm:text-[40px] md:text-[52px] font-bold font-font1 mb-4 text-center">
           Our Popular Products
         </h1>
@@ -273,7 +270,7 @@ const Checkout = () => {
 
       <OatlyTv />
       <Footer />
-    </>
+    </div>
   ) : (
     <Error msg="Only Logged In Users Can Access This Page..." />
   );
