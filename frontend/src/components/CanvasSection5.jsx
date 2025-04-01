@@ -9,6 +9,7 @@ import oat1 from "../assets/home/oat1.svg";
 import oat5 from "../assets/home/oat5.svg";
 import oat2 from "../assets/home/oat2.svg";
 import tape from "../assets/home/tape.svg";
+import { Link } from "react-router-dom";
 
 const CanvasSection5 = () => {
   return (
@@ -43,7 +44,8 @@ const CanvasSection5 = () => {
       </div>
 
       <div className="absolute w-[104.34vh] left-[35.52vh] top-[3%] transition-transform hover:scale-105 duration-300 cursor-pointer">
-        <a
+        <Link
+          to={"/farm"}
           href="/things-we-do/"
           aria-label="/things-we-do/stories/the-farm"
           className="block cursor-hand"
@@ -57,7 +59,7 @@ const CanvasSection5 = () => {
               sizes="104.34vh"
             />
           </div>
-        </a>
+        </Link>
       </div>
 
       <div className="absolute w-[24.42vh] left-[124.32vh] top-[8%]">
@@ -94,7 +96,8 @@ const CanvasSection5 = () => {
       </div>
 
       <div className="absolute w-[68.82vh] left-[75.48vh] bottom-[1%] transition-transform hover:scale-105 duration-300 cursor-pointer">
-        <a
+        <Link 
+        to={"/farmer-shaking"}
           href="/things-we-do"
           aria-label="How can we feed more people using the same earth? Farmer Adam Arnesson and his colleagues decided to answer the question."
           className="block cursor-hand"
@@ -106,7 +109,7 @@ const CanvasSection5 = () => {
               className="w-full h-auto object-cover"
             />
           </div>
-        </a>
+        </Link>
       </div>
 
       <div className="absolute w-[5.772vh] left-[-8.88vh] top-[6%]">

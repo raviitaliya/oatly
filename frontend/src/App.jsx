@@ -39,6 +39,7 @@ import FarmerShakingFarmers from "./pages/FarmerShakingFarmers";
 import Dairyfacts from "./pages/Dairyfacts";
 import WisconsinSupperClubSwapsDairy from "./pages/WisconsinSupperClubSwapsDairy";
 import Petition from "./pages/Petition";
+ 
 
 function App() {
   const { fetchUser } = useProductStore();
@@ -82,7 +83,12 @@ function App() {
           <Route path="accessibility" element={<Accessibility/>} />
           <Route path="career" element={<Careers/>} />
           <Route path="sustainability" element={<Formal/>} />
-          <Route path="farmain" element={<Petition/>} />
+          <Route path="petition" element={<Petition/>} />
+          <Route path="milk-myths" element={<Milkfacts/>} />
+          <Route path="out-pilote" element={<Oatpilot/>} />
+          <Route path="farm" element={<Farmain/>} />
+          <Route path="farmer-shaking" element={<FarmerShakingFarmers/>} />
+          <Route path="ditch-milk" element={<Dairyfacts/>} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const CanvasSection = () => {
   return (
@@ -11,7 +12,8 @@ const CanvasSection = () => {
       }}
     >
       <div className="relative mx-auto" style={{ width: "83.1168vh" }}>
-        <a
+        <Link
+          to={"/sustainability"}
           href="/oatly-who"
           aria-label="The Oatly Sustainability report update 2022"
           className="absolute block transition-transform hover:scale-105 duration-300"
@@ -23,7 +25,7 @@ const CanvasSection = () => {
             className="w-full h-auto md:mt-7 lg:mt-14 xl:mt-8"
             sizes="59.94vh"
           />
-        </a>
+        </Link>
 
         {/* Hidden Pixel Image */}
         <div

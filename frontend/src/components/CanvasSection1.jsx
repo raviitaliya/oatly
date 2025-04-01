@@ -8,6 +8,7 @@ import oat3 from "../assets/home/oat3.svg";
 import oat5 from "../assets/home/oat5.svg";
 import feet from "../assets/home/feet.svg";
 import milkmyths from "../assets/home/milkmyths.svg";
+import { Link } from "react-router-dom";
 
 const CanvasSection1 = () => {
   return (
@@ -30,8 +31,10 @@ const CanvasSection1 = () => {
       </div>
 
       <div className="relative w-[18vh] left-[4%] top-[-45%] hover:scale-105 duration-300 transition-transform">
-        <a
-          href="/things-we-do/"
+        <Link
+        to={"/petition"}
+        href="/petition"
+         
           className="block w-full h-full cursor-hand"
         >
           <div className="relative">
@@ -44,29 +47,32 @@ const CanvasSection1 = () => {
               />
             </div>
           </div>
-        </a>
+        </Link>
       </div>
 
       <div className="relative w-[33.3vh] left-[44.4vh] top-[-18%] hover:scale-105 duration-300 transition-transform">
-        <a
+        <Link
+        to={'/milk-myths'}
+
           href="/things-we-do/"
           className="block w-full h-full"
         >
           <div className="w-full h-full cursor-hand">
             <img src={milkmyths} alt="Milk Myths" className="w-full h-auto" />
           </div>
-        </a>
+        </Link>
       </div>
 
       <div className="relative w-[44.18vh] left-[57.72vh] bottom-[10%] hover:scale-105 duration-300 transition-transform">
-        <a
+        <Link
+          to={'out-pilote'}
           href="/things-we-do"
           className="block w-full h-full cursor-hand"
         >
           <div className="relative pb-[61.9565%]">
             <img src={truck} alt="truck" />
           </div>
-        </a>
+        </Link>
       </div>
 
       <div className="relative w-[7.548vh] left-[4.44vh] top-[55%]">
