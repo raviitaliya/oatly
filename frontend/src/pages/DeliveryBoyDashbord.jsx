@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useProductStore } from "@/store/Store";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Form,
   FormControl,
@@ -32,10 +44,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useForm } from "react-hook-form";
+import { useProductStore } from "@/store/Store";
 
 function DeliveryBoyDashboard() {
   const {
     profile,
+    earnings,
     assignedOrders,
     loading,
     error,
@@ -43,10 +57,16 @@ function DeliveryBoyDashboard() {
     acceptOrder,
     updateOrderStatus,
     getDeliveryBoyProfile,
-    isAvailable,
     user,
     toggleAvailability,
-  } = useProductStore(); 
+    deliveryProfile,
+  } = useProductStore();
+
+  // Use store value directly, with fallback to false if undefined
+  const isAvailable = deliveryProfile?.isAvailable ?? false;
+
+  // console.log("deliveryProfile?.isAvailable:", deliveryProfile?.isAvailable);
+  // console.log("isAvailable in component:", isAvailable);
 
   const [activeSection, setActiveSection] = useState("profile");
   const [activeOrderId, setActiveOrderId] = useState(null);
@@ -64,7 +84,10 @@ function DeliveryBoyDashboard() {
   }, [getDeliveryBoyProfile, fetchAssignedOrders]);
 
   useEffect(() => {
-    localStorage.setItem("deliveredOrdersHistory", JSON.stringify(deliveredOrdersHistory));
+    localStorage.setItem(
+      "deliveredOrdersHistory",
+      JSON.stringify(deliveredOrdersHistory)
+    );
   }, [deliveredOrdersHistory]);
 
   const handleRefresh = async () => {
@@ -76,14 +99,22 @@ function DeliveryBoyDashboard() {
     }
   };
 
-  const orderRequests = assignedOrders.filter((order) => order.status === "Pending");
+  const orderRequests = assignedOrders.filter(
+    (order) => order.status === "Pending"
+  );
   const activeOrders = assignedOrders.filter((order) =>
     ["Assigned", "Out for Delivery"].includes(order.status)
   );
-  const currentDeliveredOrders = assignedOrders.filter((order) => order.status === "Delivered");
+  const currentDeliveredOrders = assignedOrders.filter(
+    (order) => order.status === "Delivered"
+  );
   const totalDeliveredOrders =
-    profile?.totalDeliveredOrders ?? deliveredOrdersHistory.length + currentDeliveredOrders.length;
-  const allDeliveredOrders = [...deliveredOrdersHistory, ...currentDeliveredOrders];
+    profile?.totalDeliveredOrders ??
+    deliveredOrdersHistory.length + currentDeliveredOrders.length;
+  const allDeliveredOrders = [
+    ...deliveredOrdersHistory,
+    ...currentDeliveredOrders,
+  ];
 
   const handleAcceptOrder = (orderId) => {
     console.log("Accepting Order:", orderId);
@@ -99,7 +130,10 @@ function DeliveryBoyDashboard() {
     }
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coordinates = [position.coords.longitude, position.coords.latitude];
+        const coordinates = [
+          position.coords.longitude,
+          position.coords.latitude,
+        ];
         updateOrderStatus(orderId, "Out for Delivery", coordinates);
         setActiveOrderId(orderId);
 
@@ -127,11 +161,24 @@ function DeliveryBoyDashboard() {
     console.log("Marking Order as Delivered:", orderId);
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coordinates = [position.coords.longitude, position.coords.latitude];
+        const coordinates = [
+          position.coords.longitude,
+          position.coords.latitude,
+        ];
         updateOrderStatus(orderId, "Delivered", coordinates);
-        const deliveredOrder = assignedOrders.find((order) => order.orderId === orderId);
-        if (deliveredOrder && !deliveredOrdersHistory.some((o) => o.orderId === deliveredOrder.orderId)) {
-          setDeliveredOrdersHistory((prev) => [...prev, { ...deliveredOrder, deliveredAt: new Date() }]);
+        const deliveredOrder = assignedOrders.find(
+          (order) => order.orderId === orderId
+        );
+        if (
+          deliveredOrder &&
+          !deliveredOrdersHistory.some(
+            (o) => o.orderId === deliveredOrder.orderId
+          )
+        ) {
+          setDeliveredOrdersHistory((prev) => [
+            ...prev,
+            { ...deliveredOrder, deliveredAt: new Date() },
+          ]);
         }
         if (deliveryInterval) {
           console.log("Clearing delivery interval");
@@ -143,9 +190,19 @@ function DeliveryBoyDashboard() {
       (err) => {
         console.error("Geolocation Error:", err);
         updateOrderStatus(orderId, "Delivered");
-        const deliveredOrder = assignedOrders.find((order) => order.orderId === orderId);
-        if (deliveredOrder && !deliveredOrdersHistory.some((o) => o.orderId === deliveredOrder.orderId)) {
-          setDeliveredOrdersHistory((prev) => [...prev, { ...deliveredOrder, deliveredAt: new Date() }]);
+        const deliveredOrder = assignedOrders.find(
+          (order) => order.orderId === orderId
+        );
+        if (
+          deliveredOrder &&
+          !deliveredOrdersHistory.some(
+            (o) => o.orderId === deliveredOrder.orderId
+          )
+        ) {
+          setDeliveredOrdersHistory((prev) => [
+            ...prev,
+            { ...deliveredOrder, deliveredAt: new Date() },
+          ]);
         }
         if (deliveryInterval) {
           console.log("Clearing delivery interval (error case)");
@@ -196,22 +253,28 @@ function DeliveryBoyDashboard() {
       },
     };
     console.log("Updating profile with:", updatedProfile);
-    updateUser(updatedProfile);
+    // Assuming updateUser exists in your store; if not, adjust accordingly
+    // updateUser(updatedProfile);
     setShowProfileForm(false);
   };
 
   const statusVariants = {
     initial: { scale: 0.8, opacity: 0 },
-    animate: { scale: 1, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
+    animate: {
+      scale: 1,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
     exit: { scale: 0.8, opacity: 0, transition: { duration: 0.3 } },
   };
 
   return (
     <div className="flex h-screen bg-gray-100">
-     
       <div className="w-64 bg-white shadow-lg flex flex-col">
         <div className="p-4">
-          <h2 className="text-2xl font-bold text-gray-800">Delivery Dashboard</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            Delivery Dashboard
+          </h2>
           <p className="text-sm text-gray-600">Manage your deliveries</p>
         </div>
         <Separator />
@@ -271,7 +334,10 @@ function DeliveryBoyDashboard() {
             <Button
               variant="ghost"
               className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
-              onClick={toggleAvailability}
+              onClick={() => {
+                console.log("Toggle clicked, calling toggleAvailability");
+                toggleAvailability();
+              }}
             >
               <LogOut className="mr-2 h-4 w-4" />
               {isAvailable ? "Go Offline" : "Go Online"}
@@ -283,10 +349,14 @@ function DeliveryBoyDashboard() {
           <div className="flex items-center">
             <Avatar className="h-8 w-8 mr-2">
               <AvatarImage src="/avatar.png" />
-              <AvatarFallback>{profile?.fullName?.charAt(0) || "D"}</AvatarFallback>
+              <AvatarFallback>
+                {profile?.fullName?.charAt(0) || "D"}
+              </AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium">{profile?.fullName || "Delivery Boy"}</p>
+              <p className="text-sm font-medium">
+                {profile?.fullName || "Delivery Boy"}
+              </p>
               <p className="text-xs text-gray-500">
                 {isAvailable ? "Online" : "Offline"}
               </p>
@@ -306,7 +376,11 @@ function DeliveryBoyDashboard() {
               {activeSection === "history" && "Order History"}
             </h1>
             {isAvailable && (
-              <Button variant="outline" onClick={handleRefresh} disabled={loading}>
+              <Button
+                variant="outline"
+                onClick={handleRefresh}
+                disabled={loading}
+              >
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh Orders
               </Button>
@@ -333,15 +407,21 @@ function DeliveryBoyDashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Card className="shadow-lg mb-6 ">
+              <Card className="shadow-lg mb-6">
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Profile Information</CardTitle>
-                    <Sheet open={showProfileForm} onOpenChange={setShowProfileForm}>
+                    <Sheet
+                      open={showProfileForm}
+                      onOpenChange={setShowProfileForm}
+                    >
                       <SheetTrigger asChild>
                         <Button>Edit Profile</Button>
                       </SheetTrigger>
-                      <SheetContent className="w-full sm:max-w-lg overflow-auto" side="right">
+                      <SheetContent
+                        className="w-full sm:max-w-lg overflow-auto"
+                        side="right"
+                      >
                         <SheetHeader>
                           <SheetTitle>Edit Profile</SheetTitle>
                           <SheetDescription>
@@ -349,7 +429,10 @@ function DeliveryBoyDashboard() {
                           </SheetDescription>
                         </SheetHeader>
                         <Form {...form}>
-                          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+                          <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-4 mt-4"
+                          >
                             <FormField
                               control={form.control}
                               name="fullName"
@@ -357,7 +440,10 @@ function DeliveryBoyDashboard() {
                                 <FormItem>
                                   <FormLabel>Full Name</FormLabel>
                                   <FormControl>
-                                    <Input {...field} placeholder="Your Full Name" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Your Full Name"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -370,7 +456,10 @@ function DeliveryBoyDashboard() {
                                 <FormItem>
                                   <FormLabel>Mobile</FormLabel>
                                   <FormControl>
-                                    <Input {...field} placeholder="Your Mobile" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Your Mobile"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -385,7 +474,10 @@ function DeliveryBoyDashboard() {
                                 <FormItem>
                                   <FormLabel>Address Line 1</FormLabel>
                                   <FormControl>
-                                    <Input {...field} placeholder="Address Line 1" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Address Line 1"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -398,7 +490,10 @@ function DeliveryBoyDashboard() {
                                 <FormItem>
                                   <FormLabel>Address Line 2</FormLabel>
                                   <FormControl>
-                                    <Input {...field} placeholder="Address Line 2" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Address Line 2"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -446,7 +541,10 @@ function DeliveryBoyDashboard() {
                               />
                             </div>
                             <div className="flex justify-end gap-2 mt-6">
-                              <Button variant="outline" onClick={() => setShowProfileForm(false)}>
+                              <Button
+                                variant="outline"
+                                onClick={() => setShowProfileForm(false)}
+                              >
                                 Cancel
                               </Button>
                               <Button type="submit">Update Profile</Button>
@@ -460,22 +558,30 @@ function DeliveryBoyDashboard() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h3 className="text-lg font-semibold mb-4">Personal Details</h3>
+                      <h3 className="text-lg font-semibold mb-4">
+                        Personal Details
+                      </h3>
                       <div className="space-y-2">
                         <div className="flex items-center">
                           <User className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Name:</span>
-                          <span className="ml-2">{profile?.fullName || "Not specified"}</span>
+                          <span className="ml-2">
+                            {user?.name || "Not specified"}
+                          </span>
                         </div>
                         <div className="flex items-center">
                           <Clock className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Mobile:</span>
-                          <span className="ml-2">{profile?.mobile || "Not specified"}</span>
+                          <span className="ml-2">
+                            {user?.mobile || "Not specified"}
+                          </span>
                         </div>
                         <div className="flex items-center">
                           <Mail className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Email:</span>
-                          <span className="ml-2">{profile?.email || "Not specified"}</span>
+                          <span className="ml-2">
+                            {user?.email || "Not specified"}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -486,7 +592,6 @@ function DeliveryBoyDashboard() {
                           <Home className="h-4 w-4 mr-2 mt-1 text-gray-500" />
                           <div>
                             <p>{user?.address1 || "No address specified"},</p>
-                            {/* {user?.address2 && <p>{user.address2}</p>} */}
                             {user?.city && (
                               <p>
                                 {user?.city}, {user?.state} {user?.zipcode}
@@ -510,8 +615,12 @@ function DeliveryBoyDashboard() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="text-sm text-gray-500">Total Delivered</p>
-                            <p className="text-3xl font-bold">{profile?.totalDeliveries}</p>
+                            <p className="text-sm text-gray-500">
+                              Total Delivered
+                            </p>
+                            <p className="text-3xl font-bold">
+                              {user?.totalDeliveries || 0}
+                            </p>
                           </div>
                           <CheckCircle className="h-8 w-8 text-blue-500" />
                         </div>
@@ -521,8 +630,12 @@ function DeliveryBoyDashboard() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="text-sm text-gray-500">Total Earnings</p>
-                            <p className="text-3xl font-bold">₹{profile?.earnings || 0}</p>
+                            <p className="text-sm text-gray-500">
+                              Total Earnings
+                            </p>
+                            <p className="text-3xl font-bold">
+                              ₹{user?.earnings || 0}
+                            </p>
                           </div>
                           <DollarSign className="h-8 w-8 text-green-500" />
                         </div>
@@ -532,13 +645,17 @@ function DeliveryBoyDashboard() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="text-sm text-gray-500">Availability</p>
+                            <p className="text-sm text-gray-500">
+                              Availability
+                            </p>
                             <p className="text-xl font-bold">
                               {isAvailable ? "Online" : "Offline"}
                             </p>
                           </div>
                           <Badge
-                            className={isAvailable ? "bg-green-500" : "bg-red-500"}
+                            className={
+                              isAvailable ? "bg-green-500" : "bg-red-500"
+                            }
                           >
                             {isAvailable ? "ON" : "OFF"}
                           </Badge>
@@ -567,8 +684,12 @@ function DeliveryBoyDashboard() {
                 <Card className="shadow-md">
                   <CardContent className="p-8 flex flex-col items-center justify-center">
                     <Package className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">No Order Requests</h3>
-                    <p className="text-gray-500 mt-2">No new orders to accept</p>
+                    <h3 className="text-xl font-medium text-gray-700">
+                      No Order Requests
+                    </h3>
+                    <p className="text-gray-500 mt-2">
+                      No new orders to accept
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
@@ -585,17 +706,25 @@ function DeliveryBoyDashboard() {
                       >
                         <Card className="shadow-lg hover:shadow-xl transition-shadow border-l-4 border-yellow-500">
                           <CardHeader className="pb-2">
-                            <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
+                            <CardTitle className="text-lg">
+                              Order #{order.orderId}
+                            </CardTitle>
                             <CardDescription>
-                              Created on: {new Date(order.createdAt).toLocaleString()}
+                              Created on:{" "}
+                              {new Date(order.createdAt).toLocaleString()}
                             </CardDescription>
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-start space-x-4">
-                              {order.items && order.items.length > 0 && order.items[0].productImage ? (
+                              {order.items &&
+                              order.items.length > 0 &&
+                              order.items[0].productImage ? (
                                 <img
                                   src={order.items[0].productImage}
-                                  alt={order.items[0].productName || "Product Image"}
+                                  alt={
+                                    order.items[0].productName ||
+                                    "Product Image"
+                                  }
                                   className="w-24 h-24 object-cover rounded"
                                   onError={(e) => {
                                     e.target.src = "/fallback-image.png";
@@ -607,15 +736,24 @@ function DeliveryBoyDashboard() {
                                 </div>
                               )}
                               <div className="flex-1">
-                                <p className="font-medium">Customer: {order.customerName}</p>
-                                <p className="text-sm text-gray-600">Mobile: {order.customerMobile}</p>
-                                <p className="font-medium mt-1">Total: ₹{order.totalAmount}</p>
+                                <p className="font-medium">
+                                  Customer: {order.customerName}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Mobile: {order.customerMobile}
+                                </p>
+                                <p className="font-medium mt-1">
+                                  Total: ₹{order.totalAmount}
+                                </p>
                                 <p className="text-sm text-gray-600 mt-1">
-                                  Address: {order.deliveryAddress.address1}, {order.deliveryAddress.city}
+                                  Address: {order.deliveryAddress.address1},{" "}
+                                  {order.deliveryAddress.city}
                                 </p>
                                 <Button
                                   className="mt-4 w-full"
-                                  onClick={() => handleAcceptOrder(order.orderId)}
+                                  onClick={() =>
+                                    handleAcceptOrder(order.orderId)
+                                  }
                                 >
                                   Accept Order
                                 </Button>
@@ -626,7 +764,8 @@ function DeliveryBoyDashboard() {
                               <p className="font-medium mb-2">Items:</p>
                               {order.items.map((item, index) => (
                                 <p key={index} className="text-sm">
-                                  {item.productName} - ₹{item.price} x {item.quantity}
+                                  {item.productName} - ₹{item.price} x{" "}
+                                  {item.quantity}
                                 </p>
                               ))}
                             </div>
@@ -656,8 +795,12 @@ function DeliveryBoyDashboard() {
                 <Card className="shadow-md">
                   <CardContent className="p-8 flex flex-col items-center justify-center">
                     <Truck className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">No Active Orders</h3>
-                    <p className="text-gray-500 mt-2">No orders currently in delivery</p>
+                    <h3 className="text-xl font-medium text-gray-700">
+                      No Active Orders
+                    </h3>
+                    <p className="text-gray-500 mt-2">
+                      No orders currently in delivery
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
@@ -675,7 +818,9 @@ function DeliveryBoyDashboard() {
                         <Card className="shadow-lg hover:shadow-xl transition-shadow border-l-4 border-blue-500">
                           <CardHeader className="pb-2">
                             <div className="flex justify-between items-center">
-                              <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
+                              <CardTitle className="text-lg">
+                                Order #{order.orderId}
+                              </CardTitle>
                               <Badge
                                 className={
                                   order.status === "Assigned"
@@ -687,15 +832,21 @@ function DeliveryBoyDashboard() {
                               </Badge>
                             </div>
                             <CardDescription>
-                              Created on: {new Date(order.createdAt).toLocaleString()}
+                              Created on:{" "}
+                              {new Date(order.createdAt).toLocaleString()}
                             </CardDescription>
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-start space-x-4">
-                              {order.items && order.items.length > 0 && order.items[0].productImage ? (
+                              {order.items &&
+                              order.items.length > 0 &&
+                              order.items[0].productImage ? (
                                 <img
                                   src={order.items[0].productImage}
-                                  alt={order.items[0].productName || "Product Image"}
+                                  alt={
+                                    order.items[0].productName ||
+                                    "Product Image"
+                                  }
                                   className="w-24 h-24 object-cover rounded"
                                   onError={(e) => {
                                     e.target.src = "/fallback-image.png";
@@ -707,23 +858,34 @@ function DeliveryBoyDashboard() {
                                 </div>
                               )}
                               <div className="flex-1">
-                                <p className="font-medium">Customer: {order.customerName}</p>
-                                <p className="text-sm text-gray-600">Mobile: {order.customerMobile}</p>
-                                <p className="font-medium mt-1">Total: ₹{order.totalAmount}</p>
+                                <p className="font-medium">
+                                  Customer: {order.customerName}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  Mobile: {order.customerMobile}
+                                </p>
+                                <p className="font-medium mt-1">
+                                  Total: ₹{order.totalAmount}
+                                </p>
                                 <p className="text-sm text-gray-600 mt-1">
-                                  Address: {order.deliveryAddress.address1}, {order.deliveryAddress.city}
+                                  Address: {order.deliveryAddress.address1},{" "}
+                                  {order.deliveryAddress.city}
                                 </p>
                                 {order.status === "Assigned" ? (
                                   <Button
                                     className="mt-4 w-full bg-green-500 hover:bg-green-600"
-                                    onClick={() => handleStartDelivery(order.orderId)}
+                                    onClick={() =>
+                                      handleStartDelivery(order.orderId)
+                                    }
                                   >
                                     Start Delivery
                                   </Button>
                                 ) : (
                                   <Button
                                     className="mt-4 w-full bg-purple-500 hover:bg-purple-600"
-                                    onClick={() => handleMarkDelivered(order.orderId)}
+                                    onClick={() =>
+                                      handleMarkDelivered(order.orderId)
+                                    }
                                   >
                                     Mark Delivered
                                   </Button>
@@ -735,7 +897,8 @@ function DeliveryBoyDashboard() {
                               <p className="font-medium mb-2">Items:</p>
                               {order.items.map((item, index) => (
                                 <p key={index} className="text-sm">
-                                  {item.productName} - ₹{item.price} x {item.quantity}
+                                  {item.productName} - ₹{item.price} x{" "}
+                                  {item.quantity}
                                 </p>
                               ))}
                             </div>
@@ -757,7 +920,10 @@ function DeliveryBoyDashboard() {
               transition={{ duration: 0.5 }}
             >
               <div className="flex justify-between items-center mb-6">
-                <Badge variant="outline" className="px-3 py-1 text-sm bg-green-50">
+                <Badge
+                  variant="outline"
+                  className="px-3 py-1 text-sm bg-green-50"
+                >
                   {allDeliveredOrders.length} delivered
                 </Badge>
               </div>
@@ -765,8 +931,12 @@ function DeliveryBoyDashboard() {
                 <Card className="shadow-md">
                   <CardContent className="p-8 flex flex-col items-center justify-center">
                     <CheckCircle className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">No Delivered Orders</h3>
-                    <p className="text-gray-500 mt-2">Your delivered orders will appear here</p>
+                    <h3 className="text-xl font-medium text-gray-700">
+                      No Delivered Orders
+                    </h3>
+                    <p className="text-gray-500 mt-2">
+                      Your delivered orders will appear here
+                    </p>
                   </CardContent>
                 </Card>
               ) : (
@@ -777,17 +947,26 @@ function DeliveryBoyDashboard() {
                       className="shadow-lg hover:shadow-xl transition-shadow border-l-4 border-green-500"
                     >
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
+                        <CardTitle className="text-lg">
+                          Order #{order.orderId}
+                        </CardTitle>
                         <CardDescription>
-                          Delivered on: {new Date(order.deliveredAt || order.createdAt).toLocaleString()}
+                          Delivered on:{" "}
+                          {new Date(
+                            order.deliveredAt || order.createdAt
+                          ).toLocaleString()}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="flex items-start space-x-4">
-                          {order.items && order.items.length > 0 && order.items[0].productImage ? (
+                          {order.items &&
+                          order.items.length > 0 &&
+                          order.items[0].productImage ? (
                             <img
                               src={order.items[0].productImage}
-                              alt={order.items[0].productName || "Product Image"}
+                              alt={
+                                order.items[0].productName || "Product Image"
+                              }
                               className="w-24 h-24 object-cover rounded"
                               onError={(e) => {
                                 e.target.src = "/fallback-image.png";
@@ -799,11 +978,18 @@ function DeliveryBoyDashboard() {
                             </div>
                           )}
                           <div className="flex-1">
-                            <p className="font-medium">Customer: {order.customerName}</p>
-                            <p className="text-sm text-gray-600">Mobile: {order.customerMobile}</p>
-                            <p className="font-medium mt-1">Total: ₹{order.totalAmount}</p>
+                            <p className="font-medium">
+                              Customer: {order.customerName}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              Mobile: {order.customerMobile}
+                            </p>
+                            <p className="font-medium mt-1">
+                              Total: ₹{order.totalAmount}
+                            </p>
                             <p className="text-sm text-gray-600 mt-1">
-                              Address: {order.deliveryAddress.address1}, {order.deliveryAddress.city}
+                              Address: {order.deliveryAddress.address1},{" "}
+                              {order.deliveryAddress.city}
                             </p>
                           </div>
                         </div>
@@ -812,7 +998,8 @@ function DeliveryBoyDashboard() {
                           <p className="font-medium mb-2">Items:</p>
                           {order.items.map((item, index) => (
                             <p key={index} className="text-sm">
-                              {item.productName} - ₹{item.price} x {item.quantity}
+                              {item.productName} - ₹{item.price} x{" "}
+                              {item.quantity}
                             </p>
                           ))}
                         </div>

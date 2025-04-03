@@ -8,10 +8,9 @@ import cross from "../assets/logo/cross.svg";
 import { useProductStore } from "../store/Store";
 
 const SignUp = () => {
-  const [userType, setUserType] = useState(null); // 'user' or 'deliveryBoy'
+  const [userType, setUserType] = useState(null);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    // Common fields
     name: "",
     username: "",
     email: "",
@@ -19,7 +18,6 @@ const SignUp = () => {
     password: "",
     confpassword: "",
 
-    // Regular user fields
     primaryMobile: "",
     address1: "",
     address2: "",
@@ -28,13 +26,12 @@ const SignUp = () => {
     country: "",
     zipcode: "",
 
-    // Delivery boy specific fields
     isAvailable: true,
     status: "active",
     location: {
       type: "Point",
-      coordinates: [] // Will be populated later with geolocation
-    }
+      coordinates: [],
+    },
   });
 
   const { signUpUser, loading, error, isSignUpOpen, openSignIn, openOtp } =
@@ -43,7 +40,6 @@ const SignUp = () => {
 
   const [errors, setErrors] = useState({});
 
-  // User type selection screen
   if (!userType && isSignUpOpen) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -60,7 +56,7 @@ const SignUp = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setUserType('user')}
+                onClick={() => setUserType("user")}
                 className="px-8 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-xl font-font2"
               >
                 Customer
@@ -68,7 +64,7 @@ const SignUp = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setUserType('deliveryBoy')}
+                onClick={() => setUserType("deliveryBoy")}
                 className="px-8 py-4 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-xl font-font2"
               >
                 Delivery Partner
@@ -86,6 +82,11 @@ const SignUp = () => {
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
               />
+              <img
+                src={cross || "/cross.svg"}
+                alt="this is svg"
+                className="w-[40px] absolute top-[40px] left-[40px]  "
+              />
             </button>
           </div>
         </div>
@@ -93,11 +94,9 @@ const SignUp = () => {
     );
   }
 
-
-
   const validateStep1 = () => {
     const stepErrors = {};
-    if (userType === 'deliveryBoy') {
+    if (userType === "deliveryBoy") {
       if (!formData.name.trim()) {
         stepErrors.name = "Name is required";
         toast.error("Name is required");
@@ -147,7 +146,7 @@ const SignUp = () => {
   // Add validateStep2 for delivery boy
   const validateStep2 = () => {
     const stepErrors = {};
-    if (userType === 'deliveryBoy') {
+    if (userType === "deliveryBoy") {
       if (!formData.password) {
         stepErrors.password = "Password is required";
         toast.error("Password is required");
@@ -164,12 +163,12 @@ const SignUp = () => {
         toast.error("Please specify availability");
       }
     } else {
-      // Regular user validation
       if (!formData.primaryMobile?.trim()) {
         stepErrors.primaryMobile = "Primary mobile number is required";
         toast.error("Primary mobile number is required");
       } else if (!/^\d{10}$/.test(formData.primaryMobile)) {
-        stepErrors.primaryMobile = "Please enter a valid 10-digit mobile number";
+        stepErrors.primaryMobile =
+          "Please enter a valid 10-digit mobile number";
         toast.error("Please enter a valid 10-digit mobile number");
       }
       if (!formData.password) {
@@ -191,7 +190,6 @@ const SignUp = () => {
   const validateStep3 = () => {
     const stepErrors = {};
 
-    // Address validation
     if (!formData.address1?.trim()) {
       stepErrors.address1 = "Building name and number is required";
       toast.error("Building name and number is required");
@@ -231,7 +229,7 @@ const SignUp = () => {
 
   // Modify the step content rendering
   const renderStepContent = () => {
-    if (userType === 'deliveryBoy') {
+    if (userType === "deliveryBoy") {
       switch (step) {
         case 1:
           return (
@@ -246,7 +244,12 @@ const SignUp = () => {
               <motion.div className="space-y-6">
                 {renderInput("name", "Name", "text", "Enter your full name")}
                 {renderInput("email", "Email", "email", "Enter your email")}
-                {renderInput("mobile", "Mobile", "tel", "Enter your mobile number")}
+                {renderInput(
+                  "mobile",
+                  "Mobile",
+                  "tel",
+                  "Enter your mobile number"
+                )}
               </motion.div>
             </motion.div>
           );
@@ -261,18 +264,30 @@ const SignUp = () => {
               className="h-[450px]"
             >
               <motion.div className="space-y-6">
-                {renderInput("password", "Password", "password", "Create a strong password")}
-                {renderInput("confpassword", "Confirm Password", "password", "Confirm your password")}
+                {renderInput(
+                  "password",
+                  "Password",
+                  "password",
+                  "Create a strong password"
+                )}
+                {renderInput(
+                  "confpassword",
+                  "Confirm Password",
+                  "password",
+                  "Confirm your password"
+                )}
                 <div className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     id="isAvailable"
                     name="isAvailable"
                     checked={formData.isAvailable}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      isAvailable: e.target.checked
-                    })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        isAvailable: e.target.checked,
+                      })
+                    }
                     className="w-4 h-4"
                   />
                   <label htmlFor="isAvailable" className="text-xl font-font2">
@@ -293,29 +308,46 @@ const SignUp = () => {
               className="h-[450px]"
             >
               <div className="space-y-6 px-1 py-1 space-x-1 overflow-y-auto max-h-[430px]">
-                {renderInput("address1", "Building Name & Number", "text", "Enter building name and number")}
-                {renderInput("address2", "Street Address", "text", "Enter street name, area, landmark etc.")}
+                {renderInput(
+                  "address1",
+                  "Building Name & Number",
+                  "text",
+                  "Enter building name and number"
+                )}
+                {renderInput(
+                  "address2",
+                  "Street Address",
+                  "text",
+                  "Enter street name, area, landmark etc."
+                )}
                 {renderInput("city", "City", "text", "Enter your city")}
                 {renderInput("state", "State", "text", "Enter your state")}
-                {renderInput("country", "Country", "text", "Enter your country")}
-                {renderInput("zipcode", "Zipcode", "text", "Enter your zipcode")}
+                {renderInput(
+                  "country",
+                  "Country",
+                  "text",
+                  "Enter your country"
+                )}
+                {renderInput(
+                  "zipcode",
+                  "Zipcode",
+                  "text",
+                  "Enter your zipcode"
+                )}
               </div>
             </motion.div>
           );
       }
     } else {
-      // Original user registration steps remain the same
-      // ... existing step rendering code ...
+      console.log("Sign Up:", error);
     }
   };
 
-  console.log(formData.name);
+  // console.log(formData.name);
 
-  // Modify handleSubmit for delivery boy
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
 
-    // Validate the current step
     let isValid = false;
     switch (step) {
       case 1:
@@ -331,28 +363,29 @@ const SignUp = () => {
 
     if (!isValid) return;
 
-    // Prepare signup data
     const signupData = {
       ...formData,
-      role: userType === 'deliveryBoy' ? 'delivery_boy' : 'user'
+      role: userType === "deliveryBoy" ? "delivery_boy" : "user",
     };
 
     try {
       const response = await signUpUser(signupData);
 
       if (response.status === 200) {
-        // Success toast with green background
         toast.success("Registration successful! Please verify your OTP.", {
           duration: 3000,
 
-          icon: "✅"
+          icon: "✅",
         });
         closeSignUp();
         openOtp();
       } else {
-        toast.error(response?.data?.message || "Registration failed. Please try again.", {
-          duration: 3000,
-        });
+        toast.error(
+          response?.data?.message || "Registration failed. Please try again.",
+          {
+            duration: 3000,
+          }
+        );
       }
     } catch (err) {
       if (err.response?.status >= 400) {
@@ -362,32 +395,34 @@ const SignUp = () => {
             color: "white",
             border: "none",
           },
-          icon: "⚠️"
+          icon: "⚠️",
         });
       } else if (err.response?.status === 400) {
-        toast.error(err.response?.data?.message || "Please check your information and try again.", {
-          duration: 3000,
-          style: {
-            background: "#EF4444", // Red background
-            color: "white",
-            border: "none",
-          },
-          icon: "❌"
-        });
+        toast.error(
+          err.response?.data?.message ||
+            "Please check your information and try again.",
+          {
+            duration: 3000,
+            style: {
+              background: "#EF4444",
+              color: "white",
+              border: "none",
+            },
+            icon: "❌",
+          }
+        );
       } else {
-        // Generic error
         toast.error("An unexpected error occurred. Please try again later.", {
           duration: 3000,
           style: {
-            background: "#DC2626", // Dark red background
+            background: "#DC2626",
             color: "white",
             border: "none",
           },
-          icon: "❌"
+          icon: "❌",
         });
       }
 
-      // Log error for debugging
       console.error("Signup Error:", err);
     }
   };
@@ -423,7 +458,7 @@ const SignUp = () => {
         break;
 
       case 3:
-        if (userType === 'deliveryBoy' || userType === 'user') {
+        if (userType === "deliveryBoy" || userType === "user") {
           isValid = validateStep3();
           if (isValid) {
             handleSubmit();
@@ -445,11 +480,14 @@ const SignUp = () => {
         name={name}
         value={formData[name]}
         onChange={handleChange}
-        className={`w-full px-3 py-[6px] border ${errors[name] ? "border-red-500" : "border-gray-300"
-          } rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl`}
+        className={`w-full px-3 py-[6px] border ${
+          errors[name] ? "border-red-500" : "border-gray-300"
+        } rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-font2 text-xl`}
         placeholder={placeholder}
       />
-      {errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>}
+      {errors[name] && (
+        <p className="text-red-500 text-sm mt-1">{errors[name]}</p>
+      )}
     </div>
   );
 
@@ -493,14 +531,29 @@ const SignUp = () => {
                   initial={{ x: 300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -300, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 30,
+                    duration: 0.2,
+                  }}
                   className="h-[450px]"
                 >
                   <motion.div className="space-y-6">
                     {renderInput("name", "Name", "text", "Enter your name")}
-                    {renderInput("username", "Username", "text", "Enter your username")}
+                    {renderInput(
+                      "username",
+                      "Username",
+                      "text",
+                      "Enter your username"
+                    )}
                     {renderInput("email", "Email", "email", "Enter your email")}
-                    {renderInput("mobile", "Mobile", "text", "Enter your mobile number")}
+                    {renderInput(
+                      "mobile",
+                      "Mobile",
+                      "text",
+                      "Enter your mobile number"
+                    )}
                   </motion.div>
                 </motion.div>
               )}
@@ -511,13 +564,33 @@ const SignUp = () => {
                   initial={{ x: 300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -300, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 30,
+                    duration: 0.2,
+                  }}
                   className="h-[450px]"
                 >
                   <motion.div className="space-y-6">
-                    {renderInput("primaryMobile", "Primary Mobile", "text", "Enter your primary mobile number")}
-                    {renderInput("password", "Password", "password", "Enter your password")}
-                    {renderInput("confpassword", "Confirm Password", "password", "Confirm your password")}
+                    {renderInput(
+                      "primaryMobile",
+                      "Primary Mobile",
+                      "text",
+                      "Enter your primary mobile number"
+                    )}
+                    {renderInput(
+                      "password",
+                      "Password",
+                      "password",
+                      "Enter your password"
+                    )}
+                    {renderInput(
+                      "confpassword",
+                      "Confirm Password",
+                      "password",
+                      "Confirm your password"
+                    )}
                   </motion.div>
                 </motion.div>
               )}
@@ -528,16 +601,41 @@ const SignUp = () => {
                   initial={{ x: 300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -300, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30, duration: 0.2 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 30,
+                    duration: 0.2,
+                  }}
                   className="h-[450px]"
                 >
                   <div className="space-y-6 px-1 py-1 space-x-1 overflow-y-auto max-h-[430px]">
-                    {renderInput("address1", "Building Name & Number", "text", "Enter building name and number")}
-                    {renderInput("address2", "Street Address", "text", "Enter street name, area, landmark etc.")}
+                    {renderInput(
+                      "address1",
+                      "Building Name & Number",
+                      "text",
+                      "Enter building name and number"
+                    )}
+                    {renderInput(
+                      "address2",
+                      "Street Address",
+                      "text",
+                      "Enter street name, area, landmark etc."
+                    )}
                     {renderInput("city", "City", "text", "Enter your city")}
                     {renderInput("state", "State", "text", "Enter your state")}
-                    {renderInput("country", "Country", "text", "Enter your country")}
-                    {renderInput("zipcode", "Zipcode", "text", "Enter your zipcode")}
+                    {renderInput(
+                      "country",
+                      "Country",
+                      "text",
+                      "Enter your country"
+                    )}
+                    {renderInput(
+                      "zipcode",
+                      "Zipcode",
+                      "text",
+                      "Enter your zipcode"
+                    )}
                   </div>
                 </motion.div>
               )}

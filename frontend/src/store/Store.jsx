@@ -590,20 +590,23 @@ export const useProductStore = create((set, get) => ({
     }
   },
 
-  toggleDeliveryBoyAvailability: async () => {
+  toggleAvailability: async () => {
     set({ loading: true, error: null });
     try {
       const response = await api.post("/delivery_boy/toggle-availability");
-      if (response.data.success) {
+      // console.log(response.data.isAvailable);
+      
+      if (response?.data?.success) {
         set((state) => ({
           deliveryProfile: {
             ...state.deliveryProfile,
-            isAvailable: response.data.isAvailable
+            isAvailable: response.data.isAvailable,
           },
           loading: false,
         }));
       }
     } catch (error) {
+      alert("Error: " + (error.message || "Unknown error"));
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to toggle availability",
@@ -667,6 +670,7 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/delivery_boy/earnings");
+      console.log(response);
       if (response.data.success)
         set({ earnings: response.data.data, loading: false });
     } catch (error) {
@@ -740,7 +744,7 @@ export const useProductStore = create((set, get) => ({
               amount: order.amount * 100,
               currency: order.currency,
               order_id: order.orderId,
-              name: "Milk Store",
+              name: "Oatly",
               description: "Order Payment",
               handler: async (paymentResponse) => {
                 const verifyData = {

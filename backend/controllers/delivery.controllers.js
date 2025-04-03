@@ -245,6 +245,7 @@ export const updateOrderStatus = async (req, res) => {
 // Get Earnings
 export const getEarnings = async (req, res) => {
   const userId = req.userId;
+  console.log(userId);
 
   try {
     const deliveryBoy = await DeliveryBoy.findOne({ userId });
@@ -269,7 +270,7 @@ export const getEarnings = async (req, res) => {
 // Toggle Availability
 export const toggleAvailability = async (req, res) => {
   const userId = req.userId;
-
+  
   try {
     const deliveryBoy = await DeliveryBoy.findOne({ userId });
     if (!deliveryBoy) {
@@ -309,16 +310,22 @@ export const fetchAllDeliveryBoy = async (req, res) => {
 export const bolckToggleDeliveryBoy = async (req, res) => {
   try {
     const { userId } = req.params;
-    const deliveryBoy = await DeliveryBoy.findOne({ userId }).populate("userId");
+    const deliveryBoy = await DeliveryBoy.findOne({ userId }).populate(
+      "userId"
+    );
     if (!deliveryBoy || !deliveryBoy.userId) {
-      return res.status(404).json({ success: false, message: "Delivery boy not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Delivery boy not found" });
     }
     const user = deliveryBoy.userId;
     user.isBlocked = !user.isBlocked; // Toggle block status
     await user.save();
     res.status(200).json({
       success: true,
-      message: `Delivery boy ${user.isBlocked ? "blocked" : "unblocked"} successfully`,
+      message: `Delivery boy ${
+        user.isBlocked ? "blocked" : "unblocked"
+      } successfully`,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
