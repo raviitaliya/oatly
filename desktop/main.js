@@ -1,58 +1,64 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const isDev = require("electron-is-dev"); // Add this dependency
 
 let mainWindow;
 
 function createWindow() {
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false, // Better security: set to false
       contextIsolation: true,
       preload: path.join(__dirname, "preload.js"),
     },
-<<<<<<< HEAD
-    // Add custom title bar settings
-    frame: false, // Remove default window frame
-    titleBarStyle: 'hidden',
-    icon: path.join(__dirname, 'public', 'logo.png'), // Add window icon
-    backgroundColor: '#ffffff'
-=======
-    // Show loading state
-    show: false,
->>>>>>> eed47bde951f5da70e0e0b3a7a24dbf1149c44ad
+    frame: false,
+    titleBarStyle: "hidden",
+    icon: path.join(__dirname, "public", "logo.png"),
+    backgroundColor: "#ffffff",
   });
 
-  // Load the app
-  const startUrl = "http://localhost:5174";
+  // Determine which URL to load based on environment
+  const startUrl = isDev
+    ? "http://localhost:5173" // Development
+    : `file://${path.join(__dirname, "dist", "index.html")}`; // Production (assumes Vite build output)
 
+  // Load the appropriate URL with better error handling
   mainWindow
     .loadURL(startUrl)
-    .then(() => {
-      console.log("URL loaded successfully");
-      mainWindow.show();
-    })
     .catch((err) => {
-      console.error("Failed to load URL:", err);
-      // Try loading a local HTML file as fallback
-      mainWindow.loadFile(path.join(__dirname, "loading.html"));
+      console.error("Failed to load primary URL:", err);
+      // Fallback to a local error page
+      const fallbackPath = path.join(__dirname, "public", "error.html");
+      mainWindow
+        .loadFile(fallbackPath)
+        .catch((fallbackErr) => {
+          console.error("Failed to load fallback page:", fallbackErr);
+        });
+    })
+    .finally(() => {
+      mainWindow.show();
     });
 
-  // Open DevTools for debugging
-  mainWindow.webContents.openDevTools();
+  // Only open DevTools in development
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
-  // Log any errors
-  mainWindow.webContents.on(
-    "did-fail-load",
-    (event, errorCode, errorDescription) => {
-      console.error("Failed to load:", errorCode, errorDescription);
-    }
-  );
+  mainWindow.webContents.on("did-fail-load", (event, errorCode, errorDescription) => {
+    console.error("Failed to load:", errorCode, errorDescription);
+  });
+
+  // Handle window events
+  mainWindow.on("maximize", () => {
+    mainWindow.webContents.send("window-maximized");
+  });
+  mainWindow.on("unmaximize", () => {
+    mainWindow.webContents.send("window-unmaximized");
+  });
 }
 
-// This method will be called when Electron has finished initialization
 app.whenReady().then(() => {
   console.log("App is ready, creating window...");
   createWindow();
@@ -62,30 +68,27 @@ app.whenReady().then(() => {
   });
 });
 
-// Quit when all windows are closed.
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
 });
 
-// Handle IPC messages
+// IPC handlers
 ipcMain.on("app-maximize", (event) => {
   const window = BrowserWindow.getFocusedWindow();
-  if (window.isMaximized()) {
-    window.unmaximize();
-  } else {
-    window.maximize();
+  if (window) {
+    window.isMaximized() ? window.unmaximize() : window.maximize();
   }
 });
 
 ipcMain.on("app-minimize", () => {
-  BrowserWindow.getFocusedWindow().minimize();
+  const window = BrowserWindow.getFocusedWindow();
+  if (window) window.minimize();
 });
 
 ipcMain.on("app-quit", () => {
   app.quit();
 });
 
-// Handle any uncaught errors
 process.on("uncaughtException", (error) => {
   console.error("Uncaught Exception:", error);
 });
