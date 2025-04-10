@@ -14,6 +14,8 @@ export const useAdminStore = create((set) => ({
   deliveryBoys: [],
   loading: false,
   error: null,
+  token: null,
+  
   dashboardStats: {
     totalRevenue: 0,
     activeDeliveryPartners: 0,
@@ -101,6 +103,17 @@ export const useAdminStore = create((set) => ({
         variant: "destructive",
       });
       return false;
+    }
+  },
+
+  
+  login: async (email, password) => {
+    // eslint-disable-next-line no-useless-catch
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   },
 
@@ -477,5 +490,6 @@ export const useAdminStore = create((set) => ({
         variant: "destructive"
       });
     }
-  }
+  },
+  
 }));

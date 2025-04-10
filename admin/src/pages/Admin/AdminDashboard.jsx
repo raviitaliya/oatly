@@ -469,14 +469,6 @@ function AdminDashboard() {
               Orders
             </Button>
             <Separator className="my-2" />
-            <Button variant="ghost" className="w-full justify-start">
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <Bell className="mr-2 h-4 w-4" />
-              Notifications
-            </Button>
           </div>
         </ScrollArea>
       </div>

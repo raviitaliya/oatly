@@ -7,16 +7,16 @@ import { DeliveryBoy } from "../models/deliveryProfile.model.js";
 import { User } from "../models/user.model.js";
 
 export const LoginAdmin = async (req, res) => {
-  const { username, password } = req.body;
-
+  const { email, password } = req.body;
+  console.log(email, password)
   try {
-    const username = "Oatly123";
-    const password = "Oatly123";
+    const Email = "oatly@milk.com";
+    const Password = "oatly123";
 
-    if (username === username && password === password) {
+    if (Email == email && Password == password) {
       return res.status(200).json(200, "User Logged in Successfully");
     } else {
-      return res.status(200).json(200, "User Logged in Failed");
+      return res.status(400).json(400, "User Logged in Failed");
     }
   } catch (error) {
     return res.status(500).json({
