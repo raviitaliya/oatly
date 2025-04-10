@@ -62,6 +62,17 @@ import {
   Legend,
 } from 'chart.js';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 // Register ChartJS components
 ChartJS.register(
@@ -117,6 +128,9 @@ function AdminDashboard() {
     recentActivity,
     inventoryStats,
     realtimeStats,
+    products,
+    deleteProduct,
+    fetchProducts,
   } = useAdminStore();
   const [activeSection, setActiveSection] = useState("dashboard");
   const [showAddProductForm, setShowAddProductForm] = useState(false);
@@ -126,21 +140,14 @@ function AdminDashboard() {
   useEffect(() => {
     // Fetch initial dashboard data
     fetchDashboardStats();
+    startRealtimeUpdates();
 
-    // Start realtime updates
-    const cleanup = startRealtimeUpdates();
-
-    // Cleanup on unmount
-    return () => {
-      cleanup();
-    };
-  }, []);
-
-  useEffect(() => {
+    // Fetch data based on active section
     if (activeSection === "users") fetchUsers();
     if (activeSection === "delivery-boys") fetchDeliveryBoys();
     if (activeSection === "orders") fetchOrders();
-  }, [activeSection, fetchUsers, fetchDeliveryBoys, fetchOrders]);
+    if (activeSection === "products") fetchProducts();
+  }, [activeSection, fetchUsers, fetchDeliveryBoys, fetchOrders, fetchProducts, fetchDashboardStats, startRealtimeUpdates]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -162,6 +169,7 @@ function AdminDashboard() {
     const file = e.target.files[0];
     setImage(file);
   };
+  
 
   const onSubmit = async (data) => {
     const success = await addProduct(data, image);
@@ -183,6 +191,7 @@ function AdminDashboard() {
     (order) => order.status === "Delivered"
   );
 
+  console.log(products);
   const renderDashboard = () => (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -511,7 +520,60 @@ function AdminDashboard() {
                   <CardTitle>Products</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">Product list coming soon...</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {products.map((product) => (
+                      <Card key={product._id} className="overflow-hidden">
+                        <div className="aspect-w-16 aspect-h-9">
+                          <img
+                            src={product.image}
+                            alt={product.productname}
+                            className="object-cover w-full  object-center"
+                          />
+                        </div>
+                        <CardContent className="p-4">
+                          <div className="space-y-2">
+                            <h3 className="font-semibold text-lg">{product.productname}</h3>
+                            <p className="text-sm text-gray-500">{product.category}</p>
+                            <p className="text-sm text-gray-600 line-clamp-2">{product.desription}</p>
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold">₹{product.price}</span>
+                              <div className="flex space-x-2">
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      disabled={loading}
+                                    >
+                                      Delete
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete the product
+                                        "{product.productname}" from the database.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteProduct(product._id)}
+                                        className="bg-red-600 hover:bg-red-700"
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>

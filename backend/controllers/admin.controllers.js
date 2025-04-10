@@ -130,6 +130,30 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
+export const deleteProduct = async (req, res) => {
+  const { productId } = req.params;
+  try {
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+    if (!deletedProduct) {
+      return res.status(404).json({
+        status: 404,
+        message: "Product not found",
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Error while deleting product",
+      error: error.message,
+    });
+  }
+};
+
+
 export const OatDrink = async (req, res) => {
   try {
     const products = await Product.find({ category: "Oat Drink" });
@@ -628,6 +652,8 @@ export const getDashboardStats = async (req, res) => {
   }
 };
 
+
+
 // Add real-time analytics endpoint
 export const getRealtimeStats = async (req, res) => {
   try {
@@ -690,6 +716,8 @@ export const getRealtimeStats = async (req, res) => {
     });
   }
 };
+
+
 
 // Add inventory analytics endpoint
 export const getInventoryAnalytics = async (req, res) => {

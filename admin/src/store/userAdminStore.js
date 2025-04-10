@@ -2,10 +2,27 @@ import { create } from "zustand";
 import { toast } from "@/hooks/use-toast";
 import api from "@/api/api";
 import { io } from "socket.io-client";
+import axios from "axios";
 
 const API = "http://localhost:8000/api";
 
 const socket = io("http://localhost:8000");
+
+const apiInstance = axios.create({
+  baseURL: API,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add interceptor to include auth token
+apiInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const useAdminStore = create((set) => ({
   products: [],
@@ -491,5 +508,57 @@ export const useAdminStore = create((set) => ({
       });
     }
   },
-  
+
+  // Fetch all products
+  fetchProducts: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get("/admin/getAllProduct");
+      console.log("Products response:", response.data); // Debug log
+      if (response.data && response.data.products) {
+        set({ products: response.data.products, loading: false });
+      } else {
+        set({ products: [], loading: false });
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error); // Debug log
+      set({
+        error: error.response?.data?.message || "Failed to fetch products",
+        loading: false,
+      });
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to fetch products",
+        variant: "destructive",
+      });
+    }
+  },
+
+  // Delete a product
+  deleteProduct: async (productId) => {
+    set({ loading: true, error: null });
+    try {
+      await api.delete(`/admin/products/${productId}`);
+      set((state) => ({
+        products: state.products.filter((product) => product._id !== productId),
+        loading: false,
+      }));
+      toast({
+        title: "Success",
+        description: "Product deleted successfully",
+      });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to delete product",
+        loading: false,
+      });
+      toast({
+        title: "Error",
+        description: error.response?.data?.message || "Failed to delete product",
+        variant: "destructive",
+      });
+    }
+  },
+
+
 }));

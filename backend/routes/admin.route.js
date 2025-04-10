@@ -17,6 +17,7 @@ import {
   manageInventory,
   getFeedback,
   generateReport,
+  deleteProduct,
 } from "../controllers/admin.controllers.js";
 import { authorize, verifyToken } from "../middleware/verifyToken.js";
 
@@ -41,6 +42,8 @@ router.route("/addProduct").post(
 );
 
 router.get("/getAllProduct", getAllProducts);
+
+router.delete("/products/:productId", deleteProduct);
 
 router.get("/oatDrink", OatDrink);
 router.get("/oatdrink", OatDrink);
