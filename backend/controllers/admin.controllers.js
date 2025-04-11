@@ -60,6 +60,25 @@ export const AddProudct = async (req, res) => {
         .status(400)
         .json({ status: 400, message: "All fields are required" });
     }
+    
+    if (
+      [
+        productname,
+        desription,
+        category,
+        heading1,
+        desription1,
+        heading2,
+        desription2,
+        qustion1,
+        answer1,
+        price,
+      ].every((field) => field?.trim())
+    ) {
+      return res
+        .status(400)
+        .json({ status: 400, message: "Products already exists" });
+    }
 
     const imageLocalPath = req.files?.image[0]?.path;
 
