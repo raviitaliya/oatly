@@ -93,7 +93,8 @@ const Navbar = () => {
   return (
     <nav
       className={`flex ${
-        isAddToCartOpen ? "z-[40]" : " z-[51]"
+        isAddToCartOpen ? "z-[40]" : " z-[51]",
+        isSheetOpen ? "z-[0]" : "z-[51]"
       } items-center fixed justify-between p-2 sm:p-3 w-full`}
     >
       <div className="flex items-center">

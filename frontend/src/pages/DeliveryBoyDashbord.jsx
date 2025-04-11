@@ -362,7 +362,14 @@ function DeliveryBoyDashboard() {
               Order History
             </Button>
             <Separator className="my-2" />
-
+            <Button variant="ghost" className="w-full justify-start">
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </Button>
+            <Button variant="ghost" className="w-full justify-start">
+              <Bell className="mr-2 h-4 w-4" />
+              Notifications
+            </Button>
             <Button
               variant="ghost"
               className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
@@ -661,7 +668,7 @@ function DeliveryBoyDashboard() {
                               Total Earnings
                             </p>
                             <p className="text-3xl font-bold">
-                              ₹{earnings || 120}
+                              ₹{earnings || 0}
                             </p>
                           </div>
                           <DollarSign className="h-8 w-8 text-green-500" />
