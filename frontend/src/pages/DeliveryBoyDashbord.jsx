@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Card,
@@ -62,11 +62,7 @@ function DeliveryBoyDashboard() {
     deliveryProfile,
   } = useProductStore();
 
-  // Use store value directly, with fallback to false if undefined
   const isAvailable = deliveryProfile?.isAvailable ?? false;
-
-  // console.log("deliveryProfile?.isAvailable:", deliveryProfile?.isAvailable);
-  // console.log("isAvailable in component:", isAvailable);
 
   const [activeSection, setActiveSection] = useState("profile");
   const [activeOrderId, setActiveOrderId] = useState(null);
@@ -77,12 +73,14 @@ function DeliveryBoyDashboard() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Initial data fetch
   useEffect(() => {
     console.log("Initial fetch triggered");
     getDeliveryBoyProfile();
     fetchAssignedOrders();
   }, [getDeliveryBoyProfile, fetchAssignedOrders]);
 
+  // Persist delivered orders history to localStorage
   useEffect(() => {
     localStorage.setItem(
       "deliveredOrdersHistory",
@@ -90,15 +88,17 @@ function DeliveryBoyDashboard() {
     );
   }, [deliveredOrdersHistory]);
 
-  const handleRefresh = async () => {
+  // Memoized refresh handler
+  const handleRefresh = useCallback(async () => {
     try {
       console.log("Manual refresh triggered");
       await fetchAssignedOrders();
     } catch (err) {
       console.error("Error during manual refresh:", err);
     }
-  };
+  }, [fetchAssignedOrders]);
 
+  // Filter orders
   const orderRequests = assignedOrders.filter(
     (order) => order.status === "Pending"
   );
@@ -116,103 +116,144 @@ function DeliveryBoyDashboard() {
     ...currentDeliveredOrders,
   ];
 
-  const handleAcceptOrder = (orderId) => {
-    console.log("Accepting Order:", orderId);
-    acceptOrder(orderId);
-  };
+  const handleAcceptOrder = useCallback(
+    (orderId) => {
+      console.log("Accepting Order:", orderId);
+      acceptOrder(orderId);
+    },
+    [acceptOrder]
+  );
 
-  const handleStartDelivery = (orderId) => {
-    console.log("Starting Delivery for Order:", orderId);
-    if (deliveryInterval) {
-      console.log("Clearing previous delivery interval");
-      clearInterval(deliveryInterval);
-      setDeliveryInterval(null);
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coordinates = [
-          position.coords.longitude,
-          position.coords.latitude,
-        ];
-        updateOrderStatus(orderId, "Out for Delivery", coordinates);
-        setActiveOrderId(orderId);
-
-        const interval = setInterval(() => {
-          console.log("Geolocation update for order:", orderId);
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              const newCoords = [pos.coords.longitude, pos.coords.latitude];
-              console.log("Sending new coordinates:", newCoords);
-              updateOrderStatus(orderId, "Out for Delivery", newCoords);
-            },
-            (err) => console.error("Geolocation Error:", err)
-          );
-        }, 10000);
-        setDeliveryInterval(interval);
-      },
-      (err) => {
-        console.error("Geolocation Error:", err);
-        updateOrderStatus(orderId, "Out for Delivery");
+  const handleStartDelivery = useCallback(
+    (orderId) => {
+      console.log("Starting Delivery for Order:", orderId);
+      if (deliveryInterval) {
+        console.log("Clearing previous delivery interval");
+        clearInterval(deliveryInterval);
+        setDeliveryInterval(null);
       }
-    );
-  };
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coordinates = [
+            position.coords.longitude,
+            position.coords.latitude,
+          ];
+          updateOrderStatus(orderId, "Out for Delivery", coordinates);
+          setActiveOrderId(orderId);
 
-  const handleMarkDelivered = (orderId) => {
-    console.log("Marking Order as Delivered:", orderId);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coordinates = [
-          position.coords.longitude,
-          position.coords.latitude,
-        ];
-        updateOrderStatus(orderId, "Delivered", coordinates);
-        const deliveredOrder = assignedOrders.find(
-          (order) => order.orderId === orderId
-        );
-        if (
-          deliveredOrder &&
-          !deliveredOrdersHistory.some(
-            (o) => o.orderId === deliveredOrder.orderId
-          )
-        ) {
-          setDeliveredOrdersHistory((prev) => [
-            ...prev,
-            { ...deliveredOrder, deliveredAt: new Date() },
-          ]);
+          const interval = setInterval(() => {
+            console.log("Geolocation update for order:", orderId);
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                const newCoords = [pos.coords.longitude, pos.coords.latitude];
+                console.log("Sending new coordinates:", newCoords);
+                updateOrderStatus(orderId, "Out for Delivery", newCoords);
+              },
+              (err) => console.error("Geolocation Error:", err)
+            );
+          }, 10000);
+          setDeliveryInterval(interval);
+        },
+        (err) => {
+          console.error("Geolocation Error:", err);
+          updateOrderStatus(orderId, "Out for Delivery");
         }
-        if (deliveryInterval) {
-          console.log("Clearing delivery interval");
-          clearInterval(deliveryInterval);
-          setDeliveryInterval(null);
+      );
+    },
+    [deliveryInterval, updateOrderStatus]
+  );
+
+  const handleMarkDelivered = useCallback(
+    (orderId) => {
+      console.log("Marking Order as Delivered:", orderId);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coordinates = [
+            position.coords.longitude,
+            position.coords.latitude,
+          ];
+          // Call updateOrderStatus and wait for it to complete
+          updateOrderStatus(orderId, "Delivered", coordinates)
+            .then(() => {
+              console.log(`Order ${orderId} marked as Delivered successfully`);
+              const deliveredOrder = assignedOrders.find(
+                (order) => order.orderId === orderId
+              );
+              if (
+                deliveredOrder &&
+                !deliveredOrdersHistory.some(
+                  (o) => o.orderId === deliveredOrder.orderId
+                )
+              ) {
+                setDeliveredOrdersHistory((prev) => [
+                  ...prev,
+                  {
+                    ...deliveredOrder,
+                    deliveredAt: new Date(),
+                    status: "Delivered",
+                  },
+                ]);
+              }
+              if (deliveryInterval) {
+                console.log("Clearing delivery interval");
+                clearInterval(deliveryInterval);
+                setDeliveryInterval(null);
+              }
+              setActiveOrderId(null);
+              // Fetch updated orders to ensure UI reflects server state
+              fetchAssignedOrders();
+            })
+            .catch((err) => {
+              console.error("Failed to mark order as delivered:", err);
+            });
+        },
+        (err) => {
+          console.error("Geolocation Error:", err);
+          updateOrderStatus(orderId, "Delivered")
+            .then(() => {
+              const deliveredOrder = assignedOrders.find(
+                (order) => order.orderId === orderId
+              );
+              if (
+                deliveredOrder &&
+                !deliveredOrdersHistory.some(
+                  (o) => o.orderId === deliveredOrder.orderId
+                )
+              ) {
+                setDeliveredOrdersHistory((prev) => [
+                  ...prev,
+                  {
+                    ...deliveredOrder,
+                    deliveredAt: new Date(),
+                    status: "Delivered",
+                  },
+                ]);
+              }
+              if (deliveryInterval) {
+                console.log("Clearing delivery interval (error case)");
+                clearInterval(deliveryInterval);
+                setDeliveryInterval(null);
+              }
+              setActiveOrderId(null);
+              fetchAssignedOrders();
+            })
+            .catch((err) => {
+              console.error(
+                "Failed to mark order as delivered (no coords):",
+                err
+              );
+            });
         }
-        setActiveOrderId(null);
-      },
-      (err) => {
-        console.error("Geolocation Error:", err);
-        updateOrderStatus(orderId, "Delivered");
-        const deliveredOrder = assignedOrders.find(
-          (order) => order.orderId === orderId
-        );
-        if (
-          deliveredOrder &&
-          !deliveredOrdersHistory.some(
-            (o) => o.orderId === deliveredOrder.orderId
-          )
-        ) {
-          setDeliveredOrdersHistory((prev) => [
-            ...prev,
-            { ...deliveredOrder, deliveredAt: new Date() },
-          ]);
-        }
-        if (deliveryInterval) {
-          console.log("Clearing delivery interval (error case)");
-          clearInterval(deliveryInterval);
-          setDeliveryInterval(null);
-        }
-        setActiveOrderId(null);
-      }
-    );
-  };
+      );
+    },
+    [
+      assignedOrders,
+      deliveryInterval,
+      updateOrderStatus,
+      fetchAssignedOrders,
+      deliveredOrdersHistory,
+    ]
+  );
 
   const form = useForm({
     defaultValues: {
@@ -253,8 +294,6 @@ function DeliveryBoyDashboard() {
       },
     };
     console.log("Updating profile with:", updatedProfile);
-    // Assuming updateUser exists in your store; if not, adjust accordingly
-    // updateUser(updatedProfile);
     setShowProfileForm(false);
   };
 
@@ -334,10 +373,7 @@ function DeliveryBoyDashboard() {
             <Button
               variant="ghost"
               className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
-              onClick={() => {
-                console.log("Toggle clicked, calling toggleAvailability");
-                toggleAvailability();
-              }}
+              onClick={toggleAvailability}
             >
               <LogOut className="mr-2 h-4 w-4" />
               {isAvailable ? "Go Offline" : "Go Online"}
@@ -365,7 +401,6 @@ function DeliveryBoyDashboard() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 overflow-auto bg-gray-100">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
@@ -400,7 +435,6 @@ function DeliveryBoyDashboard() {
             </Card>
           )}
 
-          {/* Profile Section */}
           {activeSection === "profile" && !loading && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -613,13 +647,13 @@ function DeliveryBoyDashboard() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     <Card className="bg-blue-50">
                       <CardContent className="p-6">
-                        <div className="flex justify-between items-center">
+                        <div className=" lực justify-between items-center">
                           <div>
                             <p className="text-sm text-gray-500">
                               Total Delivered
                             </p>
                             <p className="text-3xl font-bold">
-                              {user?.totalDeliveries || 0}
+                              {totalDeliveredOrders || 0}
                             </p>
                           </div>
                           <CheckCircle className="h-8 w-8 text-blue-500" />
@@ -634,7 +668,7 @@ function DeliveryBoyDashboard() {
                               Total Earnings
                             </p>
                             <p className="text-3xl font-bold">
-                              ₹{user?.earnings || 0}
+                              ₹{earnings || 0}
                             </p>
                           </div>
                           <DollarSign className="h-8 w-8 text-green-500" />
@@ -668,7 +702,6 @@ function DeliveryBoyDashboard() {
             </motion.div>
           )}
 
-          {/* Order Requests Section */}
           {activeSection === "requests" && !loading && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -716,25 +749,27 @@ function DeliveryBoyDashboard() {
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-start space-x-4">
-                              {order.items &&
-                              order.items.length > 0 &&
-                              order.items[0].productImage ? (
-                                <img
-                                  src={order.items[0].productImage}
-                                  alt={
-                                    order.items[0].productName ||
-                                    "Product Image"
-                                  }
-                                  className="w-24 h-24 object-cover rounded"
-                                  onError={(e) => {
-                                    e.target.src = "/fallback-image.png";
-                                  }}
-                                />
-                              ) : (
-                                <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
-                                  <ShoppingCart className="h-8 w-8 text-gray-400" />
-                                </div>
-                              )}
+                              <div className="w-24 h-24 rounded flex items-center justify-center">
+                                {order.items &&
+                                order.items.length > 0 &&
+                                order.items[0].productImage ? (
+                                  <img
+                                    src={order.items[0].productImage}
+                                    alt={
+                                      order.items[0].productName ||
+                                      "Product Image"
+                                    }
+                                    className="w-24 h-24 object-cover rounded"
+                                    onError={(e) => {
+                                      e.target.src = "/fallback-image.png";
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
+                                    <ShoppingCart className="h-8 w-8 text-gray-400" />
+                                  </div>
+                                )}
+                              </div>
                               <div className="flex-1">
                                 <p className="font-medium">
                                   Customer: {order.customerName}
@@ -759,16 +794,6 @@ function DeliveryBoyDashboard() {
                                 </Button>
                               </div>
                             </div>
-                            <Separator className="my-4" />
-                            <div className="mt-2">
-                              <p className="font-medium mb-2">Items:</p>
-                              {order.items.map((item, index) => (
-                                <p key={index} className="text-sm">
-                                  {item.productName} - ₹{item.price} x{" "}
-                                  {item.quantity}
-                                </p>
-                              ))}
-                            </div>
                           </CardContent>
                         </Card>
                       </motion.div>
@@ -779,7 +804,6 @@ function DeliveryBoyDashboard() {
             </motion.div>
           )}
 
-          {/* Active Orders Section */}
           {activeSection === "active" && !loading && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -838,25 +862,27 @@ function DeliveryBoyDashboard() {
                           </CardHeader>
                           <CardContent>
                             <div className="flex items-start space-x-4">
-                              {order.items &&
-                              order.items.length > 0 &&
-                              order.items[0].productImage ? (
-                                <img
-                                  src={order.items[0].productImage}
-                                  alt={
-                                    order.items[0].productName ||
-                                    "Product Image"
-                                  }
-                                  className="w-24 h-24 object-cover rounded"
-                                  onError={(e) => {
-                                    e.target.src = "/fallback-image.png";
-                                  }}
-                                />
-                              ) : (
-                                <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
-                                  <ShoppingCart className="h-8 w-8 text-gray-400" />
-                                </div>
-                              )}
+                              <div className="w-24 h-24 rounded flex items-center justify-center">
+                                {order.items &&
+                                order.items.length > 0 &&
+                                order.items[0].productImage ? (
+                                  <img
+                                    src={order.items[0].productImage}
+                                    alt={
+                                      order.items[0].productName ||
+                                      "Product Image"
+                                    }
+                                    className="w-24 h-24 object-cover rounded"
+                                    onError={(e) => {
+                                      e.target.src = "/fallback-image.png";
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
+                                    <ShoppingCart className="h-8 w-8 text-gray-400" />
+                                  </div>
+                                )}
+                              </div>
                               <div className="flex-1">
                                 <p className="font-medium">
                                   Customer: {order.customerName}
@@ -892,16 +918,6 @@ function DeliveryBoyDashboard() {
                                 )}
                               </div>
                             </div>
-                            <Separator className="my-4" />
-                            <div className="mt-2">
-                              <p className="font-medium mb-2">Items:</p>
-                              {order.items.map((item, index) => (
-                                <p key={index} className="text-sm">
-                                  {item.productName} - ₹{item.price} x{" "}
-                                  {item.quantity}
-                                </p>
-                              ))}
-                            </div>
                           </CardContent>
                         </Card>
                       </motion.div>
@@ -912,7 +928,6 @@ function DeliveryBoyDashboard() {
             </motion.div>
           )}
 
-          {/* Order History Section */}
           {activeSection === "history" && !loading && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -959,24 +974,26 @@ function DeliveryBoyDashboard() {
                       </CardHeader>
                       <CardContent>
                         <div className="flex items-start space-x-4">
-                          {order.items &&
-                          order.items.length > 0 &&
-                          order.items[0].productImage ? (
-                            <img
-                              src={order.items[0].productImage}
-                              alt={
-                                order.items[0].productName || "Product Image"
-                              }
-                              className="w-24 h-24 object-cover rounded"
-                              onError={(e) => {
-                                e.target.src = "/fallback-image.png";
-                              }}
-                            />
-                          ) : (
-                            <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
-                              <ShoppingCart className="h-8 w-8 text-gray-400" />
-                            </div>
-                          )}
+                          <div className="w-24 h-24  rounded flex items-center justify-center">
+                            {order.items &&
+                            order.items.length > 0 &&
+                            order.items[0].productImage ? (
+                              <img
+                                src={order.items[0].productImage}
+                                alt={
+                                  order.items[0].productName || "Product Image"
+                                }
+                                className="w-24 h-24 object-cover rounded"
+                                onError={(e) => {
+                                  e.target.src = "/fallback-image.png";
+                                }}
+                              />
+                            ) : (
+                              <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
+                                <ShoppingCart className="h-8 w-8 text-gray-400" />
+                              </div>
+                            )}
+                          </div>
                           <div className="flex-1">
                             <p className="font-medium">
                               Customer: {order.customerName}
@@ -992,16 +1009,6 @@ function DeliveryBoyDashboard() {
                               {order.deliveryAddress.city}
                             </p>
                           </div>
-                        </div>
-                        <Separator className="my-4" />
-                        <div className="mt-2">
-                          <p className="font-medium mb-2">Items:</p>
-                          {order.items.map((item, index) => (
-                            <p key={index} className="text-sm">
-                              {item.productName} - ₹{item.price} x{" "}
-                              {item.quantity}
-                            </p>
-                          ))}
                         </div>
                       </CardContent>
                     </Card>

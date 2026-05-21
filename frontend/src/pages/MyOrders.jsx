@@ -51,6 +51,7 @@ function MyOrders() {
     fetchOrders,
     orders,
     cancelOrder,
+    earning,
     fetchUser,
     user,
     updateUser,
@@ -59,7 +60,6 @@ function MyOrders() {
     logOut,
   } = useProductStore();
 
-  
   const [activeSection, setActiveSection] = useState("profile");
   const [showProfileForm, setShowProfileForm] = useState(false);
 
@@ -68,15 +68,17 @@ function MyOrders() {
     fetchOrders();
   }, [fetchUser, fetchOrders]);
 
+  useEffect(() => {
+    console.log("Current orders state:", orders);
+    console.log("get earning",earning);
+    
+  }, [orders]);
+
   const currentOrders = orders.filter((order) =>
     ["Pending", "Assigned", "Out for Delivery"].includes(order.status)
   );
-  const deliveredOrders = orders.filter(
-    (order) => order.status === "Delivered"
-  );
-  const cancelledOrders = orders.filter(
-    (order) => order.status === "Cancelled"
-  );
+  const deliveredOrders = orders.filter((order) => order.status === "Delivered");
+  const cancelledOrders = orders.filter((order) => order.status === "Cancelled");
 
   const form = useForm({
     defaultValues: {
@@ -123,11 +125,7 @@ function MyOrders() {
 
   const statusVariants = {
     initial: { scale: 0.8, opacity: 0 },
-    animate: {
-      scale: 1,
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
+    animate: { scale: 1, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
     exit: { scale: 0.8, opacity: 0, transition: { duration: 0.3 } },
   };
 
@@ -135,7 +133,6 @@ function MyOrders() {
     <div className="flex h-screen pt-16 bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-lg flex flex-col">
-        
         <Separator />
         <ScrollArea className="flex-1">
           <div className="space-y-1 p-2">
@@ -177,14 +174,7 @@ function MyOrders() {
               Cancelled Orders
             </Button>
             <Separator className="my-2" />
-            <Button variant="ghost" className="w-full justify-start">
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <Bell className="mr-2 h-4 w-4" />
-              Notifications
-            </Button>
+            
             <Button
               variant="ghost"
               className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
@@ -203,9 +193,7 @@ function MyOrders() {
               <AvatarFallback>{user?.name?.charAt(0) || "A"}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium">
-                {user?.name || "Admin User"}
-              </p>
+              <p className="text-sm font-medium">{user?.name || "Admin User"}</p>
               <p className="text-xs text-gray-500">User</p>
             </div>
           </div>
@@ -214,7 +202,7 @@ function MyOrders() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto bg-gray-100">
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {error && (
             <Card className="mb-6 border-red-200 bg-red-50">
               <CardContent className="p-4">
@@ -230,34 +218,24 @@ function MyOrders() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-3xl font-bold mb-6">User Profile</h1>
-              <Card className="shadow-lg mb-6 ">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-6">User Profile</h1>
+              <Card className="shadow-lg mb-6">
                 <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <CardTitle>Profile Information</CardTitle>
-                    <Sheet
-                      open={showProfileForm}
-                      onOpenChange={setShowProfileForm}
-                    >
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <CardTitle className="mb-2 sm:mb-0">Profile Information</CardTitle>
+                    <Sheet open={showProfileForm} onOpenChange={setShowProfileForm}>
                       <SheetTrigger asChild>
                         <Button>Edit Profile</Button>
                       </SheetTrigger>
-                      <SheetContent
-                        className="w-full sm:max-w-lg overflow-auto"
-                        side="right"
-                      >
+                      <SheetContent className="w-full sm:max-w-lg overflow-auto" side="right">
                         <SheetHeader>
                           <SheetTitle>Edit Profile</SheetTitle>
                           <SheetDescription>
-                            Update your personal information and delivery
-                            address
+                            Update your personal information and delivery address
                           </SheetDescription>
                         </SheetHeader>
                         <Form {...form}>
-                          <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-4 mt-4"
-                          >
+                          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
                             <FormField
                               control={form.control}
                               name="name"
@@ -278,19 +256,14 @@ function MyOrders() {
                                 <FormItem>
                                   <FormLabel>Mobile</FormLabel>
                                   <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Your Mobile"
-                                    />
+                                    <Input {...field} placeholder="Your Mobile" />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
                             <Separator className="my-4" />
-                            <h3 className="text-md font-medium">
-                              Delivery Address
-                            </h3>
+                            <h3 className="text-md font-medium">Delivery Address</h3>
                             <FormField
                               control={form.control}
                               name="address1"
@@ -298,10 +271,7 @@ function MyOrders() {
                                 <FormItem>
                                   <FormLabel>Address Line 1</FormLabel>
                                   <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Address Line 1"
-                                    />
+                                    <Input {...field} placeholder="Address Line 1" />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -314,16 +284,13 @@ function MyOrders() {
                                 <FormItem>
                                   <FormLabel>Address Line 2</FormLabel>
                                   <FormControl>
-                                    <Input
-                                      {...field}
-                                      placeholder="Address Line 2"
-                                    />
+                                    <Input {...field} placeholder="Address Line 2" />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                               <FormField
                                 control={form.control}
                                 name="city"
@@ -365,10 +332,7 @@ function MyOrders() {
                               />
                             </div>
                             <div className="flex justify-end gap-2 mt-6">
-                              <Button
-                                variant="outline"
-                                onClick={() => setShowProfileForm(false)}
-                              >
+                              <Button variant="outline" onClick={() => setShowProfileForm(false)}>
                                 Cancel
                               </Button>
                               <Button type="submit">Update Profile</Button>
@@ -379,48 +343,39 @@ function MyOrders() {
                     </Sheet>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4">
-                        Personal Details
-                      </h3>
-                      <div className="space-y-2">
-                        <div className="flex items-center">
+                <CardContent className="p-4">
+                  <div className="flex flex-col sm:flex-row gap-6">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-4">Personal Details</h3>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center flex-wrap">
                           <User className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Name:</span>
-                          <span className="ml-2">
-                            {user?.name || "Not specified"}
-                          </span>
+                          <span className="ml-2 break-words">{user?.name || "Not specified"}</span>
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center flex-wrap">
                           <Clock className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Mobile:</span>
-                          <span className="ml-2">
-                            {user?.mobile || "Not specified"}
-                          </span>
+                          <span className="ml-2 break-words">{user?.mobile || "Not specified"}</span>
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex items-center flex-wrap">
                           <Mail className="h-4 w-4 mr-2 text-gray-500" />
                           <span className="font-medium">Email:</span>
-                          <span className="ml-2">
-                            {user?.email || "Not specified"}
-                          </span>
+                          <span className="ml-2 break-words">{user?.email || "Not specified"}</span>
                         </div>
                       </div>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4">
-                        Delivery Address
-                      </h3>
-                      <div className="space-y-2">
-                        <div className="flex items-start">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-4">Delivery Address</h3>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-start flex-wrap">
                           <Home className="h-4 w-4 mr-2 mt-1 text-gray-500" />
-                          <div>
-                            <p>{user?.address1 || "No address specified"},</p>
-                            {user?.city && (
+                          <div className="break-words">
+                            <p>{user?.deliveryAddress?.address1 || "No address specified"},</p>
+                            {user?.deliveryAddress?.city && (
                               <p>
-                                {user.city}, {user.state} {user.zipcode}
+                                {user.deliveryAddress.city}, {user.deliveryAddress.state}{" "}
+                                {user.deliveryAddress.zipcode}
                               </p>
                             )}
                           </div>
@@ -435,51 +390,33 @@ function MyOrders() {
                 <CardHeader>
                   <CardTitle>Account Summary</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     <Card className="bg-blue-50">
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <p className="text-sm text-gray-500">
-                              Active Orders
-                            </p>
-                            <p className="text-3xl font-bold">
-                              {currentOrders.length}
-                            </p>
-                          </div>
-                          <Package className="h-8 w-8 text-blue-500" />
+                      <CardContent className="p-4 flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-gray-500">Active Orders</p>
+                          <p className="text-2xl font-bold">{currentOrders.length}</p>
                         </div>
+                        <Package className="h-6 w-6 text-blue-500" />
                       </CardContent>
                     </Card>
                     <Card className="bg-green-50">
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <p className="text-sm text-gray-500">
-                              Delivered Orders
-                            </p>
-                            <p className="text-3xl font-bold">
-                              {deliveredOrders.length}
-                            </p>
-                          </div>
-                          <CheckCircle className="h-8 w-8 text-green-500" />
+                      <CardContent className="p-4 flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-gray-500">Delivered Orders</p>
+                          <p className="text-2xl font-bold">{deliveredOrders.length}</p>
                         </div>
+                        <CheckCircle className="h-6 w-6 text-green-500" />
                       </CardContent>
                     </Card>
                     <Card className="bg-red-50">
-                      <CardContent className="p-6">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <p className="text-sm text-gray-500">
-                              Cancelled Orders
-                            </p>
-                            <p className="text-3xl font-bold">
-                              {cancelledOrders.length}
-                            </p>
-                          </div>
-                          <XCircle className="h-8 w-8 text-red-500" />
+                      <CardContent className="p-4 flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-gray-500">Cancelled Orders</p>
+                          <p className="text-2xl font-bold">{cancelledOrders.length}</p>
                         </div>
+                        <XCircle className="h-6 w-6 text-red-500" />
                       </CardContent>
                     </Card>
                   </div>
@@ -495,8 +432,8 @@ function MyOrders() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Current Orders</h1>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-0">Current Orders</h1>
                 <Badge variant="outline" className="px-3 py-1 text-sm">
                   {currentOrders.length} active orders
                 </Badge>
@@ -504,18 +441,14 @@ function MyOrders() {
 
               {currentOrders.length === 0 ? (
                 <Card className="shadow-md">
-                  <CardContent className="p-8 flex flex-col items-center justify-center">
-                    <Package className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">
-                      No Current Orders
-                    </h3>
-                    <p className="text-gray-500 mt-2">
-                      All orders have been delivered or cancelled
-                    </p>
+                  <CardContent className="p-6 flex flex-col items-center justify-center">
+                    <Package className="h-12 w-12 text-gray-300 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-700">No Current Orders</h3>
+                    <p className="text-gray-500 mt-2 text-center">All orders have been delivered or cancelled</p>
                   </CardContent>
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <AnimatePresence>
                     {currentOrders.map((order) => (
                       <motion.div
@@ -527,13 +460,11 @@ function MyOrders() {
                         className="w-full"
                       >
                         <Card className="shadow-lg hover:shadow-xl transition-shadow border-l-4 border-blue-500">
-                          <CardHeader className="pb-2">
+                          <CardHeader className="p-4">
                             <div className="flex justify-between items-center">
-                              <CardTitle className="text-lg">
-                                Order #{order.orderId}
-                              </CardTitle>
+                              <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
                               <motion.div
-                                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${
                                   order.status === "Pending"
                                     ? "bg-yellow-100 text-yellow-800"
                                     : order.status === "Assigned"
@@ -546,60 +477,47 @@ function MyOrders() {
                                 {order.status}
                               </motion.div>
                             </div>
-                            <CardDescription>
-                              Created on:{" "}
-                              {new Date(order.createdAt).toLocaleString()}
+                            <CardDescription className="text-xs">
+                              Created on: {new Date(order.createdAt).toLocaleString()}
                             </CardDescription>
                           </CardHeader>
-                          <CardContent>
-                            <div className="flex items-start space-x-4">
-                              {order.items &&
-                              order.items.length > 0 &&
-                              order.items[0].productImage ? (
+                          <CardContent className="p-4">
+                            <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                              {order.items && order.items.length > 0 && order.items[0].productImage ? (
                                 <img
                                   src={order.items[0].productImage}
-                                  alt={
-                                    order.items[0].productName ||
-                                    "Product Image"
-                                  }
-                                  className="w-24 h-24 object-cover rounded"
+                                  alt={order.items[0].productName || "Product Image"}
+                                  className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded flex-shrink-0"
                                   onError={(e) => {
-                                    console.log(
-                                      `Image failed to load for Order #${order.orderId}`
-                                    );
+                                    console.log(`Image failed to load for Order #${order.orderId}`);
                                     e.target.src = "/fallback-image.png";
                                   }}
                                 />
                               ) : (
-                                <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
-                                  <ShoppingCart className="h-8 w-8 text-gray-400" />
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
+                                  <ShoppingCart className="h-6 w-6 text-gray-400" />
                                 </div>
                               )}
-                              <div className="flex-1">
-                                <div className="flex justify-between">
+                              <div className="flex-1 space-y-2">
+                                <div className="flex justify-between text-sm">
                                   <p className="font-medium">Total Amount:</p>
-                                  <p className="font-bold">
-                                    ₹{order.totalAmount}
-                                  </p>
+                                  <p className="font-bold">₹{order.totalAmount}</p>
                                 </div>
-                                <div className="flex justify-between mt-1">
+                                <div className="flex justify-between text-sm">
                                   <p className="font-medium">Items:</p>
                                   <p>{order.items.length}</p>
                                 </div>
-                                <div className="mt-2">
-                                  <p className="font-medium mb-1">
-                                    Delivery Address:
-                                  </p>
-                                  <p className="text-sm text-gray-600">
-                                    {order.deliveryAddress?.address1},{" "}
-                                    {order.deliveryAddress?.city}
+                                <div>
+                                  <p className="font-medium text-sm mb-1">Delivery Address:</p>
+                                  <p className="text-xs text-gray-600 break-words">
+                                    {order.deliveryAddress?.address1}, {order.deliveryAddress?.city}
                                   </p>
                                 </div>
                                 {order.status === "Pending" && (
                                   <Button
                                     variant="destructive"
                                     size="sm"
-                                    className="mt-4 w-full"
+                                    className="mt-2 w-full"
                                     onClick={() => cancelOrder(order.orderId)}
                                   >
                                     Cancel Order
@@ -608,18 +526,13 @@ function MyOrders() {
                               </div>
                             </div>
                             <Separator className="my-4" />
-                            <div className="mt-2">
-                              <p className="font-medium mb-2">Order Items:</p>
-                              <div className="space-y-2">
+                            <div>
+                              <p className="font-medium text-sm mb-2">Order Items:</p>
+                              <div className="space-y-2 text-xs">
                                 {order.items.map((item, index) => (
-                                  <div
-                                    key={index}
-                                    className="flex justify-between items-center"
-                                  >
-                                    <span className="text-sm">
-                                      {item.productName}
-                                    </span>
-                                    <span className="text-sm font-medium">
+                                  <div key={index} className="flex justify-between items-center">
+                                    <span className="truncate flex-1">{item.productName}</span>
+                                    <span className="font-medium flex-shrink-0 ml-2">
                                       ₹{item.price} x {item.quantity}
                                     </span>
                                   </div>
@@ -643,110 +556,81 @@ function MyOrders() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Delivered Orders</h1>
-                <Badge
-                  variant="outline"
-                  className="px-3 py-1 text-sm bg-green-50"
-                >
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-0">Delivered Orders</h1>
+                <Badge variant="outline" className="px-3 py-1 text-sm bg-green-50">
                   {deliveredOrders.length} delivered
                 </Badge>
               </div>
 
               {deliveredOrders.length === 0 ? (
                 <Card className="shadow-md">
-                  <CardContent className="p-8 flex flex-col items-center justify-center">
-                    <CheckCircle className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">
-                      No Delivered Orders
-                    </h3>
-                    <p className="text-gray-500 mt-2">
-                      Your delivered orders will appear here
-                    </p>
+                  <CardContent className="p-6 flex flex-col items-center justify-center">
+                    <CheckCircle className="h-12 w-12 text-gray-300 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-700">No Delivered Orders</h3>
+                    <p className="text-gray-500 mt-2 text-center">Your delivered orders will appear here</p>
                   </CardContent>
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {deliveredOrders.map((order) => (
                     <Card
                       key={order.orderId}
                       className="shadow-lg hover:shadow-xl transition-shadow border-l-4 border-green-500"
                     >
-                      <CardHeader className="pb-2">
+                      <CardHeader className="p-4">
                         <div className="flex justify-between items-center">
-                          <CardTitle className="text-lg">
-                            Order #{order.orderId}
-                          </CardTitle>
-                          <Badge
-                            variant="success"
-                            className="bg-green-100 text-green-800"
-                          >
+                          <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
+                          <Badge variant="success" className="bg-green-100 text-green-800 text-xs">
                             Delivered
                           </Badge>
                         </div>
-                        <CardDescription>
-                          Delivered on:{" "}
-                          {new Date(
-                            order.deliveredAt || order.createdAt
-                          ).toLocaleString()}
+                        <CardDescription className="text-xs">
+                          Delivered on: {new Date(order.deliveredAt || order.createdAt).toLocaleString()}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <div className="flex items-start space-x-4">
-                          {order.items &&
-                          order.items.length > 0 &&
-                          order.items[0].productImage ? (
+                      <CardContent className="p-4">
+                        <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                          {order.items && order.items.length > 0 && order.items[0].productImage ? (
                             <img
                               src={order.items[0].productImage}
-                              alt={
-                                order.items[0].productName || "Product Image"
-                              }
-                              className="w-24 h-24 object-cover rounded"
+                              alt={order.items[0].productName || "Product Image"}
+                              className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded flex-shrink-0"
                               onError={(e) => {
-                                console.log(
-                                  `Image failed to load for Order #${order.orderId}`
-                                );
+                                console.log(`Image failed to load for Order #${order.orderId}`);
                                 e.target.src = "/fallback-image.png";
                               }}
                             />
                           ) : (
-                            <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
-                              <ShoppingCart className="h-8 w-8 text-gray-400" />
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
+                              <ShoppingCart className="h-6 w-6 text-gray-400" />
                             </div>
                           )}
-                          <div className="flex-1">
-                            <div className="flex justify-between">
+                          <div className="flex-1 space-y-2">
+                            <div className="flex justify-between text-sm">
                               <p className="font-medium">Total Amount:</p>
                               <p className="font-bold">₹{order.totalAmount}</p>
                             </div>
-                            <div className="flex justify-between mt-1">
+                            <div className="flex justify-between text-sm">
                               <p className="font-medium">Items:</p>
                               <p>{order.items.length}</p>
                             </div>
-                            <div className="mt-2">
-                              <p className="font-medium mb-1">
-                                Delivery Address:
-                              </p>
-                              <p className="text-sm text-gray-600">
-                                {order.deliveryAddress?.address1},{" "}
-                                {order.deliveryAddress?.city}
+                            <div>
+                              <p className="font-medium text-sm mb-1">Delivery Address:</p>
+                              <p className="text-xs text-gray-600 break-words">
+                                {order.deliveryAddress?.address1}, {order.deliveryAddress?.city}
                               </p>
                             </div>
                           </div>
                         </div>
                         <Separator className="my-4" />
-                        <div className="mt-2">
-                          <p className="font-medium mb-2">Order Items:</p>
-                          <div className="space-y-2">
+                        <div>
+                          <p className="font-medium text-sm mb-2">Order Items:</p>
+                          <div className="space-y-2 text-xs">
                             {order.items.map((item, index) => (
-                              <div
-                                key={index}
-                                className="flex justify-between items-center"
-                              >
-                                <span className="text-sm">
-                                  {item.productName}
-                                </span>
-                                <span className="text-sm Sparrow font-medium">
+                              <div key={index} className="flex justify-between items-center">
+                                <span className="truncate flex-1">{item.productName}</span>
+                                <span className="font-medium flex-shrink-0 ml-2">
                                   ₹{item.price} x {item.quantity}
                                 </span>
                               </div>
@@ -768,108 +652,81 @@ function MyOrders() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Cancelled Orders</h1>
-                <Badge
-                  variant="outline"
-                  className="px-3 py-1 text-sm bg-red-50"
-                >
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-0">Cancelled Orders</h1>
+                <Badge variant="outline" className="px-3 py-1 text-sm bg-red-50">
                   {cancelledOrders.length} cancelled
                 </Badge>
               </div>
 
               {cancelledOrders.length === 0 ? (
                 <Card className="shadow-md">
-                  <CardContent className="p-8 flex flex-col items-center justify-center">
-                    <XCircle className="h-16 w-16 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-700">
-                      No Cancelled Orders
-                    </h3>
-                    <p className="text-gray-500 mt-2">
-                      Your cancelled orders will appear here
-                    </p>
+                  <CardContent className="p-6 flex flex-col items-center justify-center">
+                    <XCircle className="h-12 w-12 text-gray-300 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-700">No Cancelled Orders</h3>
+                    <p className="text-gray-500 mt-2 text-center">Your cancelled orders will appear here</p>
                   </CardContent>
                 </Card>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {cancelledOrders.map((order) => (
                     <Card
                       key={order.orderId}
                       className="shadow-lg hover:shadow-xl transition-shadow border-l-4 border-red-500"
                     >
-                      <CardHeader className="pb-2">
+                      <CardHeader className="p-4">
                         <div className="flex justify-between items-center">
-                          <CardTitle className="text-lg">
-                            Order #{order.orderId}
-                          </CardTitle>
-                          <Badge
-                            variant="destructive"
-                            className="bg-red-100 text-red-800"
-                          >
+                          <CardTitle className="text-lg">Order #{order.orderId}</CardTitle>
+                          <Badge variant="destructive" className="bg-red-100 text-red-800 text-xs">
                             Cancelled
                           </Badge>
                         </div>
-                        <CardDescription>
-                          Cancelled on:{" "}
-                          {new Date(order.createdAt).toLocaleString()}
+                        <CardDescription className="text-xs">
+                          Cancelled on: {new Date(order.createdAt).toLocaleString()}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <div className="flex items-start space-x-4">
-                          {order.items &&
-                          order.items.length > 0 &&
-                          order.items[0].productImage ? (
+                      <CardContent className="p-4">
+                        <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                          {order.items && order.items.length > 0 && order.items[0].productImage ? (
                             <img
                               src={order.items[0].productImage}
-                              alt={
-                                order.items[0].productName || "Product Image"
-                              }
-                              className="w-24 h-24 object-cover rounded"
+                              alt={order.items[0].productName || "Product Image"}
+                              className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded flex-shrink-0"
                               onError={(e) => {
-                                console.log(
-                                  `Image failed to load for Order #${order.orderId}`
-                                );
+                                console.log(`Image failed to load for Order #${order.orderId}`);
                                 e.target.src = "/fallback-image.png";
                               }}
                             />
                           ) : (
-                            <div className="w-24 h-24 bg-gray-200 rounded flex items-center justify-center">
-                              <ShoppingCart className="h-8 w-8 text-gray-400" />
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
+                              <ShoppingCart className="h-6 w-6 text-gray-400" />
                             </div>
                           )}
-                          <div className="flex-1">
-                            <div className="flex justify-between">
+                          <div className="flex-1 space-y-2">
+                            <div className="flex justify-between text-sm">
                               <p className="font-medium">Total Amount:</p>
                               <p className="font-bold">₹{order.totalAmount}</p>
                             </div>
-                            <div className="flex justify-between mt-1">
+                            <div className="flex justify-between text-sm">
                               <p className="font-medium">Items:</p>
                               <p>{order.items.length}</p>
                             </div>
-                            <div className="mt-2">
-                              <p className="font-medium mb-1">
-                                Delivery Address:
-                              </p>
-                              <p className="text-sm text-gray-600">
-                                {order.deliveryAddress?.address1},{" "}
-                                {order.deliveryAddress?.city}
+                            <div>
+                              <p className="font-medium text-sm mb-1">Delivery Address:</p>
+                              <p className="text-xs text-gray-600 break-words">
+                                {order.deliveryAddress?.address1}, {order.deliveryAddress?.city}
                               </p>
                             </div>
                           </div>
                         </div>
                         <Separator className="my-4" />
-                        <div className="mt-2">
-                          <p className="font-medium mb-2">Order Items:</p>
-                          <div className="space-y-2">
+                        <div>
+                          <p className="font-medium text-sm mb-2">Order Items:</p>
+                          <div className="space-y-2 text-xs">
                             {order.items.map((item, index) => (
-                              <div
-                                key={index}
-                                className="flex justify-between items-center"
-                              >
-                                <span className="text-sm">
-                                  {item.productName}
-                                </span>
-                                <span className="text-sm font-medium">
+                              <div key={index} className="flex justify-between items-center">
+                                <span className="truncate flex-1">{item.productName}</span>
+                                <span className="font-medium flex-shrink-0 ml-2">
                                   ₹{item.price} x {item.quantity}
                                 </span>
                               </div>

@@ -684,7 +684,7 @@ export const useProductStore = create((set, get) => ({
 
   placeOrder: async () => {
     set({ loading: true, error: null });
-    const { cart, user } = get();
+    const { cart, user, fetchOrders } = get(); 
 
     if (!cart.length) {
       set({ loading: false, error: "Cart is empty" });
@@ -767,12 +767,12 @@ export const useProductStore = create((set, get) => ({
                     loading: false,
                   });
                   localStorage.removeItem("cart");
-                  resolve(true); // Payment successful
+                  await fetchOrders(); 
+                  resolve(true);
                 }
               },
               modal: {
                 ondismiss: () => {
-                  // User closed the modal without paying
                   set({ loading: false, error: "Payment was cancelled" });
                   reject(new Error("Payment cancelled by user"));
                 },
@@ -806,10 +806,42 @@ export const useProductStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/orders/my-orders");
+      console.log("Full API Response from /orders/my-orders:", response); 
+      console.log("Orders data:", response.data.orders); 
+      if (response.data.success) {
+        set({ orders: response.data.orders || [], loading: false }); 
+      } else {
+        console.log("API success false:", response.data);
+        set({ loading: false, error: "API returned success: false" });
+      }
     } catch (error) {
+      console.error("Fetch orders error:", error.response || error);
       set({
         loading: false,
         error: error.response?.data?.message || "Failed to fetch orders",
+      });
+    }
+  },
+
+  cancelOrder: async (orderId) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.post("/orders/cancel", { orderId });
+      console.log("Cancel Order Response:", response.data);
+      if (response.data.success) {
+        await get().fetchOrders(); 
+        set({ loading: false });
+      } else {
+        set({
+          loading: false,
+          error: response.data.message || "Failed to cancel order",
+        });
+      }
+    } catch (error) {
+      console.error("Cancel order error:", error.response || error);
+      set({
+        loading: false,
+        error: error.response?.data?.message || "Failed to cancel order",
       });
     }
   },
