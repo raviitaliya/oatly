@@ -56,3 +56,31 @@ The application provides secure authentication, online payments, real-time order
 ```bash
 git clone https://github.com/raviitaliya/oatly.git
 cd oatly
+
+🔐 Environment Variables
+
+Create a .env file inside the Backend folder.
+
+PORT=8000
+
+MONGODB_URI=your_mongodb_uri
+
+EMAIL_USER=your_email
+
+EMAIL_PASS=your_email_password
+
+JWT_SECRET=your_jwt_secret
+
+CLIENT_URL=http://localhost:5173
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+RAZORPAY_API_KEY=your_razorpay_api_key
+
+RAZORPAY_API_SECRET=your_razorpay_api_secret
+
+RAZORPAY_KEY_ID=your_razorpay_key_id
