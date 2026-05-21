@@ -49,13 +49,6 @@ The application provides secure authentication, online payments, real-time order
 
 ---
 
-## ⚙️ Installation
-
-### Clone Repository
-
-```bash
-git clone https://github.com/raviitaliya/oatly.git
-cd oatly
 
 🔐 Environment Variables
 
@@ -84,3 +77,12 @@ RAZORPAY_API_KEY=your_razorpay_api_key
 RAZORPAY_API_SECRET=your_razorpay_api_secret
 
 RAZORPAY_KEY_ID=your_razorpay_key_id
+
+
+## ⚙️ Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/raviitaliya/oatly.git
+cd oatly
