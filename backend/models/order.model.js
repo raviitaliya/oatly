@@ -39,9 +39,8 @@ const orderSchema = new mongoose.Schema(
 orderSchema.index({ location: "2dsphere" });
 
 // Check for middleware that might alter items
-orderSchema.pre("save", function (next) {
+orderSchema.pre("save", function () {
   console.log("Pre-save middleware - Items before save:", this.items);
-  next();
 });
 
 export const Order = mongoose.model("Order", orderSchema);
