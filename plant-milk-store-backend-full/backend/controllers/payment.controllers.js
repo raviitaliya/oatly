@@ -6,9 +6,6 @@ import { Payment } from "../models/payment.model.js";
 
 export const createOrder = async (req, res) => {
   const { amount } = req.body;
-
-  console.log(amount);
-
   const options = {
     amount: Number(req.body.amount * 100),
     currency: "INR",

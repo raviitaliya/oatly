@@ -8,7 +8,6 @@ import { User } from "../models/user.model.js";
 
 export const LoginAdmin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
   try {
     const Email = "oatly@milk.com";
     const Password = "oatly123";
@@ -108,8 +107,6 @@ export const AddProudct = async (req, res) => {
 export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    console.log(products);
-
     if (!products || products.length === 0) {
       return res.status(404).json({
         status: 404,
@@ -158,7 +155,6 @@ export const OatDrink = async (req, res) => {
   try {
     const products = await Product.find({ category: "Oat Drink" });
 
-    // console.log(products);
 
     if (!products || products.length === 0) {
       return res.status(404).json({
