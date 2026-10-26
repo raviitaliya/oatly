@@ -97,15 +97,15 @@ export const createCheckout = async (req, res) => {
     const deliveryAddress = address
       ? address.toObject()
       : {
-          address1: user.address1,
-          address2: user.address2,
-          city: user.city,
-          state: user.state,
-          country: user.country,
-          zipcode: user.zipcode,
-          fullName: user.name,
-          mobile: user.mobile,
-        };
+        address1: user.address1,
+        address2: user.address2,
+        city: user.city,
+        state: user.state,
+        country: user.country,
+        zipcode: user.zipcode,
+        fullName: user.name,
+        mobile: user.mobile,
+      };
     const priced = await priceCart(req.userId, couponCode);
     const taxAmount = Number(
       (
@@ -279,7 +279,7 @@ export const verifyCheckout = async (req, res) => {
     );
     const user = await User.findById(req.userId).select("email name");
     if (user?.email)
-      sendOrderConfirmationEmail(user.email, user.name, fresh).catch(() => {});
+      sendOrderConfirmationEmail(user.email, user.name, fresh).catch(() => { });
     res.json({
       success: true,
       message: "Payment verified and order confirmed",
