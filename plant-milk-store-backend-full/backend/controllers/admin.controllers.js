@@ -8,7 +8,7 @@ import { User } from "../models/user.model.js";
 
 export const LoginAdmin = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password)
+  console.log(email, password);
   try {
     const Email = "oatly@milk.com";
     const Password = "oatly123";
@@ -154,7 +154,6 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-
 export const OatDrink = async (req, res) => {
   try {
     const products = await Product.find({ category: "Oat Drink" });
@@ -219,7 +218,7 @@ export const Cooking = async (req, res) => {
       status: 200,
       products,
       message: "Oat Drinks fetched successfully",
-    });   
+    });
   } catch (error) {
     return res.status(500).json({
       status: 500,
@@ -438,20 +437,20 @@ export const getFeedback = async (req, res) => {
 export const generateReport = async (req, res) => {
   try {
     const orders = await Order.find({ status: "Delivered" }).populate(
-      "userId deliveryBoyId"
+      "userId deliveryBoyId",
     );
     const doc = new PDFDocument();
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=sales_report.pdf"
+      "attachment; filename=sales_report.pdf",
     );
 
     doc.pipe(res);
     doc.fontSize(20).text("Sales Report", { align: "center" });
     orders.forEach((order) => {
       doc.text(
-        `Order #${order._id}: $${order.totalAmount} - ${order.userId.name}`
+        `Order #${order._id}: $${order.totalAmount} - ${order.userId.name}`,
       );
     });
     doc.end();
@@ -464,7 +463,11 @@ export const getDashboardStats = async (req, res) => {
   try {
     // Get date ranges
     const today = new Date();
-    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+    const lastMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() - 1,
+      today.getDate(),
+    );
     const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     // Get overview statistics
@@ -475,12 +478,12 @@ export const getDashboardStats = async (req, res) => {
       totalUsers,
       newUsers,
       activeOrders,
-      productStats
+      productStats,
     ] = await Promise.all([
       // Total revenue
       Order.aggregate([
         { $match: { status: "Delivered" } },
-        { $group: { _id: null, total: { $sum: "$totalAmount" } } }
+        { $group: { _id: null, total: { $sum: "$totalAmount" } } },
       ]),
 
       // Monthly revenue trend
@@ -488,22 +491,22 @@ export const getDashboardStats = async (req, res) => {
         {
           $match: {
             status: "Delivered",
-            createdAt: { $gte: lastMonth }
-          }
+            createdAt: { $gte: lastMonth },
+          },
         },
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-            revenue: { $sum: "$totalAmount" }
-          }
+            revenue: { $sum: "$totalAmount" },
+          },
         },
-        { $sort: { "_id": 1 } }
+        { $sort: { _id: 1 } },
       ]),
 
       // Active delivery boys
-      DeliveryBoy.countDocuments({ 
+      DeliveryBoy.countDocuments({
         isAvailable: true,
-        status: "active"
+        status: "active",
       }),
 
       // Total users
@@ -512,12 +515,12 @@ export const getDashboardStats = async (req, res) => {
       // New users this month
       User.countDocuments({
         role: "user",
-        createdAt: { $gte: lastMonth }
+        createdAt: { $gte: lastMonth },
       }),
 
       // Active orders
       Order.countDocuments({
-        status: { $in: ["Pending", "Assigned", "Out for Delivery"] }
+        status: { $in: ["Pending", "Assigned", "Out for Delivery"] },
       }),
 
       // Product category statistics
@@ -526,10 +529,10 @@ export const getDashboardStats = async (req, res) => {
           $group: {
             _id: "$category",
             count: { $sum: 1 },
-            avgPrice: { $avg: { $toDouble: "$price" } }
-          }
-        }
-      ])
+            avgPrice: { $avg: { $toDouble: "$price" } },
+          },
+        },
+      ]),
     ]);
 
     // Get delivery analytics
@@ -537,49 +540,49 @@ export const getDashboardStats = async (req, res) => {
       {
         $match: {
           status: "Delivered",
-          deliveredAt: { $gte: lastWeek }
-        }
+          deliveredAt: { $gte: lastWeek },
+        },
       },
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$deliveredAt" } },
           deliveries: { $sum: 1 },
-          totalEarnings: { $sum: "$totalAmount" }
-        }
+          totalEarnings: { $sum: "$totalAmount" },
+        },
       },
-      { $sort: { "_id": 1 } }
+      { $sort: { _id: 1 } },
     ]);
 
     // Get top performing delivery partners
     const topDeliveryPartners = await DeliveryBoy.aggregate([
       {
-        $match: { status: "active" }
+        $match: { status: "active" },
       },
       {
-        $sort: { totalDeliveries: -1, earnings: -1 }
+        $sort: { totalDeliveries: -1, earnings: -1 },
       },
       {
-        $limit: 5
+        $limit: 5,
       },
       {
         $lookup: {
           from: "users",
           localField: "userId",
           foreignField: "_id",
-          as: "userDetails"
-        }
+          as: "userDetails",
+        },
       },
       {
-        $unwind: "$userDetails"
-      }
+        $unwind: "$userDetails",
+      },
     ]);
 
     // Get recent orders with populated data
     const recentOrders = await Order.find()
       .sort({ createdAt: -1 })
       .limit(5)
-      .populate('userId', 'name email')
-      .populate('deliveryBoyId', 'fullName');
+      .populate("userId", "name email")
+      .populate("deliveryBoyId", "fullName");
 
     // Get category-wise sales
     const categorySales = await Order.aggregate([
@@ -588,11 +591,13 @@ export const getDashboardStats = async (req, res) => {
         $group: {
           _id: "$items.productName",
           totalQuantity: { $sum: "$items.quantity" },
-          totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } }
-        }
+          totalRevenue: {
+            $sum: { $multiply: ["$items.quantity", "$items.price"] },
+          },
+        },
       },
       { $sort: { totalRevenue: -1 } },
-      { $limit: 5 }
+      { $limit: 5 },
     ]);
 
     // Calculate revenue growth
@@ -601,23 +606,33 @@ export const getDashboardStats = async (req, res) => {
         $match: {
           status: "Delivered",
           createdAt: {
-            $gte: new Date(today.getFullYear(), today.getMonth() - 2, today.getDate()),
-            $lt: lastMonth
-          }
-        }
+            $gte: new Date(
+              today.getFullYear(),
+              today.getMonth() - 2,
+              today.getDate(),
+            ),
+            $lt: lastMonth,
+          },
+        },
       },
       {
         $group: {
           _id: null,
-          total: { $sum: "$totalAmount" }
-        }
-      }
+          total: { $sum: "$totalAmount" },
+        },
+      },
     ]);
 
-    const currentMonthRevenue = monthlyRevenue.reduce((acc, curr) => acc + curr.revenue, 0);
+    const currentMonthRevenue = monthlyRevenue.reduce(
+      (acc, curr) => acc + curr.revenue,
+      0,
+    );
     const previousMonthTotal = previousMonthRevenue[0]?.total || 0;
-    const revenueGrowth = previousMonthTotal === 0 ? 100 : 
-      ((currentMonthRevenue - previousMonthTotal) / previousMonthTotal) * 100;
+    const revenueGrowth =
+      previousMonthTotal === 0
+        ? 100
+        : ((currentMonthRevenue - previousMonthTotal) / previousMonthTotal) *
+        100;
 
     return res.status(200).json({
       success: true,
@@ -628,32 +643,29 @@ export const getDashboardStats = async (req, res) => {
           activeOrders,
           totalUsers,
           newUsers,
-          revenueGrowth: parseFloat(revenueGrowth.toFixed(2))
+          revenueGrowth: parseFloat(revenueGrowth.toFixed(2)),
         },
         charts: {
           monthlyRevenue,
           deliveryAnalytics,
           categorySales,
-          productStats
+          productStats,
         },
         recentActivity: {
           orders: recentOrders,
-          topDeliveryPartners
-        }
-      }
+          topDeliveryPartners,
+        },
+      },
     });
-
   } catch (error) {
     console.error("Dashboard Stats Error:", error);
     return res.status(500).json({
       success: false,
       message: "Error fetching dashboard statistics",
-      error: error.message
+      error: error.message,
     });
   }
 };
-
-
 
 // Add real-time analytics endpoint
 export const getRealtimeStats = async (req, res) => {
@@ -666,33 +678,35 @@ export const getRealtimeStats = async (req, res) => {
       Order.aggregate([
         {
           $match: {
-            createdAt: { $gte: currentHour }
-          }
+            createdAt: { $gte: currentHour },
+          },
         },
         {
           $group: {
             _id: null,
-            newOrders: { 
-              $sum: { $cond: [{ $eq: ["$status", "Pending"] }, 1, 0] }
+            newOrders: {
+              $sum: { $cond: [{ $eq: ["$status", "Pending"] }, 1, 0] },
             },
-            processingOrders: { 
-              $sum: { $cond: [{ $eq: ["$status", "Assigned"] }, 1, 0] }
+            processingOrders: {
+              $sum: { $cond: [{ $eq: ["$status", "Assigned"] }, 1, 0] },
             },
-            deliveredOrders: { 
-              $sum: { $cond: [{ $eq: ["$status", "Delivered"] }, 1, 0] }
+            deliveredOrders: {
+              $sum: { $cond: [{ $eq: ["$status", "Delivered"] }, 1, 0] },
             },
-            totalRevenue: { 
-              $sum: { $cond: [{ $eq: ["$status", "Delivered"] }, "$totalAmount", 0] }
-            }
-          }
-        }
+            totalRevenue: {
+              $sum: {
+                $cond: [{ $eq: ["$status", "Delivered"] }, "$totalAmount", 0],
+              },
+            },
+          },
+        },
       ]),
 
       // Active delivery partners
       DeliveryBoy.countDocuments({
         isAvailable: true,
-        status: "active"
-      })
+        status: "active",
+      }),
     ]);
 
     return res.status(200).json({
@@ -702,73 +716,75 @@ export const getRealtimeStats = async (req, res) => {
           newOrders: 0,
           processingOrders: 0,
           deliveredOrders: 0,
-          totalRevenue: 0
+          totalRevenue: 0,
         },
-        activeDeliveryPartners: deliveryStats
-      }
+        activeDeliveryPartners: deliveryStats,
+      },
     });
-
   } catch (error) {
     console.error("Realtime Stats Error:", error);
     return res.status(500).json({
       success: false,
       message: "Error fetching realtime statistics",
-      error: error.message
+      error: error.message,
     });
   }
 };
 
-
-
 // Add inventory analytics endpoint
 export const getInventoryAnalytics = async (req, res) => {
   try {
-    const [lowStock, categoryDistribution, productPerformance] = await Promise.all([
-      // Low stock products
-      Product.find({ stock: { $lt: 10 }})
-        .select('productname stock category price'),
+    const [lowStock, categoryDistribution, productPerformance] =
+      await Promise.all([
+        // Low stock products
+        Product.find({ stock: { $lt: 10 } }).select(
+          "productname stock category price",
+        ),
 
-      // Category-wise product distribution
-      Product.aggregate([
-        {
-          $group: {
-            _id: "$category",
-            count: { $sum: 1 },
-            totalValue: { $sum: { $multiply: [{ $toDouble: "$price" }, "$stock"] } }
-          }
-        }
-      ]),
+        // Category-wise product distribution
+        Product.aggregate([
+          {
+            $group: {
+              _id: "$category",
+              count: { $sum: 1 },
+              totalValue: {
+                $sum: { $multiply: [{ $toDouble: "$price" }, "$stock"] },
+              },
+            },
+          },
+        ]),
 
-      // Product performance (based on orders)
-      Order.aggregate([
-        { $unwind: "$items" },
-        {
-          $group: {
-            _id: "$items.productName",
-            totalOrdered: { $sum: "$items.quantity" },
-            revenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } }
-          }
-        },
-        { $sort: { totalOrdered: -1 } },
-        { $limit: 10 }
-      ])
-    ]);
+        // Product performance (based on orders)
+        Order.aggregate([
+          { $unwind: "$items" },
+          {
+            $group: {
+              _id: "$items.productName",
+              totalOrdered: { $sum: "$items.quantity" },
+              revenue: {
+                $sum: { $multiply: ["$items.quantity", "$items.price"] },
+              },
+            },
+          },
+          { $sort: { totalOrdered: -1 } },
+          { $limit: 10 },
+        ]),
+      ]);
 
     return res.status(200).json({
       success: true,
       data: {
         lowStock,
         categoryDistribution,
-        productPerformance
-      }
+        productPerformance,
+      },
     });
-
   } catch (error) {
     console.error("Inventory Analytics Error:", error);
     return res.status(500).json({
       success: false,
       message: "Error fetching inventory analytics",
-      error: error.message
+      error: error.message,
     });
   }
 };

@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
 import crypto from "crypto";
 import { User } from "../models/user.model.js";
 import { Order } from "../models/order.model.js";

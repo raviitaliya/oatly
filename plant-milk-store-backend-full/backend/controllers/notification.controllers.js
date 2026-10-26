@@ -1,0 +1,5 @@
+import { Notification } from "../models/notification.model.js";
+import { User } from "../models/user.model.js";
+export const listNotifications=async(req,res)=>{try{res.json({success:true,notifications:await Notification.find({userId:req.userId}).sort({createdAt:-1}).limit(100)});}catch(e){res.status(500).json({success:false,message:e.message});}};
+export const markNotificationRead=async(req,res)=>{try{const n=await Notification.findOneAndUpdate({_id:req.params.id,userId:req.userId},{isRead:true,readAt:new Date()},{new:true});if(!n)return res.status(404).json({success:false,message:"Notification not found"});res.json({success:true,notification:n});}catch(e){res.status(500).json({success:false,message:e.message});}};
+export const registerDeviceToken=async(req,res)=>{try{const token=String(req.body.token||"");if(!token)return res.status(400).json({success:false,message:"Token required"});await User.findByIdAndUpdate(req.userId,{$addToSet:{fcmTokens:token}});res.json({success:true,message:"Device token registered"});}catch(e){res.status(500).json({success:false,message:e.message});}};

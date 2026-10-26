@@ -89,7 +89,7 @@ export const signup = async (req, res) => {
 
     await user.save();
 
-    generateTokenAndSetCookie(res, user._id);
+    generateTokenAndSetCookie(res, user._id, user.role);
 
     await sendVerificationEmail(user.email, verificationToken);
 
@@ -271,7 +271,7 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-export const upadatePassword = async () => {
+export const upadatePassword = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -301,12 +301,22 @@ export const upadatePassword = async () => {
 
 export const checkAuth = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    console.log("Cookies:", req.cookies);
+    console.log("Raw Cookie Header:", req.headers.cookie);
+
+    const token = req.cookies?.token;
+
+    console.log("Token in checkAuth:", token);
+
     if (!token) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
@@ -323,10 +333,13 @@ export const checkAuth = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in checkAuth:", error.message);
-    res.status(500).json({ success: false, message: error.message });
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
-
 export const fetchAllUser = async (req, res) => {
   try {
     const users = await User.find({ role: "user" }).select(

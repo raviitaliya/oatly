@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
 import { instance } from "../config/razorpay.config.js";
 import crypto from "crypto";
 import { Payment } from "../models/payment.model.js";

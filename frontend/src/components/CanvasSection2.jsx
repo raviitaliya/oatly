@@ -19,7 +19,7 @@ const CanvasSection2 = () => {
       </div>
 
       <a
-        href="/our-products/oat-drink/676cfa2900be0a4c614c01e1"
+        href="/our-products/oat-drink/6ad1bb46f020bd3750461dca"
         className="absolute w-[42.18vh] left-[17.88vh] bottom-0 block transition-transform hover:scale-105 duration-300 cursor-hand"
       >
         <div className="relative w-full overflow-hidden">
@@ -37,3 +37,4 @@ const CanvasSection2 = () => {
 };
 
 export default CanvasSection2;
+  
